@@ -1,15 +1,12 @@
 package com.safetynet.safetynetalerts.repositories;
 
 import com.safetynet.safetynetalerts.models.Firestation;
-import com.safetynet.safetynetalerts.models.Person;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class FirestationRepositoryTest {
 
@@ -33,7 +30,7 @@ class FirestationRepositoryTest {
     }
 
     @Test
-    void itShouldReturnEmptyListWhenNoData() throws IOException {
+    void itShouldReturnEmptyListWhenNoData() {
         // Given
         List<Firestation> firestationList;
         String pathToFile = "src/test/java/com/safetynet/safetynetalerts/mockressources/mockfirestations_empty.json";

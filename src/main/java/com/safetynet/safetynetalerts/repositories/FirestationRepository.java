@@ -3,7 +3,6 @@ package com.safetynet.safetynetalerts.repositories;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalerts.models.Firestation;
-import com.safetynet.safetynetalerts.models.MedicalRecord;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;

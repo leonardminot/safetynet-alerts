@@ -3,15 +3,10 @@ package com.safetynet.safetynetalerts.repositories;
 import com.safetynet.safetynetalerts.models.Person;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.env.Environment;
 
-import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 
 class PersonRepositoryTest {
@@ -24,7 +19,7 @@ class PersonRepositoryTest {
     }
 
     @Test
-    void itShouldReturnThreePersons() throws IOException {
+    void itShouldReturnThreePersons() {
         // Given
         List<Person> personList;
         String pathToFile = "src/test/java/com/safetynet/safetynetalerts/mockressources/mockpersons.json";
@@ -37,7 +32,7 @@ class PersonRepositoryTest {
     }
 
     @Test
-    void itShouldReturnEmptyListWhenNoData() throws IOException {
+    void itShouldReturnEmptyListWhenNoData() {
         // Given
         List<Person> personList;
         String pathToFile = "src/test/java/com/safetynet/safetynetalerts/mockressources/mockpersons_empty.json";
