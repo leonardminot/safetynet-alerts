@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class PersonRepository {
@@ -27,5 +28,9 @@ public class PersonRepository {
     }
 
     public void savePerson(Person capture) {
+    }
+
+    public Optional<Person> selectCustomerByName(String firstName, String lastName) {
+        return Optional.empty();
     }
 }
