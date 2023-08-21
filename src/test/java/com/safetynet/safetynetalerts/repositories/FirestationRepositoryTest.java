@@ -36,7 +36,7 @@ class FirestationRepositoryTest {
     void itShouldReturnEmptyListWhenNoData() throws IOException {
         // Given
         List<Firestation> firestationList;
-        String pathToFile = "src/test/java/com/safetynet/safetynetalerts/mockressources/mockfirestations.json";
+        String pathToFile = "src/test/java/com/safetynet/safetynetalerts/mockressources/mockfirestations_empty.json";
 
         // When
         firestationList = underTest.getFirestations(pathToFile);
