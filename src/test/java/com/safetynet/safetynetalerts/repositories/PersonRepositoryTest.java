@@ -1,5 +1,6 @@
 package com.safetynet.safetynetalerts.repositories;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalerts.models.Person;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,21 +13,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class PersonRepositoryTest {
 
-    private PersonRepository underTest;
+    private PersonRepository underTestWithData;
+
+    private PersonRepository underTestWithoutData;
+
 
     @BeforeEach
     void setUp() {
-        underTest = new PersonRepository();
+        underTestWithData = new PersonRepository(
+                "src/test/java/com/safetynet/safetynetalerts/mockressources/mockpersons.json",
+                new ObjectMapper());
+
+        underTestWithoutData = new PersonRepository(
+                "src/test/java/com/safetynet/safetynetalerts/mockressources/mockpersons_empty.json",
+                new ObjectMapper());
     }
 
     @Test
     void itShouldReturnThreePersons() {
         // Given
         List<Person> personList;
-        String pathToFile = "src/test/java/com/safetynet/safetynetalerts/mockressources/mockpersons.json";
 
         // When
-        personList = underTest.getPersons(pathToFile);
+        personList = underTestWithData.getPersons();
 
         // Then
         assertThat(personList).hasSize(3);
@@ -36,10 +45,9 @@ class PersonRepositoryTest {
     void itShouldReturnEmptyListWhenNoData() {
         // Given
         List<Person> personList;
-        String pathToFile = "src/test/java/com/safetynet/safetynetalerts/mockressources/mockpersons_empty.json";
 
         // When
-        personList = underTest.getPersons(pathToFile);
+        personList = underTestWithoutData.getPersons();
 
         // Then
         assertThat(personList).hasSize(0);
@@ -49,7 +57,8 @@ class PersonRepositoryTest {
     @Test
     void itShouldReturnAPersonWhenAskName() {
         // Given
-        Optional<Person> optionalPerson;
+        Optional<Person> optionalPersonThatExists;
+        Optional<Person> optionalPersonThatDidntExist;
 
         Person magnus = new Person(
                 "Magnus",
@@ -62,10 +71,13 @@ class PersonRepositoryTest {
         );
 
         // When
-        optionalPerson = underTest.selectCustomerByName("Magnus", "Carlsen");
+        optionalPersonThatExists = underTestWithData.selectCustomerByName("Magnus", "Carlsen");
+        optionalPersonThatDidntExist = underTestWithData.selectCustomerByName("Wesley", "So");
 
         // Then
-        assertThat(optionalPerson).isPresent();
-        assertThat(optionalPerson.get()).isEqualTo(magnus);
+        assertThat(optionalPersonThatExists).isPresent();
+        assertThat(optionalPersonThatExists.get()).isEqualTo(magnus);
+
+        assertThat(optionalPersonThatDidntExist).isNotPresent();
     }
 }
