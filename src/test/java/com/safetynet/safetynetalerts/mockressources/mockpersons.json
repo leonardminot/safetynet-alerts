@@ -1,0 +1,29 @@
+[
+  {
+    "firstName": "Magnus",
+    "lastName": "Carlsen",
+    "address": "007 Rue de la Dame",
+    "city": "Oslo",
+    "zip": "63429",
+    "phone": "123-456-7890",
+    "email": "magnusd@email.com"
+  },
+  {
+    "firstName": "Maxime",
+    "lastName": "Vachier-Lagrave",
+    "address": "1990 Rue de la Tour",
+    "city": "Paris",
+    "zip": "75001",
+    "phone": "987-654-3210",
+    "email": "maxime@email.com"
+  },
+  {
+    "firstName": "Alireza",
+    "lastName": "Firouzja",
+    "address": "1990 Rue de la Tour",
+    "city": "Paris",
+    "zip": "75001",
+    "phone": "777-777-7777",
+    "email": "alireza@email.com"
+  }
+]
