@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -43,5 +44,28 @@ class PersonRepositoryTest {
         // Then
         assertThat(personList).hasSize(0);
 
+    }
+
+    @Test
+    void itShouldReturnAPersonWhenAskName() {
+        // Given
+        Optional<Person> optionalPerson;
+
+        Person magnus = new Person(
+                "Magnus",
+                "Carlsen",
+                "007 Rue de la Dame",
+                "Oslo",
+                "63429",
+                "123-456-7890",
+                "magnusd@email.com"
+        );
+
+        // When
+        optionalPerson = underTest.selectCustomerByName("Magnus", "Carlsen");
+
+        // Then
+        assertThat(optionalPerson).isPresent();
+        assertThat(optionalPerson.get()).isEqualTo(magnus);
     }
 }
