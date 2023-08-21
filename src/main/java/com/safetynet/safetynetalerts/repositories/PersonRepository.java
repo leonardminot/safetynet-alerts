@@ -25,4 +25,7 @@ public class PersonRepository {
         }
         return people;
     }
+
+    public void savePerson(Person capture) {
+    }
 }
