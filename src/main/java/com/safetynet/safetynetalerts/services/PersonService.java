@@ -5,6 +5,7 @@ import com.safetynet.safetynetalerts.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,5 +25,9 @@ public class PersonService {
                     String.format("person %s %s already exists", person.firstName(), person.lastName()));
 
         personRepository.savePerson(person);
+    }
+
+    public List<Person> getPersons() {
+        return personRepository.getPersons();
     }
 }

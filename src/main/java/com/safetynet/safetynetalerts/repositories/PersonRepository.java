@@ -25,7 +25,7 @@ public class PersonRepository {
     private final ObjectMapper objectMapper;
 
     @Autowired
-    public PersonRepository(@Value("${safetynetalerts.jsonpath}") String filePath, ObjectMapper objectMapper) {
+    public PersonRepository(@Value("${safetynetalerts.jsonpath.persons}") String filePath, ObjectMapper objectMapper) {
         this.filePath = filePath;
         this.objectMapper = objectMapper;
     }
