@@ -14,8 +14,6 @@ public class PersonRepository {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-
-
     public List<Person> getPersons(String filePath) throws IOException {
         return objectMapper.readValue(Paths.get(filePath).toFile(), new TypeReference<List<Person>>() {});
     }

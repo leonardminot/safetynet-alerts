@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,6 +17,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class PersonRepositoryTest {
 
     private PersonRepository underTest;
+
+    private Environment environment;
 
     @BeforeEach
     void setUp() {
@@ -33,5 +36,19 @@ class PersonRepositoryTest {
 
         // Then
         assertThat(personList).hasSize(3);
+    }
+
+    @Test
+    void itShouldReturnEmptyListWhenNoData() throws IOException {
+        // Given
+        List<Person> personList;
+        String pathToFile = "src/test/java/com/safetynet/safetynetalerts/mockressources/mockpersons_empty.json";
+
+        // When
+        personList = underTest.getPersons(pathToFile);
+
+        // Then
+        assertThat(personList).hasSize(0);
+
     }
 }
