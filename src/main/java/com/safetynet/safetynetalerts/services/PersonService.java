@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class PersonService {
 
-    private PersonRepository personRepository;
+    private final PersonRepository personRepository;
 
     @Autowired
     public PersonService(PersonRepository personRepository) {
@@ -16,6 +16,6 @@ public class PersonService {
     }
 
     public void createPerson(Person person) {
-
+        personRepository.savePerson(person);
     }
 }
