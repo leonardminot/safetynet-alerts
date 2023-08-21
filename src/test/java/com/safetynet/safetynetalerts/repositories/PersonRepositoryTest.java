@@ -37,7 +37,8 @@ class PersonRepositoryTest {
 
     @AfterEach
     void tearDown() throws FileNotFoundException {
-        CreateMockedData.clearJsonFile("src/test/java/com/safetynet/safetynetalerts/mockressources/mockpersons.json");
+        CreateMockedData.clearJsonFile(
+                "src/test/java/com/safetynet/safetynetalerts/mockressources/mockpersons.json");
     }
 
     @Test
@@ -90,5 +91,28 @@ class PersonRepositoryTest {
         assertThat(optionalPersonThatExists.get()).isEqualTo(magnus);
 
         assertThat(optionalPersonThatDidntExist).isNotPresent();
+    }
+
+    @Test
+    void itShouldSaveANewPerson() {
+        // Given
+        Person personToSave = new Person(
+                "Wesley",
+                "So",
+                "123 Rue du Gambit Roi",
+                "New-York",
+                "98765",
+                "333-333-3333",
+                "wesley@email.com"
+        );
+
+        // When
+        underTestWithData.savePerson(personToSave);
+
+        // Then
+        List<Person> allPerson = underTestWithData.getPersons();
+        assertThat(allPerson).hasSize(4);
+        assertThat(allPerson.get(allPerson.size() - 1)).isEqualTo(personToSave);
+
     }
 }

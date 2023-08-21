@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
@@ -39,7 +41,16 @@ public class PersonRepository {
         return people;
     }
 
-    public void savePerson(Person capture) {
+    public void savePerson(Person newPerson) {
+        List<Person> persons = getPersons();
+        persons.add(newPerson);
+        try {
+            new PrintWriter(filePath).close();
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(filePath).toFile(), persons);
+        } catch (IOException e) {
+            //TODO : moche, a refactoriser en intégrant la gestion des exceptions
+            return;
+        }
     }
 
     public Optional<Person> selectCustomerByName(String firstName, String lastName) {
