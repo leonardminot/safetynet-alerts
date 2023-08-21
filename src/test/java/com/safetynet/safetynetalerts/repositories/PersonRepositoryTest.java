@@ -1,10 +1,14 @@
 package com.safetynet.safetynetalerts.repositories;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.safetynet.safetynetalerts.mockressources.utils.CreateMockedData;
 import com.safetynet.safetynetalerts.models.Person;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +23,9 @@ class PersonRepositoryTest {
 
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
+        CreateMockedData.createPersonMockedData();
+
         underTestWithData = new PersonRepository(
                 "src/test/java/com/safetynet/safetynetalerts/mockressources/mockpersons.json",
                 new ObjectMapper());
@@ -27,6 +33,11 @@ class PersonRepositoryTest {
         underTestWithoutData = new PersonRepository(
                 "src/test/java/com/safetynet/safetynetalerts/mockressources/mockpersons_empty.json",
                 new ObjectMapper());
+    }
+
+    @AfterEach
+    void tearDown() throws FileNotFoundException {
+        CreateMockedData.clearJsonFile("src/test/java/com/safetynet/safetynetalerts/mockressources/mockpersons.json");
     }
 
     @Test
