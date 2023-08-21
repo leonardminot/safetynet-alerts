@@ -5,6 +5,8 @@ import com.safetynet.safetynetalerts.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class PersonService {
 
@@ -16,6 +18,11 @@ public class PersonService {
     }
 
     public void createPerson(Person person) {
+        Optional<Person> personInDB = personRepository.selectCustomerByName(person.firstName(), person.lastName());
+        if (personInDB.isPresent())
+            throw new IllegalStateException(
+                    String.format("person %s %s already exists", person.firstName(), person.lastName()));
+
         personRepository.savePerson(person);
     }
 }
