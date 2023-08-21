@@ -18,8 +18,6 @@ class PersonRepositoryTest {
 
     private PersonRepository underTest;
 
-    private Environment environment;
-
     @BeforeEach
     void setUp() {
         underTest = new PersonRepository();
