@@ -1,6 +1,7 @@
 package com.safetynet.safetynetalerts.repositories;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.safetynet.safetynetalerts.configuration.MyAppConfig;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.models.Person;
 import org.junit.jupiter.api.AfterEach;
@@ -28,7 +29,7 @@ class PersonRepositoryTest {
 
         personRepository = new PersonRepository(
                 filePathMockPersons,
-                new ObjectMapper());
+                MyAppConfig.objectMapper());
     }
 
     @AfterEach

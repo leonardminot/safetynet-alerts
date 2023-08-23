@@ -3,6 +3,7 @@ package com.safetynet.safetynetalerts.repositories;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalerts.models.Firestation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
@@ -13,7 +14,12 @@ import java.util.List;
 @Repository
 public class FirestationRepository {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
+
+    @Autowired
+    public FirestationRepository(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     public List<Firestation> getFirestations(String pathToFile) {
         List<Firestation> firestations;

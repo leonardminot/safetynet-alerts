@@ -1,10 +1,10 @@
 package com.safetynet.safetynetalerts.repositories;
 
+import com.safetynet.safetynetalerts.configuration.MyAppConfig;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.models.Firestation;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
@@ -21,7 +21,7 @@ class FirestationRepositoryTest {
     @BeforeEach
     void setUp() throws IOException {
         ManageMockedData.createFirestationsMockedData(filePathMockFirestations);
-        firestationRepository = new FirestationRepository();
+        firestationRepository = new FirestationRepository(MyAppConfig.objectMapper());
     }
 
     @AfterEach
