@@ -1,6 +1,7 @@
 package com.safetynet.safetynetalerts.mockressources.utils;
 
 import com.safetynet.safetynetalerts.models.Firestation;
+import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.models.Person;
 
 import java.io.FileNotFoundException;
@@ -8,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -70,6 +72,32 @@ public class ManageMockedData {
 
         mockedList.add(rueDeLaDame);
         mockedList.add(rueDeLaTour);
+
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(filePath).toFile(), mockedList);
+    }
+
+    public static void createMedicalRecordsMockedData(String filePath) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<MedicalRecord> mockedList = new ArrayList<>();
+
+        MedicalRecord magnusRecord = new MedicalRecord(
+                "Magnus",
+                "Carlsen",
+                new Date("11/30/1990"),
+                List.of("aznol:350mg", "hydrapermazol:100mg"),
+                List.of("nillacilan")
+        );
+
+        MedicalRecord maximeRecord = new MedicalRecord(
+                "Maxime",
+                "Vachier-Lagrave",
+                new Date("10/21/1990"),
+                List.of(),
+                List.of()
+        );
+
+        mockedList.add(magnusRecord);
+        mockedList.add(maximeRecord);
 
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(filePath).toFile(), mockedList);
     }
