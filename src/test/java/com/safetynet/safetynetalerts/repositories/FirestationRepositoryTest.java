@@ -1,42 +1,55 @@
 package com.safetynet.safetynetalerts.repositories;
 
+import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.models.Firestation;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class FirestationRepositoryTest {
 
-    private FirestationRepository underTest;
+    private FirestationRepository firestationRepository;
+
+    private final String filePathMockFirestations = "src/test/java/com/safetynet/safetynetalerts/mockressources/mockfirestations.json";
     @BeforeEach
-    void setUp() {
-        underTest = new FirestationRepository();
+    void setUp() throws IOException {
+        ManageMockedData.createFirestationsMockedData(filePathMockFirestations);
+        firestationRepository = new FirestationRepository();
+    }
+
+    @AfterEach
+    void tearDown() throws FileNotFoundException {
+        ManageMockedData.clearJsonFile(filePathMockFirestations);
     }
 
     @Test
-    void itShouldReturnThreePersons() {
+    void itShouldReturnThreeFirestations() {
         // Given
         List<Firestation> firestationList;
-        String pathToFile = "src/test/java/com/safetynet/safetynetalerts/mockressources/mockfirestations.json";
 
         // When
-        firestationList = underTest.getFirestations(pathToFile);
+        firestationList = firestationRepository.getFirestations(filePathMockFirestations);
 
         // Then
         assertThat(firestationList).hasSize(2);
     }
 
     @Test
-    void itShouldReturnEmptyListWhenNoData() {
+    void itShouldReturnEmptyListWhenNoData() throws FileNotFoundException {
         // Given
         List<Firestation> firestationList;
-        String pathToFile = "src/test/java/com/safetynet/safetynetalerts/mockressources/mockfirestations_empty.json";
+        // ... an empty json file
+        ManageMockedData.clearJsonFile(filePathMockFirestations);
 
         // When
-        firestationList = underTest.getFirestations(pathToFile);
+        firestationList = firestationRepository.getFirestations(filePathMockFirestations);
 
         // Then
         assertThat(firestationList).hasSize(0);

@@ -1,5 +1,6 @@
 package com.safetynet.safetynetalerts.mockressources.utils;
 
+import com.safetynet.safetynetalerts.models.Firestation;
 import com.safetynet.safetynetalerts.models.Person;
 
 import java.io.FileNotFoundException;
@@ -49,6 +50,26 @@ public class ManageMockedData {
         mockedList.add(magnus);
         mockedList.add(maxime);
         mockedList.add(alireza);
+
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(filePath).toFile(), mockedList);
+    }
+
+    public static void createFirestationsMockedData(String filePath) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Firestation> mockedList = new ArrayList<>();
+
+        Firestation rueDeLaDame = new Firestation(
+                "007 Rue de la Dame",
+                1L
+        );
+
+        Firestation rueDeLaTour = new Firestation(
+                "1990 Rue de la Tour",
+                2L
+        );
+
+        mockedList.add(rueDeLaDame);
+        mockedList.add(rueDeLaTour);
 
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(filePath).toFile(), mockedList);
     }

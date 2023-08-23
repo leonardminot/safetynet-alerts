@@ -31,14 +31,18 @@ public class PersonRepository {
     }
 
     public List<Person> getPersons() {
-        List<Person> people;
+        List<Person> persons;
         try {
-            people = objectMapper.readValue(Paths.get(filePath).toFile(), new TypeReference<>() {});
+            persons = objectMapper.readValue(Paths.get(filePath).toFile(), new TypeReference<>() {});
 
         } catch (IOException e) {
-            people =  Collections.emptyList();
+            //TODO : moche à travailler
+            // deux cas à considérer :
+            // - La liste est vide
+            // - Le fichier n'est pas trouvé
+            persons =  Collections.emptyList();
         }
-        return people;
+        return persons;
     }
 
     public void savePerson(Person newPerson) {
