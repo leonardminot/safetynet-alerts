@@ -1,7 +1,7 @@
 package com.safetynet.safetynetalerts.repositories;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.safetynetalerts.mockressources.utils.CreateMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.models.Person;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,28 +17,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class PersonRepositoryTest {
 
-    private PersonRepository underTestWithData;
+    private PersonRepository personRepository;
 
-    private PersonRepository underTestWithoutData;
+    private final String filePathMockPersons = "src/test/java/com/safetynet/safetynetalerts/mockressources/mockpersons.json";
 
 
     @BeforeEach
     void setUp() throws IOException {
-        CreateMockedData.createPersonMockedData();
+        ManageMockedData.createPersonMockedData(filePathMockPersons);
 
-        underTestWithData = new PersonRepository(
-                "src/test/java/com/safetynet/safetynetalerts/mockressources/mockpersons.json",
-                new ObjectMapper());
-
-        underTestWithoutData = new PersonRepository(
-                "src/test/java/com/safetynet/safetynetalerts/mockressources/mockpersons_empty.json",
+        personRepository = new PersonRepository(
+                filePathMockPersons,
                 new ObjectMapper());
     }
 
     @AfterEach
     void tearDown() throws FileNotFoundException {
-        CreateMockedData.clearJsonFile(
-                "src/test/java/com/safetynet/safetynetalerts/mockressources/mockpersons.json");
+        ManageMockedData.clearJsonFile(filePathMockPersons);
     }
 
     @Test
@@ -47,19 +42,21 @@ class PersonRepositoryTest {
         List<Person> personList;
 
         // When
-        personList = underTestWithData.getPersons();
+        personList = personRepository.getPersons();
 
         // Then
         assertThat(personList).hasSize(3);
     }
 
     @Test
-    void itShouldReturnEmptyListWhenNoData() {
+    void itShouldReturnEmptyListWhenNoData() throws FileNotFoundException {
         // Given
         List<Person> personList;
+        // ... empty mockpersons.json
+        ManageMockedData.clearJsonFile(filePathMockPersons);
 
         // When
-        personList = underTestWithoutData.getPersons();
+        personList = personRepository.getPersons();
 
         // Then
         assertThat(personList).hasSize(0);
@@ -83,8 +80,8 @@ class PersonRepositoryTest {
         );
 
         // When
-        optionalPersonThatExists = underTestWithData.selectCustomerByName("Magnus", "Carlsen");
-        optionalPersonThatDidntExist = underTestWithData.selectCustomerByName("Wesley", "So");
+        optionalPersonThatExists = personRepository.selectCustomerByName("Magnus", "Carlsen");
+        optionalPersonThatDidntExist = personRepository.selectCustomerByName("Wesley", "So");
 
         // Then
         assertThat(optionalPersonThatExists).isPresent();
@@ -107,10 +104,10 @@ class PersonRepositoryTest {
         );
 
         // When
-        underTestWithData.savePerson(personToSave);
+        personRepository.savePerson(personToSave);
 
         // Then
-        List<Person> allPerson = underTestWithData.getPersons();
+        List<Person> allPerson = personRepository.getPersons();
         assertThat(allPerson).hasSize(4);
         assertThat(allPerson.get(allPerson.size() - 1)).isEqualTo(personToSave);
 

@@ -10,12 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class CreateMockedData {
-    public static void createPersonMockedData() throws IOException {
+public class ManageMockedData {
+    public static void createPersonMockedData(String filePath) throws IOException {
 
         ObjectMapper objectMapper = new ObjectMapper();
         List<Person> mockedList = new ArrayList<>();
-        String filePath = "src/test/java/com/safetynet/safetynetalerts/mockressources/mockpersons.json";
 
         Person magnus = new Person(
                 "Magnus",
