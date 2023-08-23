@@ -49,12 +49,20 @@ public class PersonRepository {
         List<Person> persons = getPersons();
         persons.add(newPerson);
         try {
-            new PrintWriter(filePath).close();
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(filePath).toFile(), persons);
+            clearJsonFile();
+            fillJsonFile(persons);
         } catch (IOException e) {
             //TODO : moche, a refactoriser en intégrant la gestion des exceptions
             return;
         }
+    }
+
+    private void clearJsonFile() throws FileNotFoundException {
+        new PrintWriter(filePath).close();
+    }
+
+    private void fillJsonFile(List<Person> persons) throws IOException {
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(filePath).toFile(), persons);
     }
 
     public Optional<Person> selectCustomerByName(String firstName, String lastName) {
