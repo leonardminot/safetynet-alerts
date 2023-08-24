@@ -5,6 +5,7 @@ import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
@@ -13,6 +14,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("UnitTest")
 class MedicalRecordRepositoryTest {
 
     private MedicalRecordRepository medicalRecordRepository;

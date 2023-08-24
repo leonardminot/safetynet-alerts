@@ -4,6 +4,7 @@ import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -22,6 +23,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
 
+@Tag("UnitTest")
 @ExtendWith(MockitoExtension.class)
 class PersonServiceTest {
 
