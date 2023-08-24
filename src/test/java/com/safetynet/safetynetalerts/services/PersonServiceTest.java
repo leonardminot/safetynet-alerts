@@ -10,14 +10,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -80,7 +78,7 @@ class PersonServiceTest {
                 "harry.potter@poudlard.fr"
         );
 
-        given(personRepository.selectCustomerByName(person.firstName(), person.lastName())).willReturn(Optional.of(person));
+        given(personRepository.selectPersonByName(person.firstName(), person.lastName())).willReturn(Optional.of(person));
 
         // When
         // Then

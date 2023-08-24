@@ -5,7 +5,6 @@ import com.safetynet.safetynetalerts.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,7 +18,7 @@ public class PersonService {
     }
 
     public void createPerson(Person person) {
-        Optional<Person> personInDB = personRepository.selectCustomerByName(person.firstName(), person.lastName());
+        Optional<Person> personInDB = personRepository.selectPersonByName(person.firstName(), person.lastName());
 
         personInDB.ifPresentOrElse(p -> {
                     throw new IllegalStateException(

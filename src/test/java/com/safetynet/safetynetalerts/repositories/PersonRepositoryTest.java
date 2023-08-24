@@ -1,6 +1,5 @@
 package com.safetynet.safetynetalerts.repositories;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalerts.configuration.MyAppConfig;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.models.Person;
@@ -82,8 +81,8 @@ class PersonRepositoryTest {
         );
 
         // When
-        optionalPersonThatExists = personRepository.selectCustomerByName("Magnus", "Carlsen");
-        optionalPersonThatDidntExist = personRepository.selectCustomerByName("Wesley", "So");
+        optionalPersonThatExists = personRepository.selectPersonByName("Magnus", "Carlsen");
+        optionalPersonThatDidntExist = personRepository.selectPersonByName("Wesley", "So");
 
         // Then
         assertThat(optionalPersonThatExists).isPresent();

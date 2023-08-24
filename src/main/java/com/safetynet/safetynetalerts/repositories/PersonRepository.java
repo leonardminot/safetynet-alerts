@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @Repository
 public class PersonRepository {
@@ -65,7 +64,7 @@ public class PersonRepository {
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(filePath).toFile(), persons);
     }
 
-    public Optional<Person> selectCustomerByName(String firstName, String lastName) {
+    public Optional<Person> selectPersonByName(String firstName, String lastName) {
         List<Person> persons = getPersons();
         return persons.stream()
                 .filter(p -> Objects.equals(p.firstName(), firstName) && Objects.equals(p.lastName(), lastName))
