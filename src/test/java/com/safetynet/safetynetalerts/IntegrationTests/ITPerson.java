@@ -22,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.jayway.jsonpath.internal.path.PathCompiler.fail;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -109,6 +110,71 @@ public class ITPerson {
         assertThat(contentAsString).contains("person Magnus Carlsen already exists");
         List<Person> persons = personRepository.getPersons();
         assertThat(persons).hasSize(3);
+
+    }
+
+    @Test
+    void itShouldUpdateAPerson() throws Exception {
+        // Given
+        Person maximeToUpdate = new Person(
+                "Maxime",
+                "Vachier-Lagrave",
+                null,
+                null,
+                "75014",
+                "111-222-3333",
+                null
+        );
+
+        Person finalMaxime = new Person(
+                "Maxime",
+                "Vachier-Lagrave",
+                "1990 Rue de la Tour",
+                "Paris",
+                "75014",
+                "111-222-3333",
+                "maxime@email.com"
+        );
+
+        // When
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/person")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(personToJson(maximeToUpdate))));
+
+
+        // Then
+        List<Person> persons = personRepository.getPersons();
+        Optional<Person> maximeInDB = persons.stream().filter(p -> p.firstName().equals(maximeToUpdate.firstName()) && p.lastName().equals(maximeToUpdate.lastName())).findFirst();
+        resultActions.andExpect(status().isOk());
+        assertThat(persons).hasSize(3);
+        assertThat(maximeInDB)
+                .isPresent()
+                .hasValueSatisfying(p -> assertThat(p).isEqualTo(finalMaxime));
+    }
+
+    @Test
+    void itShouldNotUpdateWhenPersonDoesntExist() throws Exception {
+        // Given
+        Person unknownPerson = new Person(
+                "Wesley",
+                "So",
+                null,
+                null,
+                "75014",
+                "111-222-3333",
+                null
+        );
+
+        // When
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/person")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(personToJson(unknownPerson))));
+
+        // Then
+        String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
+
+        resultActions.andExpect(status().is4xxClientError());
+        assertThat(contentAsString).contains("person Wesley So doesn't exist");
 
     }
 

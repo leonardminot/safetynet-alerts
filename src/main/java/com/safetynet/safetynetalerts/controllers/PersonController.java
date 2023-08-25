@@ -4,10 +4,9 @@ import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.services.PersonService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("person")
@@ -23,5 +22,15 @@ public class PersonController {
     @PostMapping
     void createNewPerson(@RequestBody @Valid Person person) {
         personService.createPerson(person);
+    }
+
+    @PutMapping
+    void updatePerson(@RequestBody @Valid Person person) {
+        personService.updatePerson(person);
+    }
+
+    @GetMapping
+    List<Person> getPersons() {
+        return personService.persons();
     }
 }

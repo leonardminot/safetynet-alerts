@@ -6,6 +6,7 @@ import com.safetynet.safetynetalerts.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,8 +32,12 @@ public class PersonService {
     public void updatePerson(Person person) {
         Optional<Person> personInDB = personRepository.selectPersonByName(person.firstName(), person.lastName());
 
-        personInDB.ifPresentOrElse(personRepository::update,
+        personInDB.ifPresentOrElse(p -> personRepository.update(person),
                 () -> {throw new ApiResourceException(
                         String.format("person %s %s doesn't exist", person.firstName(), person.lastName()));});
+    }
+
+    public List<Person> persons() {
+        return personRepository.getPersons();
     }
 }

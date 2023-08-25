@@ -11,10 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class PersonRepository {
@@ -39,7 +36,7 @@ public class PersonRepository {
             // deux cas à considérer :
             // - La liste est vide
             // - Le fichier n'est pas trouvé
-            persons =  Collections.emptyList();
+            persons =  new ArrayList<>();
         }
         return persons;
     }
@@ -89,7 +86,6 @@ public class PersonRepository {
                                 Objects.isNull(person.email()) ? currentPerson.email() : person.email())
                         : currentPerson)
                 .toList();
-
         saveListToJson(updatedList);
     }
 }

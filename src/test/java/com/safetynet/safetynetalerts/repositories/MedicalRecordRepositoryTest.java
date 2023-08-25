@@ -29,7 +29,7 @@ class MedicalRecordRepositoryTest {
 
     @AfterEach
     void tearDown() throws FileNotFoundException {
-        //ManageMockedData.clearJsonFile(pathToFile);
+        ManageMockedData.clearJsonFile(pathToFile);
     }
 
     @Test
@@ -42,7 +42,6 @@ class MedicalRecordRepositoryTest {
 
         // Then
         assertThat(medicalRecordList).hasSize(2);
-        System.out.println(medicalRecordList);
     }
 
 }
