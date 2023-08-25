@@ -113,4 +113,31 @@ class PersonRepositoryTest {
         assertThat(allPerson.get(allPerson.size() - 1)).isEqualTo(personToSave);
 
     }
+
+    @Test
+    void itShouldUpdateAPerson() {
+        // Given
+        Person maximeToUpdate = new Person(
+                "Maxime",
+                "Vachier-Lagrave",
+                "1990 Rue de la Tour",
+                "Paris",
+                "75001",
+                "111-222-3333",
+                "maxime.vachierlagrave@email.com"
+        );
+
+        // When
+        personRepository.update(maximeToUpdate);
+
+        // Then
+        List<Person> allPerson = personRepository.getPersons();
+        Optional<Person> maximeInDB = allPerson.stream()
+                .filter(p -> p.firstName().equals(maximeToUpdate.firstName()) && p.lastName().equals(maximeToUpdate.lastName()))
+                .findFirst();
+
+        assertThat(allPerson).hasSize(3);
+        assertThat(maximeInDB).isPresent().hasValueSatisfying(person -> assertThat(person).isEqualTo(maximeToUpdate));
+
+    }
 }

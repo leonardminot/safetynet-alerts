@@ -89,4 +89,26 @@ class PersonServiceTest {
                         String.format("person %s %s already exists", person.firstName(), person.lastName()));
         then(personRepository).should(never()).savePerson(any(Person.class));
     }
+
+    @Test
+    void itShouldUpdateAPerson() {
+        // Given
+        // ... A person in the DB with new values for email and phone number
+        Person maximeToUpdate = new Person(
+                "Maxime",
+                "Vachier-Lagrave",
+                "1990 Rue de la Tour",
+                "Paris",
+                "75001",
+                "111-222-3333",
+                "maxime.vachierlagrave@email.com"
+        );
+
+        // When
+        personService.updatePerson(maximeToUpdate);
+
+        // Then
+        then(personRepository).should().update(personArgumentCaptor.capture());
+        assertThat(personArgumentCaptor.getValue()).isEqualTo(maximeToUpdate);
+    }
 }

@@ -70,4 +70,28 @@ public class PersonRepository {
                 .filter(p -> Objects.equals(p.firstName(), firstName) && Objects.equals(p.lastName(), lastName))
                 .findAny();
     }
+
+    public void update(Person person) {
+        List<Person> persons = getPersons();
+        List<Person> updatedList = persons.stream()
+                .map(currentPerson -> currentPerson.firstName().equals(person.firstName()) && currentPerson.lastName().equals(person.lastName()) ?
+                        new Person(
+                               currentPerson.firstName(),
+                               currentPerson.lastName(),
+                               person.address(),
+                               person.city(),
+                               person.zip(),
+                               person.phone(),
+                               person.email())
+                        :currentPerson )
+                .toList();
+
+        try {
+            clearJsonFile();
+            fillJsonFile(updatedList);
+        } catch (IOException e) {
+            //TODO : moche, a refactoriser en intégrant la gestion des exceptions
+            return;
+        }
+    }
 }
