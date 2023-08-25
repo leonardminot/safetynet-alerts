@@ -125,7 +125,6 @@ class PersonServiceTest {
         // Then
         then(personRepository).should().update(personArgumentCaptor.capture());
         assertThat(personArgumentCaptor.getValue()).isEqualTo(maximeToUpdate);
-        System.out.println(personArgumentCaptor.getValue());
     }
 
     @Test

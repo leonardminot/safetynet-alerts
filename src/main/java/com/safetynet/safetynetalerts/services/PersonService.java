@@ -31,7 +31,6 @@ public class PersonService {
 
     public void updatePerson(Person person) {
         Optional<Person> personInDB = personRepository.selectPersonByName(person.firstName(), person.lastName());
-        System.out.println(personInDB);
 
         personInDB.ifPresentOrElse(p -> personRepository.update(person),
                 () -> {throw new ApiResourceException(

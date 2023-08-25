@@ -29,6 +29,11 @@ public class PersonController {
         personService.updatePerson(person);
     }
 
+    @DeleteMapping
+    void deletePerson(@RequestBody @Valid Person person) {
+        personService.delete(person);
+    }
+
     @GetMapping
     List<Person> getPersons() {
         return personService.persons();

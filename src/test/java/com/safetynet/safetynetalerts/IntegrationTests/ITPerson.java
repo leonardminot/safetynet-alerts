@@ -178,6 +178,59 @@ public class ITPerson {
 
     }
 
+    @Test
+    void itShouldDeleteAPerson() throws Exception {
+        // Given
+        Person personToDelete = new Person(
+                "Maxime",
+                "Vachier-Lagrave",
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        // When
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/person")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(personToJson(personToDelete))));
+
+        // Then
+        List<Person> persons = personRepository.getPersons();
+        Optional<Person> maximeInDB = persons.stream().filter(p -> p.firstName().equals(personToDelete.firstName()) && p.lastName().equals(personToDelete.lastName())).findFirst();
+        resultActions.andExpect(status().isOk());
+        assertThat(persons).hasSize(2);
+        assertThat(maximeInDB)
+                .isNotPresent();
+    }
+
+    @Test
+    void itShouldNotDeleteAPersonWhenPersonDoesntExist() throws Exception {
+        // Given
+        Person unknownPerson = new Person(
+                "Wesley",
+                "So",
+                null,
+                null,
+                "75014",
+                "111-222-3333",
+                null
+        );
+
+        // When
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/person")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(personToJson(unknownPerson))));
+
+        // Then
+        String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
+
+        resultActions.andExpect(status().is4xxClientError());
+        assertThat(contentAsString).contains("person Wesley So doesn't exist");
+
+    }
+
     private String personToJson(Person person) {
         try {
             return new ObjectMapper().writeValueAsString(person);
