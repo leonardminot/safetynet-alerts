@@ -58,7 +58,7 @@ public class PersonService {
         Optional<Person> personInDB = personRepository.selectPersonByName(personToDelete.firstName(), personToDelete.lastName());
 
         personInDB.ifPresentOrElse(p -> {
-                    log.info(String.format("On PUT /person : Success for the creation of [%s %s] :" + personToDelete, personToDelete.firstName(), personToDelete.lastName()));
+                    log.info(String.format("On PUT /person : Success for the suppression of [%s %s] :" + personToDelete, personToDelete.firstName(), personToDelete.lastName()));
                     personRepository.delete(personToDelete);
                 },
                 () -> {

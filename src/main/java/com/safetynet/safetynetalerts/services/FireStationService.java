@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -34,5 +35,17 @@ public class FireStationService {
                 }
         );
 
+    }
+
+    public void updateMapping(Firestation firestation) {
+        boolean isAddressExists = firestationRepository.isAddressExist(firestation);
+        if (isAddressExists) {
+            log.info(String.format("On PUT /firestation : Success for the update of the mapping %s", firestation.toString()));
+            firestationRepository.updateMapping(firestation);
+        } else {
+            log.error(String.format("On PUT /firestation : No mapping available for address [%s]", firestation.address()));
+            throw new ApiResourceException(
+                    String.format("No mapping available for address [%s]", firestation.address()));
+        }
     }
 }

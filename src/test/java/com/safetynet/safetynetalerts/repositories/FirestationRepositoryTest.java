@@ -111,4 +111,53 @@ class FirestationRepositoryTest {
 
         assertThat(optionalFireStationThatDoesntExist).isNotPresent();
     }
+
+    @Test
+    void itShouldUpdateMapping() {
+        // Given
+        Firestation newMapping = new Firestation(
+                "007 Rue de la Dame",
+                "7"
+        );
+
+        // When
+        firestationRepository.updateMapping(newMapping);
+
+        // Then
+        List<Firestation> firestations = firestationRepository.getFirestations();
+        assertThat(firestations).hasSize(2);
+
+        Optional<Firestation> optionalFirestation = firestations.stream()
+                .filter(fs -> fs.address().equals(newMapping.address()))
+                .findAny();
+
+        assertThat(optionalFirestation)
+                .isPresent()
+                .hasValueSatisfying(fs -> assertThat(fs).isEqualTo(newMapping));
+
+    }
+
+    @Test
+    void itShouldIfAddressExist() {
+        // Given
+        // ... unknown address
+        Firestation unknownAddress = new Firestation(
+                "64 rue des case",
+                "7"
+        );
+
+        // ... known address
+        Firestation knownAddress = new Firestation(
+                "007 Rue de la Dame",
+                "1"
+        );
+
+        // When
+        Boolean mustBeTrue = firestationRepository.isAddressExist(knownAddress);
+        Boolean mustBeFalse = firestationRepository.isAddressExist(unknownAddress);
+
+        // Then
+        assertThat(mustBeTrue).isTrue();
+        assertThat(mustBeFalse).isFalse();
+    }
 }

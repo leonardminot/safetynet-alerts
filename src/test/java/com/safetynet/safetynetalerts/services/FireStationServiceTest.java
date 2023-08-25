@@ -72,8 +72,51 @@ class FireStationServiceTest {
                         String.format("mapping address : [%s] with station : [%s] already exist",
                                 rueDeLaDame.address(),
                                 rueDeLaDame.station()));
-        verify(firestationRepository, times(1)).isMappingExist(any(Firestation.class));
         then(firestationRepository).should(never()).createMapping(any(Firestation.class));
+
+    }
+
+    @Test
+    void itShouldUpdateTheStationNumber() {
+        // Given
+        // ... existant mapping
+        Firestation currentMapping = new Firestation(
+                "007 Rue de la Dame",
+                "1"
+        );
+
+        // ... to update to a new mapping
+        Firestation futureMapping = new Firestation(
+                "007 Rue de la Dame",
+                "7"
+        );
+
+        when(firestationRepository.isAddressExist(any(Firestation.class))).thenReturn(true);
+
+        // When
+        fireStationService.updateMapping(futureMapping);
+
+        // Then
+        then(firestationRepository).should().updateMapping(firestationArgumentCaptor.capture());
+        assertThat(firestationArgumentCaptor.getValue()).isEqualTo(futureMapping);
+
+    }
+
+    @Test
+    void itShouldThrowWhenAddressIsNotKnown() {
+        // Given
+        Firestation unknownAddress = new Firestation(
+                "64 rue des case",
+                "7"
+        );
+
+        when(firestationRepository.isAddressExist(any(Firestation.class))).thenReturn(false);
+        // When
+        // Then
+        assertThatThrownBy(() -> fireStationService.updateMapping(unknownAddress))
+                .isInstanceOf(ApiResourceException.class)
+                .hasMessageContaining(String.format("No mapping available for address [%s]", unknownAddress.address()));
+        then(firestationRepository).should(never()).updateMapping(any(Firestation.class));
 
     }
 }

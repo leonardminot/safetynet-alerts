@@ -69,4 +69,21 @@ public class FirestationRepository {
     private void fillJsonFile(List<Firestation> firestations) throws IOException {
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(filePath).toFile(), firestations);
     }
+
+    public void updateMapping(Firestation firestation) {
+        List<Firestation> updatedList = getFirestations().stream()
+                .map(fs -> fs.address().equals(firestation.address()) ?
+                        new Firestation(
+                                firestation.address(),
+                                firestation.station()
+                        )
+                        : fs)
+                .toList();
+        saveListToJson(updatedList);
+    }
+
+    public Boolean isAddressExist(Firestation firestation) {
+        return getFirestations().stream()
+                .anyMatch(fs -> fs.address().equals(firestation.address()));
+    }
 }

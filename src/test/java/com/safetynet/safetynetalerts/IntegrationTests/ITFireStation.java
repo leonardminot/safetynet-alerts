@@ -22,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.jayway.jsonpath.internal.path.PathCompiler.fail;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -98,6 +99,62 @@ public class ITFireStation {
                         rueDeLaDame.station()));
         List<Firestation> firestations = firestationRepository.getFirestations();
         assertThat(firestations).hasSize(2);
+    }
+
+    @Test
+    void itShouldUpdateAMapping() throws Exception {
+        // Given
+        // ... existant mapping
+        Firestation currentMapping = new Firestation(
+                "007 Rue de la Dame",
+                "1"
+        );
+
+        // ... to update to a new mapping
+        Firestation futureMapping = new Firestation(
+                "007 Rue de la Dame",
+                "7"
+        );
+
+        // When
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/firestation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(personToJson(futureMapping))));
+
+        // Then
+        List<Firestation> firestations = firestationRepository.getFirestations();
+        resultActions.andExpect(status().isOk());
+        assertThat(firestations).hasSize(2);
+        Optional<Firestation> optionalFirestation = firestations.stream()
+                .filter(fs -> fs.address().equals(currentMapping.address()))
+                .findAny();
+        assertThat(optionalFirestation)
+                .isPresent()
+                .hasValueSatisfying(fs -> assertThat(fs).isEqualTo(futureMapping));
+    }
+
+    @Test
+    void itShouldNotUpdateWhenUnknownAddress() throws Exception {
+        // Given
+        Firestation unknownAddress = new Firestation(
+                "64 rue des case",
+                "7"
+        );
+
+        // When
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/firestation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(personToJson(unknownAddress))));
+
+        // Then
+        String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
+
+        resultActions.andExpect(status().is4xxClientError());
+        assertThat(contentAsString).contains(
+                String.format("No mapping available for address [%s]", unknownAddress.address()));
+        List<Firestation> firestations = firestationRepository.getFirestations();
+        assertThat(firestations).hasSize(2);
+
     }
 
     private String personToJson(Firestation firestation) {
