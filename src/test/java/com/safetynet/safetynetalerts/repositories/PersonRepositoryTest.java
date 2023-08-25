@@ -140,4 +140,42 @@ class PersonRepositoryTest {
         assertThat(maximeInDB).isPresent().hasValueSatisfying(person -> assertThat(person).isEqualTo(maximeToUpdate));
 
     }
+
+    @Test
+    void itShouldUpdateAPersonWithSomeNullFields() {
+        // Given
+        Person maximeToUpdate = new Person(
+                "Maxime",
+                "Vachier-Lagrave",
+                null,
+                null,
+                "75014",
+                "111-222-3333",
+                null
+        );
+
+        //... The final person to get
+        Person finalMaxime = new Person(
+                "Maxime",
+                "Vachier-Lagrave",
+                "1990 Rue de la Tour",
+                "Paris",
+                "75014",
+                "111-222-3333",
+                "maxime@email.com"
+        );
+
+        // When
+        personRepository.update(maximeToUpdate);
+
+        // Then
+        List<Person> allPerson = personRepository.getPersons();
+        Optional<Person> maximeInDB = allPerson.stream()
+                .filter(p -> p.firstName().equals(maximeToUpdate.firstName()) && p.lastName().equals(maximeToUpdate.lastName()))
+                .findFirst();
+
+        assertThat(allPerson).hasSize(3);
+        assertThat(maximeInDB).isPresent().hasValueSatisfying(person -> assertThat(person).isEqualTo(finalMaxime));
+
+    }
 }

@@ -76,14 +76,14 @@ public class PersonRepository {
         List<Person> updatedList = persons.stream()
                 .map(currentPerson -> currentPerson.firstName().equals(person.firstName()) && currentPerson.lastName().equals(person.lastName()) ?
                         new Person(
-                               currentPerson.firstName(),
-                               currentPerson.lastName(),
-                               person.address(),
-                               person.city(),
-                               person.zip(),
-                               person.phone(),
-                               person.email())
-                        :currentPerson )
+                                currentPerson.firstName(),
+                                currentPerson.lastName(),
+                                Objects.isNull(person.address()) ? currentPerson.address() : person.address(),
+                                Objects.isNull(person.city()) ? currentPerson.city() : person.city(),
+                                Objects.isNull(person.zip()) ? currentPerson.zip() : person.zip(),
+                                Objects.isNull(person.phone()) ? currentPerson.phone() : person.phone(),
+                                Objects.isNull(person.email()) ? currentPerson.email() : person.email())
+                        : currentPerson)
                 .toList();
 
         try {
