@@ -29,14 +29,15 @@ public class PersonRepository {
     public List<Person> getPersons() {
         List<Person> persons;
         try {
-            persons = objectMapper.readValue(Paths.get(filePath).toFile(), new TypeReference<>() {});
+            persons = objectMapper.readValue(Paths.get(filePath).toFile(), new TypeReference<>() {
+            });
 
         } catch (IOException e) {
             //TODO : moche à travailler
             // deux cas à considérer :
             // - La liste est vide
             // - Le fichier n'est pas trouvé
-            persons =  new ArrayList<>();
+            persons = new ArrayList<>();
         }
         return persons;
     }
@@ -67,23 +68,21 @@ public class PersonRepository {
 
     public Optional<Person> selectPersonByName(String firstName, String lastName) {
         List<Person> persons = getPersons();
-        return persons.stream()
-                .filter(p -> Objects.equals(p.firstName(), firstName) && Objects.equals(p.lastName(), lastName))
-                .findAny();
+        return persons.stream().filter(p -> Objects.equals(p.firstName(), firstName) && Objects.equals(p.lastName(), lastName)).findAny();
     }
 
     public void update(Person person) {
         List<Person> persons = getPersons();
         List<Person> updatedPersons = persons.stream()
-                .map(currentPerson -> currentPerson.firstName().equals(person.firstName()) && currentPerson.lastName().equals(person.lastName()) ?
-                        new Person(
-                                currentPerson.firstName(),
-                                currentPerson.lastName(),
-                                Objects.isNull(person.address()) ? currentPerson.address() : person.address(),
-                                Objects.isNull(person.city()) ? currentPerson.city() : person.city(),
-                                Objects.isNull(person.zip()) ? currentPerson.zip() : person.zip(),
-                                Objects.isNull(person.phone()) ? currentPerson.phone() : person.phone(),
-                                Objects.isNull(person.email()) ? currentPerson.email() : person.email())
+                .map(currentPerson -> currentPerson.firstName().equals(person.firstName()) && currentPerson.lastName().equals(person.lastName())
+                        ? new Person(
+                        currentPerson.firstName(),
+                        currentPerson.lastName(),
+                        Objects.isNull(person.address()) ? currentPerson.address() : person.address(),
+                        Objects.isNull(person.city()) ? currentPerson.city() : person.city(),
+                        Objects.isNull(person.zip()) ? currentPerson.zip() : person.zip(),
+                        Objects.isNull(person.phone()) ? currentPerson.phone() : person.phone(),
+                        Objects.isNull(person.email()) ? currentPerson.email() : person.email())
                         : currentPerson)
                 .toList();
         saveListToJson(updatedPersons);
