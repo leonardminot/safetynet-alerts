@@ -64,12 +64,12 @@ public class ManageMockedData {
 
         Firestation rueDeLaDame = new Firestation(
                 "007 Rue de la Dame",
-                1L
+                "1"
         );
 
         Firestation rueDeLaTour = new Firestation(
                 "1990 Rue de la Tour",
-                2L
+                "2"
         );
 
         mockedList.add(rueDeLaDame);
