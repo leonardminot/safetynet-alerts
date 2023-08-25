@@ -178,4 +178,29 @@ class PersonRepositoryTest {
         assertThat(maximeInDB).isPresent().hasValueSatisfying(person -> assertThat(person).isEqualTo(finalMaxime));
 
     }
+
+    @Test
+    void itShouldDeleteAPerson() {
+        // Given
+        Person personToDelete = new Person(
+                "Maxime",
+                "Vachier-Lagrave",
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        // When
+        personRepository.delete(personToDelete);
+
+        // Then
+        List<Person> allPerson = personRepository.getPersons();
+        Optional<Person> maximeInDB = allPerson.stream()
+                .filter(p -> p.firstName().equals(personToDelete.firstName()) && p.lastName().equals(personToDelete.lastName()))
+                .findFirst();
+        assertThat(allPerson).hasSize(2);
+        assertThat(maximeInDB).isNotPresent();
+    }
 }

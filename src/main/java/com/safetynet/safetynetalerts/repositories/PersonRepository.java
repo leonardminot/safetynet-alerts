@@ -74,7 +74,7 @@ public class PersonRepository {
 
     public void update(Person person) {
         List<Person> persons = getPersons();
-        List<Person> updatedList = persons.stream()
+        List<Person> updatedPersons = persons.stream()
                 .map(currentPerson -> currentPerson.firstName().equals(person.firstName()) && currentPerson.lastName().equals(person.lastName()) ?
                         new Person(
                                 currentPerson.firstName(),
@@ -86,6 +86,14 @@ public class PersonRepository {
                                 Objects.isNull(person.email()) ? currentPerson.email() : person.email())
                         : currentPerson)
                 .toList();
-        saveListToJson(updatedList);
+        saveListToJson(updatedPersons);
+    }
+
+    public void delete(Person person) {
+        List<Person> persons = getPersons();
+        List<Person> updatedPersons = persons.stream()
+                .filter(p -> !p.firstName().equals(person.firstName()) && !p.lastName().equals(person.lastName()))
+                .toList();
+        saveListToJson(updatedPersons);
     }
 }

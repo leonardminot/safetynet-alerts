@@ -94,7 +94,19 @@ class PersonServiceTest {
     @Test
     void itShouldUpdateAPerson() {
         // Given
+        // ... an existing person
+        Person maximeExisting = new Person(
+                "Maxime",
+                "Vachier-Lagrave",
+                "1990 Rue de la Tour",
+                "Paris",
+                "75001",
+                "987-654-3210",
+                "maxime@email.com"
+        );
+
         // ... A person in the DB with new values for email and phone number
+
         Person maximeToUpdate = new Person(
                 "Maxime",
                 "Vachier-Lagrave",
@@ -105,7 +117,7 @@ class PersonServiceTest {
                 "maxime.vachierlagrave@email.com"
         );
         // ... and the Person is found
-        when(personRepository.selectPersonByName(any(String.class), any(String.class))).thenReturn(Optional.of(maximeToUpdate));
+        when(personRepository.selectPersonByName(any(String.class), any(String.class))).thenReturn(Optional.of(maximeExisting));
 
         // When
         personService.updatePerson(maximeToUpdate);
@@ -113,6 +125,7 @@ class PersonServiceTest {
         // Then
         then(personRepository).should().update(personArgumentCaptor.capture());
         assertThat(personArgumentCaptor.getValue()).isEqualTo(maximeToUpdate);
+        System.out.println(personArgumentCaptor.getValue());
     }
 
     @Test
@@ -128,11 +141,61 @@ class PersonServiceTest {
                 "harry.potter@poudlard.fr"
         );
 
+        // ... and person is not found
+        given(personRepository.selectPersonByName(any(String.class), any(String.class))).willReturn(Optional.empty());
+
         // When
         // Then
         assertThatThrownBy(() -> personService.updatePerson(personThatDoesntExist))
                 .isInstanceOf(ApiResourceException.class)
                 .hasMessageContaining(String.format("person %s %s doesn't exist", personThatDoesntExist.firstName(), personThatDoesntExist.lastName()));
         then(personRepository).should(never()).update(any(Person.class));
+    }
+
+    @Test
+    void itShouldDeleteAPerson() {
+        // Given
+        Person personToDelete = new Person(
+                "Maxime",
+                "Vachier-Lagrave",
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+        // ... and the Person is found
+        given(personRepository.selectPersonByName(any(String.class), any(String.class))).willReturn(Optional.of(personToDelete));
+
+        // When
+        personService.delete(personToDelete);
+
+        // Then
+        then(personRepository).should().delete(personArgumentCaptor.capture());
+        assertThat(personArgumentCaptor.getValue()).isEqualTo(personToDelete);
+    }
+
+    @Test
+    void itShouldThrowWhenDeleteAndPersonIsNotFound() {
+        // Given
+        Person personThatDoesntExist = new Person(
+                "Harry",
+                "Potter",
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        // ... and the person is not found
+        given(personRepository.selectPersonByName(any(String.class), any(String.class))).willReturn(Optional.empty());
+
+        // When
+        // Then
+        assertThatThrownBy(() -> personService.delete(personThatDoesntExist))
+                .isInstanceOf(ApiResourceException.class)
+                .hasMessageContaining(String.format("person %s %s doesn't exist", personThatDoesntExist.firstName(), personThatDoesntExist.lastName()));
+        then(personRepository).should(never()).delete(any(Person.class));
     }
 }

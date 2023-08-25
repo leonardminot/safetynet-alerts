@@ -31,6 +31,7 @@ public class PersonService {
 
     public void updatePerson(Person person) {
         Optional<Person> personInDB = personRepository.selectPersonByName(person.firstName(), person.lastName());
+        System.out.println(personInDB);
 
         personInDB.ifPresentOrElse(p -> personRepository.update(person),
                 () -> {throw new ApiResourceException(
@@ -39,5 +40,13 @@ public class PersonService {
 
     public List<Person> persons() {
         return personRepository.getPersons();
+    }
+
+    public void delete(Person personToDelete) {
+        Optional<Person> personInDB = personRepository.selectPersonByName(personToDelete.firstName(), personToDelete.lastName());
+
+        personInDB.ifPresentOrElse(p -> personRepository.delete(personToDelete),
+                () -> {throw new ApiResourceException(
+                        String.format("person %s %s doesn't exist", personToDelete.firstName(), personToDelete.lastName()));});
     }
 }
