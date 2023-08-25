@@ -10,8 +10,8 @@ import java.time.ZonedDateTime;
 @ControllerAdvice
 public class ApiExceptionHandler {
 
-    @ExceptionHandler(value = ApiCreateResourceException.class)
-    public ResponseEntity<Object> handleCreateResourcesException(ApiCreateResourceException e) {
+    @ExceptionHandler(value = ApiResourceException.class)
+    public ResponseEntity<Object> handleCreateResourcesException(ApiResourceException e) {
         ApiException apiException = new ApiException(
                 e.getMessage(),
                 e,

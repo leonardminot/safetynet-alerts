@@ -1,6 +1,6 @@
 package com.safetynet.safetynetalerts.services;
 
-import com.safetynet.safetynetalerts.exception.ApiCreateResourceException;
+import com.safetynet.safetynetalerts.exception.ApiResourceException;
 import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -21,6 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.when;
 
 @Tag("UnitTest")
 @ExtendWith(MockitoExtension.class)
@@ -67,7 +68,7 @@ class PersonServiceTest {
     }
 
     @Test
-    void itShouldThrowWhenPersonAlreadyExists() {
+    void itShouldThrowWhenPersonCreateAndAlreadyExists() {
         // Given
         Person person = new Person(
                 "Harry",
@@ -84,7 +85,7 @@ class PersonServiceTest {
         // When
         // Then
         assertThatThrownBy(() -> personService.createPerson(person))
-                .isInstanceOf(ApiCreateResourceException.class)
+                .isInstanceOf(ApiResourceException.class)
                 .hasMessageContaining(
                         String.format("person %s %s already exists", person.firstName(), person.lastName()));
         then(personRepository).should(never()).savePerson(any(Person.class));
@@ -103,6 +104,8 @@ class PersonServiceTest {
                 "111-222-3333",
                 "maxime.vachierlagrave@email.com"
         );
+        // ... and the Person is found
+        when(personRepository.selectPersonByName(any(String.class), any(String.class))).thenReturn(Optional.of(maximeToUpdate));
 
         // When
         personService.updatePerson(maximeToUpdate);
@@ -110,5 +113,26 @@ class PersonServiceTest {
         // Then
         then(personRepository).should().update(personArgumentCaptor.capture());
         assertThat(personArgumentCaptor.getValue()).isEqualTo(maximeToUpdate);
+    }
+
+    @Test
+    void itShouldThrownWhenUpdateAndPersonIsNotFound() {
+        // Given
+        Person personThatDoesntExist = new Person(
+                "Harry",
+                "Potter",
+                "Gryfondor Poudlard",
+                "Pré-au-lard",
+                "777777",
+                "123-456-7890",
+                "harry.potter@poudlard.fr"
+        );
+
+        // When
+        // Then
+        assertThatThrownBy(() -> personService.updatePerson(personThatDoesntExist))
+                .isInstanceOf(ApiResourceException.class)
+                .hasMessageContaining(String.format("person %s %s doesn't exist", personThatDoesntExist.firstName(), personThatDoesntExist.lastName()));
+        then(personRepository).should(never()).update(any(Person.class));
     }
 }
