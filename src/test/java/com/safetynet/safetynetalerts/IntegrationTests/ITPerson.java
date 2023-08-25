@@ -84,8 +84,6 @@ public class ITPerson {
 
     @Test
     void itShouldNotOKWhenCreateNewPersonThatAlreadyExist() throws Exception {
-        //TODO : mettre en place la gestion des exceptions personnalisés
-
         // Given a person already in DB
         Person magnus = new Person(
                 "Magnus",
