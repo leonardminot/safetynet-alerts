@@ -82,7 +82,7 @@ public class ITPerson {
     }
 
     @Test
-    void itShouldThrowWhenCreateNewPersonThatAlreadyExist() {
+    void itShouldNotOKWhenCreateNewPersonThatAlreadyExist() throws Exception {
         //TODO : mettre en place la gestion des exceptions personnalisés
 
         // Given a person already in DB
@@ -98,13 +98,15 @@ public class ITPerson {
 
 
         // When
-        assertThatExceptionOfType(jakarta.servlet.ServletException.class)
-                .isThrownBy(() -> mockMvc.perform(MockMvcRequestBuilders.post("/person")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(Objects.requireNonNull(personToJson(magnus)))))
-                .withMessage("Request processing failed: java.lang.IllegalStateException: person Magnus Carlsen already exists");
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/person")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(personToJson(magnus))));
 
         // Then
+        String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
+
+        resultActions.andExpect(status().is4xxClientError());
+        assertThat(contentAsString).contains("person Magnus Carlsen already exists");
         List<Person> persons = personRepository.getPersons();
         assertThat(persons).hasSize(3);
 

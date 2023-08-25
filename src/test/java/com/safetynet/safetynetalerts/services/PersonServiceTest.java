@@ -1,5 +1,6 @@
 package com.safetynet.safetynetalerts.services;
 
+import com.safetynet.safetynetalerts.exception.ApiCreateResourceException;
 import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -83,7 +84,7 @@ class PersonServiceTest {
         // When
         // Then
         assertThatThrownBy(() -> personService.createPerson(person))
-                .isInstanceOf(IllegalStateException.class)
+                .isInstanceOf(ApiCreateResourceException.class)
                 .hasMessageContaining(
                         String.format("person %s %s already exists", person.firstName(), person.lastName()));
         then(personRepository).should(never()).savePerson(any(Person.class));

@@ -1,5 +1,6 @@
 package com.safetynet.safetynetalerts.services;
 
+import com.safetynet.safetynetalerts.exception.ApiCreateResourceException;
 import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class PersonService {
         Optional<Person> personInDB = personRepository.selectPersonByName(person.firstName(), person.lastName());
 
         personInDB.ifPresentOrElse(p -> {
-                    throw new IllegalStateException(
+                    throw new ApiCreateResourceException(
                             String.format("person %s %s already exists", person.firstName(), person.lastName()));
                 },
                 () -> personRepository.savePerson(person));
