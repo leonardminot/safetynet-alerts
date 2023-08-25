@@ -1,9 +1,0 @@
-[ {
-  "firstName" : "Harry",
-  "lastName" : "Potter",
-  "address" : "Gryfondor Poudlard",
-  "city" : "Pré-au-lard",
-  "zip" : "777777",
-  "phone" : "123-456-7890",
-  "email" : "harry.potter@poudlard.fr"
-} ]

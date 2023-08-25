@@ -2,9 +2,14 @@ package com.safetynet.safetynetalerts.IntegrationTests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.models.Person;
+import com.safetynet.safetynetalerts.repositories.PersonRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -13,9 +18,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 import static com.jayway.jsonpath.internal.path.PathCompiler.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -26,8 +36,28 @@ public class ITPerson {
     @Autowired
     private MockMvc mockMvc;
 
+    private final String filePathMockPersons;
+
+    private final PersonRepository personRepository;
+
+    @Autowired
+    public ITPerson(@Value("${safetynetalerts.jsonpath.persons}") String filePathMockPersons, PersonRepository personRepository) {
+        this.filePathMockPersons = filePathMockPersons;
+        this.personRepository = personRepository;
+    }
+
+    @BeforeEach
+    void setUp() throws IOException {
+        ManageMockedData.createPersonMockedData(filePathMockPersons);
+    }
+
+    @AfterEach
+    void tearDown() throws FileNotFoundException {
+        ManageMockedData.clearJsonFile(filePathMockPersons);
+    }
+
     @Test
-    void itShouldCreateANewCustomer() throws Exception {
+    void itShouldCreateANewPerson() throws Exception {
         // Given
         Person newPerson = new Person(
                 "Harry",
@@ -45,7 +75,39 @@ public class ITPerson {
                 .content(Objects.requireNonNull(personToJson(newPerson))));
 
         // Then
+        List<Person> persons = personRepository.getPersons();
         resultActions.andExpect(status().isOk());
+        assertThat(persons).hasSize(4);
+        assertThat(persons.get(persons.size() - 1)).isEqualTo(newPerson);
+    }
+
+    @Test
+    void itShouldThrowWhenCreateNewPersonThatAlreadyExist() {
+        //TODO : mettre en place la gestion des exceptions personnalisés
+
+        // Given a person already in DB
+        Person magnus = new Person(
+                "Magnus",
+                "Carlsen",
+                "007 Rue de la Dame",
+                "Oslo",
+                "63429",
+                "123-456-7890",
+                "magnusd@email.com"
+        );
+
+
+        // When
+        assertThatExceptionOfType(jakarta.servlet.ServletException.class)
+                .isThrownBy(() -> mockMvc.perform(MockMvcRequestBuilders.post("/person")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(Objects.requireNonNull(personToJson(magnus)))))
+                .withMessage("Request processing failed: java.lang.IllegalStateException: person Magnus Carlsen already exists");
+
+        // Then
+        List<Person> persons = personRepository.getPersons();
+        assertThat(persons).hasSize(3);
+
     }
 
     private String personToJson(Person person) {
