@@ -47,6 +47,10 @@ public class PersonRepository {
     public void savePerson(Person newPerson) {
         List<Person> persons = getPersons();
         persons.add(newPerson);
+        saveListToJson(persons);
+    }
+
+    private void saveListToJson(List<Person> persons) {
         try {
             clearJsonFile();
             fillJsonFile(persons);
@@ -86,12 +90,6 @@ public class PersonRepository {
                         : currentPerson)
                 .toList();
 
-        try {
-            clearJsonFile();
-            fillJsonFile(updatedList);
-        } catch (IOException e) {
-            //TODO : moche, a refactoriser en intégrant la gestion des exceptions
-            return;
-        }
+        saveListToJson(updatedList);
     }
 }
