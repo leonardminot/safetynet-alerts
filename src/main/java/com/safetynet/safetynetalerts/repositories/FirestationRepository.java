@@ -3,7 +3,6 @@ package com.safetynet.safetynetalerts.repositories;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalerts.models.Firestation;
-import com.safetynet.safetynetalerts.models.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -58,7 +57,7 @@ public class FirestationRepository {
             fillJsonFile(firestations);
         } catch (IOException e) {
             //TODO : moche, a refactoriser en intégrant la gestion des exceptions
-            return;
+            // return;
         }
     }
 

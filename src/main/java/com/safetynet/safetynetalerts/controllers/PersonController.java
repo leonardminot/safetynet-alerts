@@ -3,7 +3,6 @@ package com.safetynet.safetynetalerts.controllers;
 import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.services.PersonService;
 import jakarta.validation.Valid;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

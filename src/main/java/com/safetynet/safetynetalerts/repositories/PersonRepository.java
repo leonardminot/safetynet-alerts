@@ -54,7 +54,7 @@ public class PersonRepository {
             fillJsonFile(persons);
         } catch (IOException e) {
             //TODO : moche, a refactoriser en intégrant la gestion des exceptions
-            return;
+            // return;
         }
     }
 
