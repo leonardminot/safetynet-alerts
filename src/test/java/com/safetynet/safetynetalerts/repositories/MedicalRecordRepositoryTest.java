@@ -3,6 +3,7 @@ package com.safetynet.safetynetalerts.repositories;
 import com.safetynet.safetynetalerts.configuration.MyAppConfig;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
+import com.safetynet.safetynetalerts.models.Person;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,4 +46,24 @@ class MedicalRecordRepositoryTest {
         assertThat(medicalRecordList).hasSize(2);
     }
 
+    @Test
+    void itShouldSaveAnewRecord() {
+        // Given
+        MedicalRecord alirezaRecord = new MedicalRecord(
+                "Alireza",
+                "Firouzja",
+                LocalDate.parse("2003-06-18"),
+                List.of("aznol:350mg", "hydrapermazol:100mg"),
+                List.of("nillacilan")
+        );
+
+        // When
+        medicalRecordRepository.saveRecord(alirezaRecord);
+
+        // Then
+        List<MedicalRecord> allMedicalRecords = medicalRecordRepository.getMedicalRecords();
+        assertThat(allMedicalRecords).hasSize(3);
+        assertThat(allMedicalRecords.get(allMedicalRecords.size() - 1)).isEqualTo(alirezaRecord);
+
+    }
 }
