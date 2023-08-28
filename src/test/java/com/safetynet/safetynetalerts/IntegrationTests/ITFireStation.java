@@ -67,7 +67,7 @@ public class ITFireStation {
         // When
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/firestation")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(personToJson(firestation))));
+                .content(Objects.requireNonNull(firestationToJson(firestation))));
 
         // Then
         List<Firestation> firestations = firestationRepository.getFirestations();
@@ -87,7 +87,7 @@ public class ITFireStation {
         // When
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/firestation")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(personToJson(rueDeLaDame))));
+                .content(Objects.requireNonNull(firestationToJson(rueDeLaDame))));
 
         // Then
         String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
@@ -119,7 +119,7 @@ public class ITFireStation {
         // When
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/firestation")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(personToJson(futureMapping))));
+                .content(Objects.requireNonNull(firestationToJson(futureMapping))));
 
         // Then
         List<Firestation> firestations = firestationRepository.getFirestations();
@@ -144,7 +144,7 @@ public class ITFireStation {
         // When
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/firestation")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(personToJson(unknownAddress))));
+                .content(Objects.requireNonNull(firestationToJson(unknownAddress))));
 
         // Then
         String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
@@ -168,7 +168,7 @@ public class ITFireStation {
         // When
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/firestation")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(personToJson(existingAddress)))
+                .content(Objects.requireNonNull(firestationToJson(existingAddress)))
         );
 
         // Then
@@ -193,7 +193,7 @@ public class ITFireStation {
         // When
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/firestation")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(personToJson(unknownAddress))));
+                .content(Objects.requireNonNull(firestationToJson(unknownAddress))));
 
         // Then
         String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
@@ -228,7 +228,7 @@ public class ITFireStation {
 
     }
 
-    private String personToJson(Firestation firestation) {
+    private String firestationToJson(Firestation firestation) {
         try {
             return new ObjectMapper().writeValueAsString(firestation);
         } catch (JsonProcessingException e) {

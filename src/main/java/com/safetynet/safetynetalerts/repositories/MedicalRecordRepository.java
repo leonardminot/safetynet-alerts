@@ -3,7 +3,6 @@ package com.safetynet.safetynetalerts.repositories;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
-import com.safetynet.safetynetalerts.models.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -23,7 +22,7 @@ public class MedicalRecordRepository {
     private final ObjectMapper objectMapper;
 
     @Autowired
-    public MedicalRecordRepository(@Value("${safetynetalerts.jsonpath.medicalRecors}") String filePath, ObjectMapper objectMapper) {
+    public MedicalRecordRepository(@Value("${safetynetalerts.jsonpath.medicalRecords}") String filePath, ObjectMapper objectMapper) {
         this.filePath = filePath;
         this.objectMapper = objectMapper;
     }
