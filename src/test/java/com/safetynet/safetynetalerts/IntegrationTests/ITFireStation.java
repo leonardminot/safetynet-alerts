@@ -157,6 +157,77 @@ public class ITFireStation {
 
     }
 
+    @Test
+    void itShouldDeleteAMappingWhenFirestationIsProvided() throws Exception {
+        // Given
+        Firestation existingAddress = new Firestation(
+                "007 Rue de la Dame",
+                null
+        );
+
+        // When
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/firestation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(personToJson(existingAddress)))
+        );
+
+        // Then
+        List<Firestation> firestations = firestationRepository.getFirestations();
+        resultActions.andExpect(status().isOk());
+        assertThat(firestations).hasSize(2);
+
+        Optional<Firestation> optionalFirestation = firestations.stream()
+                .filter(fs -> fs.address().equals(existingAddress.address()))
+                .findAny();
+        assertThat(optionalFirestation).isNotPresent();
+    }
+
+    @Test
+    void itShouldNotDeleteWhenUnknownAddress() throws Exception {
+        // Given
+        Firestation unknownAddress = new Firestation(
+                "64 rue des case",
+                "7"
+        );
+
+        // When
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/firestation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(personToJson(unknownAddress))));
+
+        // Then
+        String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
+
+        resultActions.andExpect(status().is4xxClientError());
+        assertThat(contentAsString).contains(
+                String.format("Impossible to delete Mapping : unknown adress [%s]", unknownAddress.address()));
+        List<Firestation> firestations = firestationRepository.getFirestations();
+        assertThat(firestations).hasSize(3);
+
+    }
+
+    @Test
+    void itShouldDeleteAllAddressWithStationNumber() throws Exception {
+        // Given
+        String stationNumber = "1";
+
+        // When
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/firestation/stationNumber")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("stationNumber", stationNumber));
+
+        // Then
+        List<Firestation> firestations = firestationRepository.getFirestations();
+        resultActions.andExpect(status().isOk());
+        assertThat(firestations).hasSize(1);
+
+        Optional<Firestation> optionalFirestation = firestations.stream()
+                .filter(fs -> fs.station().equals(stationNumber))
+                .findAny();
+        assertThat(optionalFirestation).isNotPresent();
+
+    }
+
     private String personToJson(Firestation firestation) {
         try {
             return new ObjectMapper().writeValueAsString(firestation);
