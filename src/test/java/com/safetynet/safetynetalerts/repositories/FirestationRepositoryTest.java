@@ -174,6 +174,47 @@ class FirestationRepositoryTest {
         // Then
         assertThat(mustBeTrue).isTrue();
         assertThat(mustBeFalse).isFalse();
+    }
 
+    @Test
+    void itShouldDeleteAMappingWhenFirestationIsProvided() {
+        // Given
+        Firestation existingAddress = new Firestation(
+                "007 Rue de la Dame",
+                null
+        );
+
+        // When
+        firestationRepository.deleteMapping(existingAddress);
+
+        // Then
+        List<Firestation> firestations = firestationRepository.getFirestations();
+        assertThat(firestations).hasSize(2);
+
+        Optional<Firestation> optionalFirestation = firestations.stream()
+                .filter(fs -> fs.address().equals(existingAddress.address()))
+                .findAny();
+
+        assertThat(optionalFirestation).isNotPresent();
+
+    }
+
+    @Test
+    void itShouldDeleteAllMappingWithSpecificStationNumber() {
+        // Given
+        String stationNumber = "1";
+
+        // When
+        firestationRepository.deleteStation(stationNumber);
+
+        // Then
+        List<Firestation> firestations = firestationRepository.getFirestations();
+        assertThat(firestations).hasSize(1);
+
+        Optional<Firestation> optionalFirestation = firestations.stream()
+                .filter(fs -> fs.station().equals(stationNumber))
+                .findAny();
+
+        assertThat(optionalFirestation).isNotPresent();
     }
 }

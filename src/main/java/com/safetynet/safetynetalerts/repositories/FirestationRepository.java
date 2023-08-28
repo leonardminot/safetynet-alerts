@@ -88,11 +88,17 @@ public class FirestationRepository {
     }
 
     public void deleteMapping(Firestation firestation) {
-
+        List<Firestation> updatedList = getFirestations().stream()
+                .filter(fs -> !fs.address().equals(firestation.address()))
+                .toList();
+        saveListToJson(updatedList);
     }
 
     public void deleteStation(String stationNumber) {
-
+        List<Firestation> updatedList = getFirestations().stream()
+                .filter(fs -> !fs.station().equals(stationNumber))
+                .toList();
+        saveListToJson(updatedList);
     }
 
     public boolean isStationExists(String stationNumber) {
