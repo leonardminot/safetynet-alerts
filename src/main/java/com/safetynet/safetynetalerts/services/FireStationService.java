@@ -52,7 +52,7 @@ public class FireStationService {
             log.info(String.format("On DELETE /firestation : Success for delete mapping %s", firestation.toString()));
             firestationRepository.deleteMapping(firestation);
         } else {
-            log.info(String.format("On DELETE /firestation : Impossible to delete Mapping : unknown adress [%s]", firestation.address()));
+            log.error(String.format("On DELETE /firestation : Impossible to delete Mapping : unknown adress [%s]", firestation.address()));
             throw new ApiResourceException(
                     String.format("Impossible to delete Mapping : unknown adress [%s]", firestation.address()));
         }
@@ -65,5 +65,21 @@ public class FireStationService {
                 null
         );
         this.deleteMapping(firestation);
+    }
+
+    public void deleteStation(String stationNumber) {
+        boolean isStationExists = firestationRepository.isStationExists(stationNumber);
+        if (isStationExists) {
+            log.info(
+                    String.format("On DELETE /firestation : Success for delete all address with station number %s", stationNumber));
+            firestationRepository.deleteStation(stationNumber);
+        } else {
+            log.error(
+                    String.format("On DELETE /firestation : Impossible to delete station [%s] : no station with this number found", stationNumber));
+            throw new ApiResourceException(
+                    String.format("Impossible to delete station [%s] : no station with this number found", stationNumber)
+            );
+        }
+
     }
 }

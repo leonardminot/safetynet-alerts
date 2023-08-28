@@ -32,6 +32,9 @@ class FireStationServiceTest {
     @Captor
     private ArgumentCaptor<Firestation> firestationArgumentCaptor;
 
+    @Captor
+    private ArgumentCaptor<String> stationArgumentCaptor;
+
     @BeforeEach
     void setUp() {
         fireStationService = new FireStationService(firestationRepository);
@@ -175,8 +178,30 @@ class FireStationServiceTest {
     @Test
     void itShouldDeleteAllAddressOfTheStationNumber() {
         // Given
+        String stationNumber = "1";
+
+        when(firestationRepository.isStationExists(any(String.class))).thenReturn(true);
+        // When
+        fireStationService.deleteStation(stationNumber);
+
+        // Then
+        then(firestationRepository).should().deleteStation(stationArgumentCaptor.capture());
+        assertThat(stationArgumentCaptor.getValue()).isEqualTo(stationNumber);
+    }
+
+    @Test
+    void itShouldThrowWhenUnknownStationNumber() {
+        // Given
+        String unknownStationNumber = "1";
+
+        when(firestationRepository.isStationExists(any(String.class))).thenReturn(false);
         // When
         // Then
-
+        assertThatThrownBy(() -> fireStationService.deleteStation(unknownStationNumber))
+                .isInstanceOf(ApiResourceException.class)
+                .hasMessageContaining(
+                        String.format("Impossible to delete station [%s] : no station with this number found", unknownStationNumber)
+                );
+        then(firestationRepository).should(never()).deleteStation(any(String.class));
     }
 }

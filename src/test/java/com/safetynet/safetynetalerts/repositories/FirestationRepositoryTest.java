@@ -46,7 +46,7 @@ class FirestationRepositoryTest {
         firestationList = firestationRepository.getFirestations();
 
         // Then
-        assertThat(firestationList).hasSize(2);
+        assertThat(firestationList).hasSize(3);
     }
 
     @Test
@@ -77,7 +77,7 @@ class FirestationRepositoryTest {
 
         // Then
         List<Firestation> allFirestations = firestationRepository.getFirestations();
-        assertThat(allFirestations).hasSize(3);
+        assertThat(allFirestations).hasSize(4);
         assertThat(allFirestations.get(allFirestations.size() - 1)).isEqualTo(firestation);
 
     }
@@ -125,7 +125,7 @@ class FirestationRepositoryTest {
 
         // Then
         List<Firestation> firestations = firestationRepository.getFirestations();
-        assertThat(firestations).hasSize(2);
+        assertThat(firestations).hasSize(3);
 
         Optional<Firestation> optionalFirestation = firestations.stream()
                 .filter(fs -> fs.address().equals(newMapping.address()))
@@ -159,5 +159,21 @@ class FirestationRepositoryTest {
         // Then
         assertThat(mustBeTrue).isTrue();
         assertThat(mustBeFalse).isFalse();
+    }
+
+    @Test
+    void itShouldIfStationExists() {
+        // Given
+        String knownStationNumber = "1";
+        String unknownStationNumber = "7";
+
+        // When
+        Boolean mustBeTrue = firestationRepository.isStationExists(knownStationNumber);
+        Boolean mustBeFalse = firestationRepository.isStationExists(unknownStationNumber);
+
+        // Then
+        assertThat(mustBeTrue).isTrue();
+        assertThat(mustBeFalse).isFalse();
+
     }
 }

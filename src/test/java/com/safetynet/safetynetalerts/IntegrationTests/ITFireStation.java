@@ -72,7 +72,7 @@ public class ITFireStation {
         // Then
         List<Firestation> firestations = firestationRepository.getFirestations();
         resultActions.andExpect(status().isOk());
-        assertThat(firestations).hasSize(3);
+        assertThat(firestations).hasSize(4);
         assertThat(firestations.get(firestations.size() - 1)).isEqualTo(firestation);
     }
 
@@ -98,7 +98,7 @@ public class ITFireStation {
                         rueDeLaDame.address(),
                         rueDeLaDame.station()));
         List<Firestation> firestations = firestationRepository.getFirestations();
-        assertThat(firestations).hasSize(2);
+        assertThat(firestations).hasSize(3);
     }
 
     @Test
@@ -124,7 +124,7 @@ public class ITFireStation {
         // Then
         List<Firestation> firestations = firestationRepository.getFirestations();
         resultActions.andExpect(status().isOk());
-        assertThat(firestations).hasSize(2);
+        assertThat(firestations).hasSize(3);
         Optional<Firestation> optionalFirestation = firestations.stream()
                 .filter(fs -> fs.address().equals(currentMapping.address()))
                 .findAny();
@@ -153,7 +153,7 @@ public class ITFireStation {
         assertThat(contentAsString).contains(
                 String.format("No mapping available for address [%s]", unknownAddress.address()));
         List<Firestation> firestations = firestationRepository.getFirestations();
-        assertThat(firestations).hasSize(2);
+        assertThat(firestations).hasSize(3);
 
     }
 

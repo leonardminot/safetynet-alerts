@@ -90,4 +90,13 @@ public class FirestationRepository {
     public void deleteMapping(Firestation firestation) {
 
     }
+
+    public void deleteStation(String stationNumber) {
+
+    }
+
+    public boolean isStationExists(String stationNumber) {
+        return getFirestations().stream()
+                .anyMatch(fs -> fs.station().equals(stationNumber));
+    }
 }

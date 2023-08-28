@@ -67,6 +67,11 @@ public class ManageMockedData {
                 "1"
         );
 
+        Firestation rueDuFou= new Firestation(
+                "105 Rue du Fou",
+                "1"
+        );
+
         Firestation rueDeLaTour = new Firestation(
                 "1990 Rue de la Tour",
                 "2"
@@ -74,6 +79,7 @@ public class ManageMockedData {
 
         mockedList.add(rueDeLaDame);
         mockedList.add(rueDeLaTour);
+        mockedList.add(rueDuFou);
 
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(filePath).toFile(), mockedList);
     }
