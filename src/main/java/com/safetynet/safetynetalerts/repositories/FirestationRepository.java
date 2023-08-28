@@ -86,4 +86,8 @@ public class FirestationRepository {
         return getFirestations().stream()
                 .anyMatch(fs -> fs.address().equals(firestation.address()));
     }
+
+    public void deleteMapping(Firestation firestation) {
+
+    }
 }

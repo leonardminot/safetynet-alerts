@@ -7,9 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-
 @Service
 @Slf4j
 public class FireStationService {
@@ -47,5 +44,26 @@ public class FireStationService {
             throw new ApiResourceException(
                     String.format("No mapping available for address [%s]", firestation.address()));
         }
+    }
+
+    public void deleteMapping(Firestation firestation) {
+        boolean isAddressExists = firestationRepository.isAddressExist(firestation);
+        if (isAddressExists) {
+            log.info(String.format("On DELETE /firestation : Success for delete mapping %s", firestation.toString()));
+            firestationRepository.deleteMapping(firestation);
+        } else {
+            log.info(String.format("On DELETE /firestation : Impossible to delete Mapping : unknown adress [%s]", firestation.address()));
+            throw new ApiResourceException(
+                    String.format("Impossible to delete Mapping : unknown adress [%s]", firestation.address()));
+        }
+
+    }
+
+    public void deleteMapping(String address) {
+        Firestation firestation = new Firestation(
+                address,
+                null
+        );
+        this.deleteMapping(firestation);
     }
 }

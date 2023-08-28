@@ -119,4 +119,64 @@ class FireStationServiceTest {
         then(firestationRepository).should(never()).updateMapping(any(Firestation.class));
 
     }
+
+    @Test
+    void itShouldDeleteAMapping() {
+        // Given
+        Firestation existingAddress = new Firestation(
+                "007 Rue de la Dame",
+                null
+        );
+
+        when(firestationRepository.isAddressExist(any(Firestation.class))).thenReturn(true);
+        // When
+        fireStationService.deleteMapping(existingAddress);
+
+        // Then
+        then(firestationRepository).should().deleteMapping(firestationArgumentCaptor.capture());
+        assertThat(firestationArgumentCaptor.getValue()).isEqualTo(existingAddress);
+
+    }
+
+    @Test
+    void itShouldDeleteAMappingWithStringParameter() {
+        // Given
+        String existingAddress = "007 Rue de la Dame";
+
+        when(firestationRepository.isAddressExist(any(Firestation.class))).thenReturn(true);
+
+        // When
+        fireStationService.deleteMapping(existingAddress);
+
+        // Then
+        then(firestationRepository).should().deleteMapping(firestationArgumentCaptor.capture());
+        assertThat(firestationArgumentCaptor.getValue().address()).isEqualTo(existingAddress);
+
+    }
+
+    @Test
+    void itShouldThrowWhenAddressDoesntExistsAndNotDeleteAMapping() {
+        // Given
+        Firestation unknownAddress = new Firestation(
+                "64 rue des case",
+                "7"
+        );
+
+        when(firestationRepository.isAddressExist(any(Firestation.class))).thenReturn(false);
+        // When
+        // Then
+        assertThatThrownBy(() -> fireStationService.deleteMapping(unknownAddress))
+                .isInstanceOf(ApiResourceException.class)
+                .hasMessageContaining(
+                        String.format("Impossible to delete Mapping : unknown adress [%s]", unknownAddress.address()));
+        then(firestationRepository).should(never()).deleteMapping(any(Firestation.class));
+    }
+
+    @Test
+    void itShouldDeleteAllAddressOfTheStationNumber() {
+        // Given
+        // When
+        // Then
+
+    }
 }
