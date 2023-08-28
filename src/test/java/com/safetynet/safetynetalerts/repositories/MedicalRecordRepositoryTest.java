@@ -24,7 +24,7 @@ class MedicalRecordRepositoryTest {
     @BeforeEach
     void setUp() throws IOException {
         ManageMockedData.createMedicalRecordsMockedData(pathToFile);
-        medicalRecordRepository = new MedicalRecordRepository(MyAppConfig.objectMapper());
+        medicalRecordRepository = new MedicalRecordRepository(pathToFile, MyAppConfig.objectMapper());
     }
 
     @AfterEach
@@ -38,7 +38,7 @@ class MedicalRecordRepositoryTest {
         List<MedicalRecord> medicalRecordList;
 
         // When
-        medicalRecordList = medicalRecordRepository.getMedicalRecords(pathToFile);
+        medicalRecordList = medicalRecordRepository.getMedicalRecords();
 
         // Then
         assertThat(medicalRecordList).hasSize(2);
