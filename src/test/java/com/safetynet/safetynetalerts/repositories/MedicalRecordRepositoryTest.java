@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -65,5 +66,30 @@ class MedicalRecordRepositoryTest {
         assertThat(allMedicalRecords).hasSize(3);
         assertThat(allMedicalRecords.get(allMedicalRecords.size() - 1)).isEqualTo(alirezaRecord);
 
+    }
+
+    @Test
+    void itShouldSelectMedicalRecordByName() {
+        // Given
+        Optional<MedicalRecord> optionalMedicalRecordThatExists;
+        Optional<MedicalRecord> optionalMedicalRecordThatDidntExist;
+
+        MedicalRecord magnusRecord = new MedicalRecord(
+                "Magnus",
+                "Carlsen",
+                LocalDate.parse("1990-11-30"),
+                List.of("aznol:350mg", "hydrapermazol:100mg"),
+                List.of("nillacilan")
+        );
+
+        // When
+        optionalMedicalRecordThatExists = medicalRecordRepository.selectMedicalRecordByName("Magnus", "Carlsen");
+        optionalMedicalRecordThatDidntExist = medicalRecordRepository.selectMedicalRecordByName("Wesley", "So");
+
+        // Then
+        assertThat(optionalMedicalRecordThatExists)
+                .isPresent()
+                .hasValueSatisfying((mr) -> assertThat(mr).isEqualTo(magnusRecord));
+        assertThat(optionalMedicalRecordThatDidntExist).isNotPresent();
     }
 }

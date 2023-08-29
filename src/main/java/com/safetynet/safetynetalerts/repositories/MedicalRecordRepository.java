@@ -63,8 +63,9 @@ public class MedicalRecordRepository {
     }
 
     public Optional<MedicalRecord> selectMedicalRecordByName(String firstName, String lastName) {
-        // TODO
-        return Optional.empty();
+        return getMedicalRecords().stream()
+                .filter(mr -> mr.firstName().equals(firstName) && mr.lastName().equals(lastName))
+                .findAny();
     }
 
     public void update(MedicalRecord medicalRecord) {
