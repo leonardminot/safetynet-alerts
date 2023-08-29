@@ -69,8 +69,9 @@ class MedicalRecordServiceTest {
                 null
         );
 
-        //TODO : il faut vérifier également que le record n'existe pas
-
+        // ... no medical record in the DB
+        when(medicalRecordRepository.selectMedicalRecordByName(any(String.class), any(String.class))).thenReturn(Optional.empty());
+        // ... and person exists in the DB
         given(personRepository.selectPersonByName(alirezaRecord.firstName(), alirezaRecord.lastName())).willReturn(Optional.of(alirezaPerson));
 
         // When
@@ -92,6 +93,9 @@ class MedicalRecordServiceTest {
                 null
         );
 
+        // ... no medical record in the DB
+        when(medicalRecordRepository.selectMedicalRecordByName(any(String.class), any(String.class))).thenReturn(Optional.empty());
+        // ... but person doesn't exist in the DB
         when(personRepository.selectPersonByName(any(String.class), any(String.class))).thenReturn(Optional.empty());
 
         // When
@@ -105,6 +109,33 @@ class MedicalRecordServiceTest {
                                 unknownPersonMedicalRecord.lastName())
                 );
         then(medicalRecordRepository).should(never()).saveRecord(any(MedicalRecord.class));
+    }
+
+    @Test
+    void itShouldThrowWhenMedicalRecordAlreadyExists() {
+        // When
+        MedicalRecord currentRecord = new MedicalRecord(
+                "Magnus",
+                "Carlsen",
+                LocalDate.parse("1990-11-30"),
+                List.of("aznol:350mg", "hydrapermazol:100mg"),
+                List.of("nillacilan")
+        );
+
+        // ... already a medical record in the DB
+        when(medicalRecordRepository.selectMedicalRecordByName(any(String.class), any(String.class))).thenReturn(Optional.of(currentRecord));
+
+        // Then
+        // When
+        assertThatThrownBy(() -> medicalRecordService.createRecord(currentRecord))
+                .isInstanceOf(ApiResourceException.class)
+                .hasMessageContaining(
+                        String.format("Error while create Medical Record for %s %s : a medical record already exists",
+                                currentRecord.firstName(),
+                                currentRecord.lastName())
+                );
+        then(medicalRecordRepository).should(never()).saveRecord(any(MedicalRecord.class));
+
     }
 
     @Test
