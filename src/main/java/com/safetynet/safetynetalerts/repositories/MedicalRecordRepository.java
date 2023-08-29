@@ -13,6 +13,7 @@ import java.io.PrintWriter;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class MedicalRecordRepository {
@@ -59,5 +60,14 @@ public class MedicalRecordRepository {
 
     private void fillJsonFile(List<MedicalRecord> medicalRecords) throws IOException {
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(filePath).toFile(), medicalRecords);
+    }
+
+    public Optional<MedicalRecord> selectMedicalRecordByName(String firstName, String lastName) {
+        // TODO
+        return Optional.empty();
+    }
+
+    public void update(MedicalRecord medicalRecord) {
+        // TODO
     }
 }

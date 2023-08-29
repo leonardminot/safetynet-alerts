@@ -69,6 +69,8 @@ class MedicalRecordServiceTest {
                 null
         );
 
+        //TODO : il faut vérifier également que le record n'existe pas
+
         given(personRepository.selectPersonByName(alirezaRecord.firstName(), alirezaRecord.lastName())).willReturn(Optional.of(alirezaPerson));
 
         // When
@@ -103,5 +105,71 @@ class MedicalRecordServiceTest {
                                 unknownPersonMedicalRecord.lastName())
                 );
         then(medicalRecordRepository).should(never()).saveRecord(any(MedicalRecord.class));
+    }
+
+    @Test
+    void itShouldUpdateAMedicalRecord() {
+        // Given
+        // ... the current record
+        MedicalRecord currentRecord = new MedicalRecord(
+                "Magnus",
+                "Carlsen",
+                LocalDate.parse("1990-11-30"),
+                List.of("aznol:350mg", "hydrapermazol:100mg"),
+                List.of("nillacilan")
+        );
+
+        // ... the update request
+        MedicalRecord updateRequest = new MedicalRecord(
+                "Magnus",
+                "Carlsen",
+                null,
+                List.of("aznol:350mg", "hydrapermazol:100mg", "ketamine:1000mg"),
+                List.of("nillacilan","peanut butter")
+        );
+
+        // ... the final record after request
+        MedicalRecord finalRecord = new MedicalRecord(
+                "Magnus",
+                "Carlsen",
+                LocalDate.parse("1990-11-30"),
+                List.of("aznol:350mg", "hydrapermazol:100mg"),
+                List.of("nillacilan")
+        );
+
+        when(medicalRecordRepository.selectMedicalRecordByName(any(String.class), any(String.class))).thenReturn(Optional.of(currentRecord));
+
+
+        // When
+        medicalRecordService.update(updateRequest);
+
+        // Then
+        then(medicalRecordRepository).should().update(medicalRecordArgumentCaptor.capture());
+        assertThat(medicalRecordArgumentCaptor.getValue()).isEqualTo(updateRequest);
+    }
+
+    @Test
+    void itShouldThrowWhenMedicalRecordIsNotFound() {
+        // Given
+        MedicalRecord unknownPersonMedicalRecord = new MedicalRecord(
+                "Wesley",
+                "So",
+                LocalDate.parse("1993-10-09"),
+                null,
+                null
+        );
+
+        when(medicalRecordRepository.selectMedicalRecordByName(any(String.class), any(String.class))).thenReturn(Optional.empty());
+
+        // When
+        // Then
+        assertThatThrownBy(() -> medicalRecordService.update(unknownPersonMedicalRecord))
+                .isInstanceOf(ApiResourceException.class)
+                .hasMessageContaining(
+                        String.format("Impossible to update, no medical record for %s %s",
+                                unknownPersonMedicalRecord.firstName(),
+                                unknownPersonMedicalRecord.lastName())
+                );
+        then(medicalRecordRepository).should(never()).update(any(MedicalRecord.class));
     }
 }

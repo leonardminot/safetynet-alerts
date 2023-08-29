@@ -4,10 +4,14 @@ import com.safetynet.safetynetalerts.exception.ApiResourceException;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
+@Slf4j
 public class MedicalRecordService {
 
     private MedicalRecordRepository medicalRecordRepository;
@@ -33,5 +37,25 @@ public class MedicalRecordService {
                         }
                 );
 
+    }
+
+    public void update(MedicalRecord medicalRecord) {
+        Optional<MedicalRecord> optionalMedicalRecord = medicalRecordRepository.selectMedicalRecordByName(medicalRecord.firstName(), medicalRecord.lastName());
+        optionalMedicalRecord.ifPresentOrElse(mr -> {
+                    log.info(String.format("On PUT /medicalRecord : success for update %s %s medical record",
+                            mr.firstName(),
+                            mr.lastName()));
+                    medicalRecordRepository.update(medicalRecord);
+                },
+                () -> {
+                    log.info(String.format("On PUT /medicalRecord : error for update %s %s medical record : medical record not found",
+                            medicalRecord.firstName(),
+                            medicalRecord.lastName()));
+                    throw new ApiResourceException(
+                            String.format("Impossible to update, no medical record for %s %s",
+                                    medicalRecord.firstName(),
+                                    medicalRecord.lastName())
+                    );
+                });
     }
 }

@@ -39,7 +39,7 @@ public class PersonService {
         Optional<Person> personInDB = personRepository.selectPersonByName(person.firstName(), person.lastName());
 
         personInDB.ifPresentOrElse(p -> {
-                    log.info(String.format("On PUT /person : Success for the creation of [%s %s] :" + person, person.firstName(), person.lastName()));
+                    log.info(String.format("On PUT /person : Success for the update of [%s %s] :" + person, person.firstName(), person.lastName()));
                     personRepository.update(person);
                 },
                 () -> {
