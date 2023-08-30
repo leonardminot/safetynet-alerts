@@ -91,7 +91,7 @@ public class PersonRepository {
     public void delete(Person person) {
         List<Person> persons = getPersons();
         List<Person> updatedPersons = persons.stream()
-                .filter(p -> !p.firstName().equals(person.firstName()) && !p.lastName().equals(person.lastName()))
+                .filter(p -> !p.firstName().equals(person.firstName()) || !p.lastName().equals(person.lastName()))
                 .toList();
         saveListToJson(updatedPersons);
     }

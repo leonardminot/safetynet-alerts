@@ -87,6 +87,10 @@ public class MedicalRecordRepository {
     }
 
     public void delete(MedicalRecord medicalRecord) {
+        List<MedicalRecord> updatedList = getMedicalRecords().stream()
+                .filter(mr -> !mr.firstName().equals(medicalRecord.firstName()) || !mr.lastName().equals(medicalRecord.lastName()))
+                .toList();
 
+        saveListToJson(updatedList);
     }
 }

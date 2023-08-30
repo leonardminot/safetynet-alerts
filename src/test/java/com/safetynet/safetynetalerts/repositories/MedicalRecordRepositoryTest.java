@@ -137,4 +137,27 @@ class MedicalRecordRepositoryTest {
                 .isPresent()
                 .hasValueSatisfying(mr -> assertThat(mr).isEqualTo(finalRecord));
     }
+
+    @Test
+    void itShouldDeleteAMedicalRecord() {
+        // Given
+        MedicalRecord recordToDelete = new MedicalRecord(
+                "Magnus",
+                "Carlsen",
+                null,
+                null,
+                null
+        );
+
+        // When
+        medicalRecordRepository.delete(recordToDelete);
+
+        // Then
+        List<MedicalRecord> medicalRecords = medicalRecordRepository.getMedicalRecords();
+        Optional<MedicalRecord> optionalMedicalRecord = medicalRecords.stream()
+                .filter(mr -> mr.firstName().equals(recordToDelete.firstName()) && mr.lastName().equals(recordToDelete.lastName()))
+                .findAny();
+        assertThat(medicalRecords).hasSize(1);
+        assertThat(optionalMedicalRecord).isNotPresent();
+    }
 }
