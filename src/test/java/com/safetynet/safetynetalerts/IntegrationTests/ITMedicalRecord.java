@@ -170,6 +170,34 @@ public class ITMedicalRecord {
 
     }
 
+    @Test
+    void itShouldNotUpdateAMedicalRecord() throws Exception {
+        // Given
+        MedicalRecord unknownPersonMedicalRecord = new MedicalRecord(
+                "Wesley",
+                "So",
+                LocalDate.parse("1993-10-09"),
+                null,
+                null
+        );
+
+        // When
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/medicalRecord")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(medicalRecordToJson(unknownPersonMedicalRecord))));
+
+        // Then
+        String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
+
+        resultActions.andExpect(status().is4xxClientError());
+        assertThat(contentAsString).contains(
+                String.format("Impossible to update, no medical record for %s %s",
+                        unknownPersonMedicalRecord.firstName(),
+                        unknownPersonMedicalRecord.lastName()));
+        List<MedicalRecord> medicalRecords = medicalRecordRepository.getMedicalRecords();
+        assertThat(medicalRecords).hasSize(2);
+    }
+
     private String medicalRecordToJson(MedicalRecord medicalRecord) {
         ObjectMapper objectMapper = MyAppConfig.objectMapper();
         try {
