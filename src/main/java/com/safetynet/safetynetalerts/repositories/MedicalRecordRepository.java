@@ -13,7 +13,9 @@ import java.io.PrintWriter;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Repository
 public class MedicalRecordRepository {
@@ -69,6 +71,18 @@ public class MedicalRecordRepository {
     }
 
     public void update(MedicalRecord medicalRecord) {
-        // TODO
+        List<MedicalRecord> updatedList = getMedicalRecords().stream()
+                .map(mr -> mr.firstName().equals(medicalRecord.firstName()) && mr.lastName().equals(medicalRecord.lastName()) ?
+                        new MedicalRecord(
+                                mr.firstName(),
+                                mr.lastName(),
+                                Objects.isNull(medicalRecord.birthdate()) ? mr.birthdate() : medicalRecord.birthdate(),
+                                Objects.isNull(medicalRecord.medications()) ? mr.medications() : medicalRecord.medications(),
+                                Objects.isNull(medicalRecord.allergies()) ? mr.allergies() : medicalRecord.allergies()
+                        )
+                        : mr)
+                .toList();
+
+        saveListToJson(updatedList);
     }
 }

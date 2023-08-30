@@ -92,4 +92,49 @@ class MedicalRecordRepositoryTest {
                 .hasValueSatisfying((mr) -> assertThat(mr).isEqualTo(magnusRecord));
         assertThat(optionalMedicalRecordThatDidntExist).isNotPresent();
     }
+
+    @Test
+    void itShouldUpdateAMedicalRecord() {
+        // Given
+        // ... the current record
+        MedicalRecord currentRecord = new MedicalRecord(
+                "Magnus",
+                "Carlsen",
+                LocalDate.parse("1990-11-30"),
+                List.of("aznol:350mg", "hydrapermazol:100mg"),
+                List.of("nillacilan")
+        );
+
+        // ... the update request
+        MedicalRecord updateRequest = new MedicalRecord(
+                "Magnus",
+                "Carlsen",
+                null,
+                List.of("aznol:350mg", "hydrapermazol:100mg", "ketamine:1000mg"),
+                List.of("nillacilan","peanut butter")
+        );
+
+        // ... the final record after request
+        MedicalRecord finalRecord = new MedicalRecord(
+                "Magnus",
+                "Carlsen",
+                LocalDate.parse("1990-11-30"),
+                List.of("aznol:350mg", "hydrapermazol:100mg", "ketamine:1000mg"),
+                List.of("nillacilan","peanut butter")
+        );
+
+        // When
+        medicalRecordRepository.update(updateRequest);
+
+        // Then
+        List<MedicalRecord> medicalRecords = medicalRecordRepository.getMedicalRecords();
+        Optional<MedicalRecord> optionalMedicalRecord = medicalRecords.stream()
+                .filter(mr -> mr.firstName().equals(currentRecord.firstName()) && mr.lastName().equals(currentRecord.lastName()))
+                .findFirst();
+
+        assertThat(medicalRecords).hasSize(2);
+        assertThat(optionalMedicalRecord)
+                .isPresent()
+                .hasValueSatisfying(mr -> assertThat(mr).isEqualTo(finalRecord));
+    }
 }
