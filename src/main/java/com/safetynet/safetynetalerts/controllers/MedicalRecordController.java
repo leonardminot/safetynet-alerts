@@ -4,10 +4,7 @@ import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.services.MedicalRecordService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("medicalRecord")
@@ -23,5 +20,10 @@ public class MedicalRecordController {
     @PostMapping
     public void createMedicalRecord(@RequestBody @Valid MedicalRecord medicalRecord) {
         medicalRecordService.createRecord(medicalRecord);
+    }
+
+    @PutMapping
+    public void updateMedicalRecord(@RequestBody @Valid MedicalRecord medicalRecord) {
+        medicalRecordService.update(medicalRecord);
     }
 }

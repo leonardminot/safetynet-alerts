@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.jayway.jsonpath.internal.path.PathCompiler.fail;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -120,6 +121,53 @@ public class ITMedicalRecord {
                         unknownPersonMedicalRecord.lastName()));
         List<MedicalRecord> medicalRecords = medicalRecordRepository.getMedicalRecords();
         assertThat(medicalRecords).hasSize(2);
+    }
+
+    @Test
+    void itShouldUpdateAMedicalRecord() throws Exception {
+        // Given
+        // ... the current record
+        MedicalRecord currentRecord = new MedicalRecord(
+                "Magnus",
+                "Carlsen",
+                LocalDate.parse("1990-11-30"),
+                List.of("aznol:350mg", "hydrapermazol:100mg"),
+                List.of("nillacilan")
+        );
+
+        // ... the update request
+        MedicalRecord updateRequest = new MedicalRecord(
+                "Magnus",
+                "Carlsen",
+                null,
+                List.of("aznol:350mg", "hydrapermazol:100mg", "ketamine:1000mg"),
+                List.of("nillacilan","peanut butter")
+        );
+
+        // ... the final record after request
+        MedicalRecord finalRecord = new MedicalRecord(
+                "Magnus",
+                "Carlsen",
+                LocalDate.parse("1990-11-30"),
+                List.of("aznol:350mg", "hydrapermazol:100mg", "ketamine:1000mg"),
+                List.of("nillacilan","peanut butter")
+        );
+
+        // When
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/medicalRecord")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(medicalRecordToJson(updateRequest))));
+
+        // Then
+        List<MedicalRecord> medicalRecords = medicalRecordRepository.getMedicalRecords();
+        resultActions.andExpect(status().isOk());
+        Optional<MedicalRecord> optionalMedicalRecord = medicalRecords.stream()
+                .filter(mr -> mr.firstName().equals(finalRecord.firstName()) && mr.lastName().equals(finalRecord.lastName()))
+                .findAny();
+        assertThat(optionalMedicalRecord)
+                .isPresent()
+                .hasValueSatisfying(medicalRecord -> assertThat(medicalRecord).isEqualTo(finalRecord));
+
     }
 
     private String medicalRecordToJson(MedicalRecord medicalRecord) {
