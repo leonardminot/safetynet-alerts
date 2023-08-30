@@ -28,4 +28,10 @@ public class MedicalRecordController {
         log.info("New request : PUT /medicalRecord with body : " + medicalRecord);
         medicalRecordService.update(medicalRecord);
     }
+
+    @DeleteMapping
+    public void deleteMedicalRecord(@RequestBody @Valid MedicalRecord medicalRecord) {
+        log.info("New request : DELETE /medicalRecord with body : " + medicalRecord);
+        medicalRecordService.delete(medicalRecord);
+    }
 }

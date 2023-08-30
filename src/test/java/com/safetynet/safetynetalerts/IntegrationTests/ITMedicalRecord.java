@@ -198,6 +198,60 @@ public class ITMedicalRecord {
         assertThat(medicalRecords).hasSize(2);
     }
 
+    @Test
+    void itShouldDeleteAMedicalRecord() throws Exception {
+        // Given
+        MedicalRecord recordToDelete = new MedicalRecord(
+                "Magnus",
+                "Carlsen",
+                null,
+                null,
+                null
+        );
+
+        // When
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/medicalRecord")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(medicalRecordToJson(recordToDelete))));
+
+        // Then
+        List<MedicalRecord> medicalRecords = medicalRecordRepository.getMedicalRecords();
+        resultActions.andExpect(status().isOk());
+        Optional<MedicalRecord> optionalMedicalRecord = medicalRecords.stream()
+                .filter(mr -> mr.firstName().equals(recordToDelete.firstName()) && mr.lastName().equals(recordToDelete.lastName()))
+                .findAny();
+        assertThat(optionalMedicalRecord)
+                .isNotPresent();
+    }
+
+    @Test
+    void itShouldNotDeleteAMedicalRecord() throws Exception {
+        // Given
+        MedicalRecord unknownPersonMedicalRecord = new MedicalRecord(
+                "Wesley",
+                "So",
+                LocalDate.parse("1993-10-09"),
+                null,
+                null
+        );
+
+        // When
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/medicalRecord")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(medicalRecordToJson(unknownPersonMedicalRecord))));
+
+        // Then
+        String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
+
+        resultActions.andExpect(status().is4xxClientError());
+        assertThat(contentAsString).contains(
+                String.format("Impossible to delete Medical Record for %s %s : medical record not found",
+                        unknownPersonMedicalRecord.firstName(),
+                        unknownPersonMedicalRecord.lastName()));
+        List<MedicalRecord> medicalRecords = medicalRecordRepository.getMedicalRecords();
+        assertThat(medicalRecords).hasSize(2);
+    }
+
     private String medicalRecordToJson(MedicalRecord medicalRecord) {
         ObjectMapper objectMapper = MyAppConfig.objectMapper();
         try {
