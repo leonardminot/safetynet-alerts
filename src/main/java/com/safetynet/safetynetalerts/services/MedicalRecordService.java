@@ -27,16 +27,27 @@ public class MedicalRecordService {
     public void createRecord(MedicalRecord medicalRecord) {
         throwIfMedicalRecordIsPresent(medicalRecord);
         throwIfPersonIsUnknown(medicalRecord);
+
         medicalRecordRepository.saveRecord(medicalRecord);
+
+        log.info(String.format("On POST /medicalRecord : success for create %s %s medical record",
+                medicalRecord.firstName(),
+                medicalRecord.lastName()));
     }
 
     private void throwIfPersonIsUnknown(MedicalRecord medicalRecord) {
         personRepository.selectPersonByName(medicalRecord.firstName(), medicalRecord.lastName())
-                .orElseThrow(() -> new ApiResourceException(
-                        String.format("Impossible to create Medical Record for %s %s : unknown person",
-                                medicalRecord.firstName(),
-                                medicalRecord.lastName())
-                ));
+                .orElseThrow(() -> {
+                            log.error(String.format("On POST /medicalRecord : Impossible to create Medical Record for %s %s : unknown person",
+                                    medicalRecord.firstName(),
+                                    medicalRecord.lastName()));
+                            return new ApiResourceException(
+                                    String.format("Impossible to create Medical Record for %s %s : unknown person",
+                                            medicalRecord.firstName(),
+                                            medicalRecord.lastName())
+                            );
+                        }
+                );
     }
 
     private void throwIfMedicalRecordIsPresent(MedicalRecord medicalRecord) {
@@ -54,11 +65,11 @@ public class MedicalRecordService {
     public void update(MedicalRecord medicalRecord) {
         throwIfCurrentMedicalRecordNotFound(medicalRecord);
 
+        medicalRecordRepository.update(medicalRecord);
+
         log.info(String.format("On PUT /medicalRecord : success for update %s %s medical record",
                 medicalRecord.firstName(),
                 medicalRecord.lastName()));
-
-        medicalRecordRepository.update(medicalRecord);
 
     }
 
@@ -66,7 +77,7 @@ public class MedicalRecordService {
         Optional<MedicalRecord> optionalMedicalRecord = medicalRecordRepository.selectMedicalRecordByName(medicalRecord.firstName(), medicalRecord.lastName());
         optionalMedicalRecord.orElseThrow(
                 () -> {
-                    log.info(String.format("On PUT /medicalRecord : error for update %s %s medical record : medical record not found",
+                    log.error(String.format("On PUT /medicalRecord : error for update %s %s medical record : medical record not found",
                             medicalRecord.firstName(),
                             medicalRecord.lastName()));
                     return new ApiResourceException(
@@ -75,5 +86,29 @@ public class MedicalRecordService {
                                     medicalRecord.lastName())
                     );
                 });
+    }
+
+    public void delete(MedicalRecord medicalRecord) {
+        throwIfMedicalRecordIsNotFound(medicalRecord);
+
+        medicalRecordRepository.delete(medicalRecord);
+
+        log.info(String.format("On DELETE /medicalRecord : success for delete %s %s medical record",
+                medicalRecord.firstName(),
+                medicalRecord.lastName()));
+    }
+
+    private void throwIfMedicalRecordIsNotFound(MedicalRecord medicalRecord) {
+        Optional<MedicalRecord> optionalMedicalRecord = medicalRecordRepository.selectMedicalRecordByName(medicalRecord.firstName(), medicalRecord.lastName());
+        optionalMedicalRecord.orElseThrow(() -> {
+            log.error(String.format("On DELETE /medicalRecord : error for delete %s %s medical record : medical record not found",
+                    medicalRecord.firstName(),
+                    medicalRecord.lastName()));
+            return new ApiResourceException(
+                    String.format("Impossible to delete Medical Record for %s %s : medical record not found",
+                            medicalRecord.firstName(),
+                            medicalRecord.lastName())
+            );
+        });
     }
 }

@@ -203,4 +203,50 @@ class MedicalRecordServiceTest {
                 );
         then(medicalRecordRepository).should(never()).update(any(MedicalRecord.class));
     }
+
+    @Test
+    void itShouldDeleteAMedicalRecord() {
+        // Given
+        MedicalRecord recordToDelete = new MedicalRecord(
+                "Magnus",
+                "Carlsen",
+                null,
+                null,
+                null
+        );
+
+        when(medicalRecordRepository.selectMedicalRecordByName(any(String.class), any(String.class))).thenReturn(Optional.of(recordToDelete));
+
+        // When
+        medicalRecordService.delete(recordToDelete);
+
+        // Then
+        then(medicalRecordRepository).should().delete(medicalRecordArgumentCaptor.capture());
+        assertThat(medicalRecordArgumentCaptor.getValue()).isEqualTo(recordToDelete);
+    }
+
+    @Test
+    void itShouldThrowWhenNameNotFoundAndNotDeleteMedicalRecord() {
+        // Given
+        MedicalRecord unknownPersonMedicalRecord = new MedicalRecord(
+                "Wesley",
+                "So",
+                LocalDate.parse("1993-10-09"),
+                null,
+                null
+        );
+
+        when(medicalRecordRepository.selectMedicalRecordByName(any(String.class), any(String.class))).thenReturn(Optional.empty());
+
+        // When
+        // Then
+        assertThatThrownBy(() -> medicalRecordService.delete(unknownPersonMedicalRecord))
+                .isInstanceOf(ApiResourceException.class)
+                .hasMessageContaining(
+                        String.format("Impossible to delete Medical Record for %s %s : medical record not found",
+                                unknownPersonMedicalRecord.firstName(),
+                                unknownPersonMedicalRecord.lastName())
+                );
+        then(medicalRecordRepository).should(never()).delete(any(MedicalRecord.class));
+    }
 }

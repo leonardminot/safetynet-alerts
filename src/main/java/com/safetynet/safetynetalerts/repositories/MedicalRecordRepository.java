@@ -85,4 +85,8 @@ public class MedicalRecordRepository {
 
         saveListToJson(updatedList);
     }
+
+    public void delete(MedicalRecord medicalRecord) {
+
+    }
 }
