@@ -29,86 +29,98 @@ public class MedicalRecordService {
         throwIfPersonIsUnknown(medicalRecord);
 
         medicalRecordRepository.saveRecord(medicalRecord);
-
-        log.info(String.format("On POST /medicalRecord : success for create %s %s medical record",
-                medicalRecord.firstName(),
-                medicalRecord.lastName()));
+        log.info(postSuccessLog(medicalRecord));
     }
 
     private void throwIfPersonIsUnknown(MedicalRecord medicalRecord) {
-        personRepository.selectPersonByName(medicalRecord.firstName(), medicalRecord.lastName())
-                .orElseThrow(() -> {
-                            log.error(String.format("On POST /medicalRecord : Impossible to create Medical Record for %s %s : unknown person",
-                                    medicalRecord.firstName(),
-                                    medicalRecord.lastName()));
-                            return new ApiResourceException(
-                                    String.format("Impossible to create Medical Record for %s %s : unknown person",
-                                            medicalRecord.firstName(),
-                                            medicalRecord.lastName())
-                            );
-                        }
-                );
+        personRepository.selectPersonByName(medicalRecord.firstName(), medicalRecord.lastName()).orElseThrow(() -> {
+                    log.error(postErrorUnknownPersonLog(medicalRecord));
+                    return new ApiResourceException(postErrorUnknownPersonLog(medicalRecord));
+                }
+        );
     }
 
     private void throwIfMedicalRecordIsPresent(MedicalRecord medicalRecord) {
-        medicalRecordRepository.selectMedicalRecordByName(medicalRecord.firstName(), medicalRecord.lastName())
-                .ifPresent((mr) -> {
-                    log.error(String.format("On POST /medicalRecord : medicalRecord for %s %s already exists",
-                            medicalRecord.firstName(),
-                            medicalRecord.lastName()));
-                    throw new ApiResourceException(String.format("Error while create Medical Record for %s %s : a medical record already exists",
-                            medicalRecord.firstName(),
-                            medicalRecord.lastName()));
+        medicalRecordRepository.selectMedicalRecordByName(medicalRecord.firstName(), medicalRecord.lastName()).ifPresent((mr) -> {
+                    log.error(postErrorMedicalRecordExistsLog(medicalRecord));
+                    throw new ApiResourceException(postErrorMedicalRecordExistsLog(medicalRecord));
                 });
+    }
+
+    private String postSuccessLog(MedicalRecord medicalRecord) {
+        return String.format("POST /medicalRecord - Payload: [%s] - Success: Medical record for [%s %s] successfully registered",
+                medicalRecord,
+                medicalRecord.firstName(),
+                medicalRecord.lastName());
+    }
+
+    private String postErrorUnknownPersonLog(MedicalRecord medicalRecord) {
+        return String.format("POST /medicalRecord - Payload: [%s] - Error: Person with name [%s %s] does not exist",
+                medicalRecord,
+                medicalRecord.firstName(),
+                medicalRecord.lastName());
+    }
+
+    private String postErrorMedicalRecordExistsLog(MedicalRecord medicalRecord) {
+        return String.format("POST /medicalRecord - Payload: [%s] - Error: Medical record for [%s %s] already exists",
+                medicalRecord,
+                medicalRecord.firstName(),
+                medicalRecord.lastName());
     }
 
     public void update(MedicalRecord medicalRecord) {
         throwIfCurrentMedicalRecordNotFound(medicalRecord);
-
         medicalRecordRepository.update(medicalRecord);
+        log.info(putSuccessLog(medicalRecord));
+    }
 
-        log.info(String.format("On PUT /medicalRecord : success for update %s %s medical record",
+    private String putSuccessLog(MedicalRecord medicalRecord) {
+        return String.format("PUT /medicalRecord - Payload: [%s] - Success: Medical Record for [%s %s] successfully updated",
+                medicalRecord,
                 medicalRecord.firstName(),
-                medicalRecord.lastName()));
-
+                medicalRecord.lastName());
     }
 
     private void throwIfCurrentMedicalRecordNotFound(MedicalRecord medicalRecord) {
         Optional<MedicalRecord> optionalMedicalRecord = medicalRecordRepository.selectMedicalRecordByName(medicalRecord.firstName(), medicalRecord.lastName());
-        optionalMedicalRecord.orElseThrow(
-                () -> {
-                    log.error(String.format("On PUT /medicalRecord : error for update %s %s medical record : medical record not found",
-                            medicalRecord.firstName(),
-                            medicalRecord.lastName()));
-                    return new ApiResourceException(
-                            String.format("Impossible to update, no medical record for %s %s",
-                                    medicalRecord.firstName(),
-                                    medicalRecord.lastName())
-                    );
+        optionalMedicalRecord.orElseThrow(() -> {
+                    log.error(putErrorNoMedRecordLog(medicalRecord));
+                    return new ApiResourceException(putErrorNoMedRecordLog(medicalRecord));
                 });
+    }
+
+    private String putErrorNoMedRecordLog(MedicalRecord medicalRecord) {
+        return String.format("PUT /medicalRecord - Payload: [%s] - Error: Medical Record for [%s %s] does not exist",
+                medicalRecord,
+                medicalRecord.firstName(),
+                medicalRecord.lastName());
     }
 
     public void delete(MedicalRecord medicalRecord) {
         throwIfMedicalRecordIsNotFound(medicalRecord);
-
         medicalRecordRepository.delete(medicalRecord);
-
-        log.info(String.format("On DELETE /medicalRecord : success for delete %s %s medical record",
-                medicalRecord.firstName(),
-                medicalRecord.lastName()));
+        log.info(deleteSuccessLog(medicalRecord));
     }
 
     private void throwIfMedicalRecordIsNotFound(MedicalRecord medicalRecord) {
         Optional<MedicalRecord> optionalMedicalRecord = medicalRecordRepository.selectMedicalRecordByName(medicalRecord.firstName(), medicalRecord.lastName());
         optionalMedicalRecord.orElseThrow(() -> {
-            log.error(String.format("On DELETE /medicalRecord : error for delete %s %s medical record : medical record not found",
-                    medicalRecord.firstName(),
-                    medicalRecord.lastName()));
-            return new ApiResourceException(
-                    String.format("Impossible to delete Medical Record for %s %s : medical record not found",
-                            medicalRecord.firstName(),
-                            medicalRecord.lastName())
-            );
+            log.error(deleteErrorNoMedRecordLog(medicalRecord));
+            return new ApiResourceException(deleteErrorNoMedRecordLog(medicalRecord));
         });
+    }
+
+    private String deleteSuccessLog(MedicalRecord medicalRecord) {
+        return String.format("DELETE /medicalRecord - Payload: [%s] - Success: Medical Record for [%s %s] successfully deleted",
+                medicalRecord,
+                medicalRecord.firstName(),
+                medicalRecord.lastName());
+    }
+
+    private String deleteErrorNoMedRecordLog(MedicalRecord medicalRecord) {
+        return String.format("DELETE /medicalRecord - Payload: [%s] - Error: Medical Record for [%s %s] does not exist",
+                medicalRecord,
+                medicalRecord.firstName(),
+                medicalRecord.lastName());
     }
 }

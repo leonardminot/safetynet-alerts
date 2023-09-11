@@ -104,7 +104,8 @@ class MedicalRecordServiceTest {
         assertThatThrownBy(() -> medicalRecordService.createRecord(unknownPersonMedicalRecord))
                 .isInstanceOf(ApiResourceException.class)
                 .hasMessageContaining(
-                        String.format("Impossible to create Medical Record for %s %s : unknown person",
+                        String.format("POST /medicalRecord - Payload: [%s] - Error: Person with name [%s %s] does not exist",
+                                unknownPersonMedicalRecord,
                                 unknownPersonMedicalRecord.firstName(),
                                 unknownPersonMedicalRecord.lastName())
                 );
@@ -130,7 +131,8 @@ class MedicalRecordServiceTest {
         assertThatThrownBy(() -> medicalRecordService.createRecord(currentRecord))
                 .isInstanceOf(ApiResourceException.class)
                 .hasMessageContaining(
-                        String.format("Error while create Medical Record for %s %s : a medical record already exists",
+                        String.format("POST /medicalRecord - Payload: [%s] - Error: Medical record for [%s %s] already exists",
+                                currentRecord,
                                 currentRecord.firstName(),
                                 currentRecord.lastName())
                 );
@@ -197,7 +199,8 @@ class MedicalRecordServiceTest {
         assertThatThrownBy(() -> medicalRecordService.update(unknownPersonMedicalRecord))
                 .isInstanceOf(ApiResourceException.class)
                 .hasMessageContaining(
-                        String.format("Impossible to update, no medical record for %s %s",
+                        String.format("PUT /medicalRecord - Payload: [%s] - Error: Medical Record for [%s %s] does not exist",
+                                unknownPersonMedicalRecord,
                                 unknownPersonMedicalRecord.firstName(),
                                 unknownPersonMedicalRecord.lastName())
                 );
@@ -243,7 +246,8 @@ class MedicalRecordServiceTest {
         assertThatThrownBy(() -> medicalRecordService.delete(unknownPersonMedicalRecord))
                 .isInstanceOf(ApiResourceException.class)
                 .hasMessageContaining(
-                        String.format("Impossible to delete Medical Record for %s %s : medical record not found",
+                        String.format("DELETE /medicalRecord - Payload: [%s] - Error: Medical Record for [%s %s] does not exist",
+                                unknownPersonMedicalRecord,
                                 unknownPersonMedicalRecord.firstName(),
                                 unknownPersonMedicalRecord.lastName())
                 );
