@@ -21,40 +21,56 @@ public class FireStationService {
     public void createMapping(Firestation firestation) {
         firestationRepository.isMappingExist(firestation).ifPresentOrElse(
                 (fs) -> {
-                    log.error(String.format("On POST /firestation : mapping %s already exists", firestation.toString()));
-                    throw new ApiResourceException(String.format("mapping address : [%s] with station : [%s] already exist",
-                            fs.address(),
-                            fs.station()));
+                    log.error(String.format("POST /firestation - Payload : [%s] - Error : Firestation number [%s] for address [%s] already exists", firestation.toString(), firestation.station(), firestation.address()));
+                    throw new ApiResourceException(String.format("POST /firestation - Payload : [%s] - Error : Firestation number [%s] for address [%s] already exists", firestation, firestation.station(), firestation.address()));
                 },
                 () -> {
-                    log.info(String.format("On POST /firestation : Success for the creation of the mapping %s", firestation.toString()));
+                    log.info(String.format("POST /firestation - Payload : [%s] - Success : Firestation number [%s] for address [%s] successfully registered",
+                            firestation,
+                            firestation.station(),
+                            firestation.address()));
                     firestationRepository.createMapping(firestation);
                 }
         );
+
+        // TODO : vérifier le cas : on ne peut pas avoir deux stations pour une seule adress
 
     }
 
     public void updateMapping(Firestation firestation) {
         boolean isAddressExists = firestationRepository.isAddressExist(firestation);
         if (isAddressExists) {
-            log.info(String.format("On PUT /firestation : Success for the update of the mapping %s", firestation.toString()));
+            log.info(String.format("PUT /firestation - Payload : [%s] - Success : Firestation at address [%s] successfully updated with new station number [%s]",
+                    firestation.toString(),
+                    firestation.address(),
+                    firestation.station()));
             firestationRepository.updateMapping(firestation);
         } else {
-            log.error(String.format("On PUT /firestation : No mapping available for address [%s]", firestation.address()));
+            log.error(String.format("PUT /firestation - Payload : [%s] - Error : No firestation found at address [%s]",
+                    firestation,
+                    firestation.address()));
             throw new ApiResourceException(
-                    String.format("No mapping available for address [%s]", firestation.address()));
+                    String.format("PUT /firestation - Payload : [%s] - Error : No firestation found at address [%s]",
+                            firestation,
+                            firestation.address()));
         }
     }
 
     public void deleteMapping(Firestation firestation) {
         boolean isAddressExists = firestationRepository.isAddressExist(firestation);
         if (isAddressExists) {
-            log.info(String.format("On DELETE /firestation : Success for delete mapping %s", firestation.toString()));
+            log.info(String.format("DELETE /firestation - Payload : [%s] - Success : Firestation at address [%s] successfully deleted",
+                    firestation.toString(),
+                    firestation.address()));
             firestationRepository.deleteMapping(firestation);
         } else {
-            log.error(String.format("On DELETE /firestation : Impossible to delete Mapping : unknown adress [%s]", firestation.address()));
+            log.error(String.format("DELETE /firestation - Payload : [%s] - Error : No firestation found at address [%s]",
+                    firestation,
+                    firestation.address()));
             throw new ApiResourceException(
-                    String.format("Impossible to delete Mapping : unknown adress [%s]", firestation.address()));
+                    String.format("DELETE /firestation - Payload : [%s] - Error : No firestation found at address [%s]",
+                            firestation,
+                            firestation.address()));
         }
 
     }
@@ -71,13 +87,19 @@ public class FireStationService {
         boolean isStationExists = firestationRepository.isStationExists(stationNumber);
         if (isStationExists) {
             log.info(
-                    String.format("On DELETE /firestation : Success for delete all address with station number %s", stationNumber));
+                    String.format("DELETE /firestation - Payload : {\"station\":\"%s\"} - Success : All firestations associated with station number %s successfully deleted",
+                            stationNumber,
+                            stationNumber));
             firestationRepository.deleteStation(stationNumber);
         } else {
             log.error(
-                    String.format("On DELETE /firestation : Impossible to delete station [%s] : no station with this number found", stationNumber));
+                    String.format("DELETE /firestation - Payload : {\"station\":\"%s\"} - Error : No firestations found associated with station number %s",
+                            stationNumber,
+                            stationNumber));
             throw new ApiResourceException(
-                    String.format("Impossible to delete station [%s] : no station with this number found", stationNumber)
+                    String.format("DELETE /firestation - Payload : {\"station\":\"%s\"} - Error : No firestations found associated with station number %s",
+                            stationNumber,
+                            stationNumber)
             );
         }
 

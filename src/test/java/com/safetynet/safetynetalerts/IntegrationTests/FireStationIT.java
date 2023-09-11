@@ -94,9 +94,10 @@ public class FireStationIT {
 
         resultActions.andExpect(status().is4xxClientError());
         assertThat(contentAsString).contains(
-                String.format("mapping address : [%s] with station : [%s] already exist",
-                        rueDeLaDame.address(),
-                        rueDeLaDame.station()));
+                String.format("POST /firestation - Payload : [%s] - Error : Firestation number [%s] for address [%s] already exists",
+                        rueDeLaDame,
+                        rueDeLaDame.station(),
+                        rueDeLaDame.address()));
         List<Firestation> firestations = firestationRepository.getFirestations();
         assertThat(firestations).hasSize(3);
     }
@@ -151,7 +152,9 @@ public class FireStationIT {
 
         resultActions.andExpect(status().is4xxClientError());
         assertThat(contentAsString).contains(
-                String.format("No mapping available for address [%s]", unknownAddress.address()));
+                String.format("PUT /firestation - Payload : [%s] - Error : No firestation found at address [%s]",
+                        unknownAddress,
+                        unknownAddress.address()));
         List<Firestation> firestations = firestationRepository.getFirestations();
         assertThat(firestations).hasSize(3);
 
@@ -200,7 +203,9 @@ public class FireStationIT {
 
         resultActions.andExpect(status().is4xxClientError());
         assertThat(contentAsString).contains(
-                String.format("Impossible to delete Mapping : unknown adress [%s]", unknownAddress.address()));
+                String.format("DELETE /firestation - Payload : [%s] - Error : No firestation found at address [%s]",
+                        unknownAddress,
+                        unknownAddress.address()));
         List<Firestation> firestations = firestationRepository.getFirestations();
         assertThat(firestations).hasSize(3);
 
