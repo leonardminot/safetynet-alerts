@@ -23,19 +23,19 @@ public class PersonController {
 
     @PostMapping
     void createNewPerson(@RequestBody @Valid Person person) {
-        log.info("New request : POST /person with body : " + person);
+        log.info("New request : POST /person - Body : " + person);
         personService.createPerson(person);
     }
 
     @PutMapping
     void updatePerson(@RequestBody @Valid Person person) {
-        log.info("New request : PUT /person with body : " + person);
+        log.info("New request : PUT /person - Body : " + person);
         personService.updatePerson(person);
     }
 
     @DeleteMapping
     void deletePerson(@RequestBody @Valid Person person) {
-        log.info("New request : DELETE /person with body : " + person);
+        log.info("New request : DELETE /person - Body : " + person);
         personService.delete(person);
     }
 

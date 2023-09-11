@@ -19,19 +19,19 @@ public class MedicalRecordController {
 
     @PostMapping
     public void createMedicalRecord(@RequestBody @Valid MedicalRecord medicalRecord) {
-        log.info("New request : POST /medicalRecord with body : " + medicalRecord);
+        log.info("New request : POST /medicalRecord - Body : " + medicalRecord);
         medicalRecordService.createRecord(medicalRecord);
     }
 
     @PutMapping
     public void updateMedicalRecord(@RequestBody @Valid MedicalRecord medicalRecord) {
-        log.info("New request : PUT /medicalRecord with body : " + medicalRecord);
+        log.info("New request : PUT /medicalRecord - Body : " + medicalRecord);
         medicalRecordService.update(medicalRecord);
     }
 
     @DeleteMapping
     public void deleteMedicalRecord(@RequestBody @Valid MedicalRecord medicalRecord) {
-        log.info("New request : DELETE /medicalRecord with body : " + medicalRecord);
+        log.info("New request : DELETE /medicalRecord - Body : " + medicalRecord);
         medicalRecordService.delete(medicalRecord);
     }
 }

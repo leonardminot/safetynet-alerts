@@ -21,26 +21,26 @@ public class FireStationController {
 
     @PostMapping
     void createNewMapping(@RequestBody @Valid Firestation firestation) {
-        log.info("New request : POST /firestation with body : " + firestation);
+        log.info("New request : POST /firestation - Body : " + firestation);
         fireStationService.createMapping(firestation);
     }
 
     @PutMapping
     void updateMapping(@RequestBody @Valid Firestation firestation) {
-        log.info("New request : PUT /firestation with body : " + firestation);
+        log.info("New request : PUT /firestation - Body : " + firestation);
         fireStationService.updateMapping(firestation);
     }
 
     @DeleteMapping
     void deleteMapping(@RequestBody @Valid Firestation firestation) {
-        log.info("New request : DELETE /firestation with body : " + firestation);
+        log.info("New request : DELETE /firestation - Body : " + firestation);
         fireStationService.deleteMapping(firestation);
     }
 
     // TODO : vérifier si le endpoint suivant serait valable dans le projet ?
     @DeleteMapping("/stationNumber")
     void deleteStationNumber(@RequestParam String stationNumber) {
-        log.info("New request : DELETE /firestation all station with number : " + stationNumber);
+        log.info("New request : DELETE /firestation - All station number (request param): " + stationNumber);
         fireStationService.deleteStation(stationNumber);
     }
 }
