@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("dev")
-public class ITFireStation {
+public class FireStationIT {
 
     @Autowired
     private MockMvc mockMvc;
@@ -41,7 +41,7 @@ public class ITFireStation {
     private final FirestationRepository firestationRepository;
 
     @Autowired
-    public ITFireStation(@Value("${safetynetalerts.jsonpath.firestations}") String filePathMockFireStations, FirestationRepository firestationRepository) {
+    public FireStationIT(@Value("${safetynetalerts.jsonpath.firestations}") String filePathMockFireStations, FirestationRepository firestationRepository) {
         this.filePathMockFireStations = filePathMockFireStations;
         this.firestationRepository = firestationRepository;
     }

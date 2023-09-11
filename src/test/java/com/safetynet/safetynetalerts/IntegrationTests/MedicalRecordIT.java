@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalerts.configuration.MyAppConfig;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
-import com.safetynet.safetynetalerts.models.Firestation;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
@@ -35,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("dev")
-public class ITMedicalRecord {
+public class MedicalRecordIT {
 
     @Autowired
     private MockMvc mockMvc;
@@ -50,7 +49,7 @@ public class ITMedicalRecord {
 
 
     @Autowired
-    public ITMedicalRecord(@Value("${safetynetalerts.jsonpath.medicalRecords}") String filePathMockMedicalRecords,@Value("${safetynetalerts.jsonpath.persons}") String filePathMockPersons, MedicalRecordRepository medicalRecordRepository, PersonRepository personRepository) {
+    public MedicalRecordIT(@Value("${safetynetalerts.jsonpath.medicalRecords}") String filePathMockMedicalRecords, @Value("${safetynetalerts.jsonpath.persons}") String filePathMockPersons, MedicalRecordRepository medicalRecordRepository, PersonRepository personRepository) {
         this.filePathMockMedicalRecords = filePathMockMedicalRecords;
         this.filePathMockPersons = filePathMockPersons;
         this.medicalRecordRepository = medicalRecordRepository;

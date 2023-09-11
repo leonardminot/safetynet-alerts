@@ -26,13 +26,12 @@ import java.util.Optional;
 
 import static com.jayway.jsonpath.internal.path.PathCompiler.fail;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("dev")
-public class ITPerson {
+public class PersonIT {
 
     @Autowired
     private MockMvc mockMvc;
@@ -42,7 +41,7 @@ public class ITPerson {
     private final PersonRepository personRepository;
 
     @Autowired
-    public ITPerson(@Value("${safetynetalerts.jsonpath.persons}") String filePathMockPersons, PersonRepository personRepository) {
+    public PersonIT(@Value("${safetynetalerts.jsonpath.persons}") String filePathMockPersons, PersonRepository personRepository) {
         this.filePathMockPersons = filePathMockPersons;
         this.personRepository = personRepository;
     }
