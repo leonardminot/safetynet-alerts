@@ -94,7 +94,7 @@ public class FireStationIT {
 
         resultActions.andExpect(status().is4xxClientError());
         assertThat(contentAsString).contains(
-                String.format("POST /firestation - Payload : [%s] - Error : Firestation number [%s] for address [%s] already exists",
+                String.format("POST /firestation - Payload: [%s] - Error: Firestation number [%s] for address [%s] already exists",
                         rueDeLaDame,
                         rueDeLaDame.station(),
                         rueDeLaDame.address()));
@@ -152,7 +152,7 @@ public class FireStationIT {
 
         resultActions.andExpect(status().is4xxClientError());
         assertThat(contentAsString).contains(
-                String.format("PUT /firestation - Payload : [%s] - Error : No firestation found at address [%s]",
+                String.format("PUT /firestation - Payload: [%s] - Error: No firestation found at address [%s]",
                         unknownAddress,
                         unknownAddress.address()));
         List<Firestation> firestations = firestationRepository.getFirestations();
@@ -203,7 +203,7 @@ public class FireStationIT {
 
         resultActions.andExpect(status().is4xxClientError());
         assertThat(contentAsString).contains(
-                String.format("DELETE /firestation - Payload : [%s] - Error : No firestation found at address [%s]",
+                String.format("DELETE /firestation - Payload: [%s] - Error: No firestation found at address [%s]",
                         unknownAddress,
                         unknownAddress.address()));
         List<Firestation> firestations = firestationRepository.getFirestations();
