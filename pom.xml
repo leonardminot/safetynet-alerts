@@ -156,6 +156,7 @@
                 <configuration>
                     <!--suppress UnresolvedMavenProperty -->
                     <argLine>${surefire.jacoco.args}</argLine>
+                    <reportsDirectory>${combine.report.target.dir}</reportsDirectory>
                 </configuration>
             </plugin>
 
@@ -166,6 +167,7 @@
                 <configuration>
                     <!--suppress UnresolvedMavenProperty -->
                     <argLine>${failsafe.jacoco.args}</argLine>
+                    <reportsDirectory>${combine.report.target.dir}</reportsDirectory>
                 </configuration>
                 <executions>
                     <execution>
@@ -176,6 +178,27 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- HTML Surefire report genereation -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>${surefire.version}</version>
+                <executions>
+                    <execution>
+                        <id>final-report-with-all-tests</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>report-only</goal>
+                        </goals>
+                        <configuration>
+                            <reportsDirectory>${combine.report.target.dir}</reportsDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+
         </plugins>
     </build>
 
