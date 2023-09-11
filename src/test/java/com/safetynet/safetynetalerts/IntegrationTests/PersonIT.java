@@ -104,7 +104,10 @@ public class PersonIT {
         String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
 
         resultActions.andExpect(status().is4xxClientError());
-        assertThat(contentAsString).contains("person Magnus Carlsen already exists");
+        assertThat(contentAsString).contains(String.format("POST /person - Payload: [%s] - Error: Person with name [%s %s] already exists",
+                magnus,
+                magnus.firstName(),
+                magnus.lastName()));
         List<Person> persons = personRepository.getPersons();
         assertThat(persons).hasSize(3);
 
@@ -171,7 +174,10 @@ public class PersonIT {
         String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
 
         resultActions.andExpect(status().is4xxClientError());
-        assertThat(contentAsString).contains("person Wesley So doesn't exist");
+        assertThat(contentAsString).contains(String.format("PUT /person - Payload: [%s] - Error: Person with name [%s %s] does not exist",
+                unknownPerson,
+                unknownPerson.firstName(),
+                unknownPerson.lastName()));
 
     }
 
@@ -224,7 +230,10 @@ public class PersonIT {
         String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
 
         resultActions.andExpect(status().is4xxClientError());
-        assertThat(contentAsString).contains("person Wesley So doesn't exist");
+        assertThat(contentAsString).contains(String.format("PUT /person - Payload: [%s] - Error: Person with name [%s %s] does not exist",
+                unknownPerson,
+                unknownPerson.firstName(),
+                unknownPerson.lastName()));
 
     }
 

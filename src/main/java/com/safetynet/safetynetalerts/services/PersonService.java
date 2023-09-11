@@ -25,12 +25,21 @@ public class PersonService {
         Optional<Person> personInDB = personRepository.selectPersonByName(person.firstName(), person.lastName());
 
         personInDB.ifPresentOrElse(p -> {
-                    log.error(String.format("On POST /person : person %s %s already exists", person.firstName(), person.lastName()));
+                    log.error(String.format("POST /person - Payload: [%s] - Error: Person with name [%s %s] already exists",
+                            person,
+                            person.firstName(),
+                            person.lastName()));
                     throw new ApiResourceException(
-                            String.format("person %s %s already exists", person.firstName(), person.lastName()));
+                            String.format("POST /person - Payload: [%s] - Error: Person with name [%s %s] already exists",
+                                    person,
+                                    person.firstName(),
+                                    person.lastName()));
                 },
                 () -> {
-                    log.info(String.format("On POST /person : Success for the creation of [%s %s] :" + person, person.firstName(), person.lastName()));
+                    log.info(String.format("POST /person - Payload: [%s] - Success: Person [%s %s] successfully registered",
+                            person,
+                            person.firstName(),
+                            person.lastName()));
                     personRepository.savePerson(person);
                 });
     }
@@ -39,13 +48,22 @@ public class PersonService {
         Optional<Person> personInDB = personRepository.selectPersonByName(person.firstName(), person.lastName());
 
         personInDB.ifPresentOrElse(p -> {
-                    log.info(String.format("On PUT /person : Success for the update of [%s %s] :" + person, person.firstName(), person.lastName()));
+                    log.info(String.format("PUT /person - Payload: [%s] - Success: Person [%s %s] successfully updated",
+                            person,
+                            person.firstName(),
+                            person.lastName()));
                     personRepository.update(person);
                 },
                 () -> {
-                    log.error(String.format("On PUT /person : person %s %s doesn't exist", person.firstName(), person.lastName()));
+                    log.error(String.format("PUT /person - Payload: [%s] - Error: Person with name [%s %s] does not exist",
+                            person,
+                            person.firstName(),
+                            person.lastName()));
                     throw new ApiResourceException(
-                            String.format("person %s %s doesn't exist", person.firstName(), person.lastName()));
+                            String.format("PUT /person - Payload: [%s] - Error: Person with name [%s %s] does not exist",
+                                    person,
+                                    person.firstName(),
+                                    person.lastName()));
                 });
     }
 
@@ -58,13 +76,19 @@ public class PersonService {
         Optional<Person> personInDB = personRepository.selectPersonByName(personToDelete.firstName(), personToDelete.lastName());
 
         personInDB.ifPresentOrElse(p -> {
-                    log.info(String.format("On PUT /person : Success for the suppression of [%s %s] :" + personToDelete, personToDelete.firstName(), personToDelete.lastName()));
+                    log.info(String.format("DELETE /person - Payload: [%s] - Success: Person [%s %s] successfully deleted", personToDelete, personToDelete.firstName(), personToDelete.lastName()));
                     personRepository.delete(personToDelete);
                 },
                 () -> {
-                    log.error(String.format("On DELETE /person : person %s %s doesn't exist", personToDelete.firstName(), personToDelete.lastName()));
+                    log.error(String.format("PUT /person - Payload: [%s] - Error: Person with name [%s %s] does not exist",
+                            personToDelete,
+                            personToDelete.firstName(),
+                            personToDelete.lastName()));
                     throw new ApiResourceException(
-                            String.format("person %s %s doesn't exist", personToDelete.firstName(), personToDelete.lastName()));
+                            String.format("PUT /person - Payload: [%s] - Error: Person with name [%s %s] does not exist",
+                                    personToDelete,
+                                    personToDelete.firstName(),
+                                    personToDelete.lastName()));
                 });
     }
 }

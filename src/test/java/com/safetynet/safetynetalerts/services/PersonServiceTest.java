@@ -87,7 +87,10 @@ class PersonServiceTest {
         assertThatThrownBy(() -> personService.createPerson(person))
                 .isInstanceOf(ApiResourceException.class)
                 .hasMessageContaining(
-                        String.format("person %s %s already exists", person.firstName(), person.lastName()));
+                        String.format("POST /person - Payload: [%s] - Error: Person with name [%s %s] already exists",
+                                person,
+                                person.firstName(),
+                                person.lastName()));
         then(personRepository).should(never()).savePerson(any(Person.class));
     }
 
@@ -147,7 +150,10 @@ class PersonServiceTest {
         // Then
         assertThatThrownBy(() -> personService.updatePerson(personThatDoesntExist))
                 .isInstanceOf(ApiResourceException.class)
-                .hasMessageContaining(String.format("person %s %s doesn't exist", personThatDoesntExist.firstName(), personThatDoesntExist.lastName()));
+                .hasMessageContaining(String.format("PUT /person - Payload: [%s] - Error: Person with name [%s %s] does not exist",
+                        personThatDoesntExist,
+                        personThatDoesntExist.firstName(),
+                        personThatDoesntExist.lastName()));
         then(personRepository).should(never()).update(any(Person.class));
     }
 
@@ -194,7 +200,10 @@ class PersonServiceTest {
         // Then
         assertThatThrownBy(() -> personService.delete(personThatDoesntExist))
                 .isInstanceOf(ApiResourceException.class)
-                .hasMessageContaining(String.format("person %s %s doesn't exist", personThatDoesntExist.firstName(), personThatDoesntExist.lastName()));
+                .hasMessageContaining(String.format("PUT /person - Payload: [%s] - Error: Person with name [%s %s] does not exist",
+                        personThatDoesntExist,
+                        personThatDoesntExist.firstName(),
+                        personThatDoesntExist.lastName()));
         then(personRepository).should(never()).delete(any(Person.class));
     }
 }
