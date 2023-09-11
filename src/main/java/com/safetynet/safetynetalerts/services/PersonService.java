@@ -54,6 +54,7 @@ public class PersonService {
     }
 
     public void delete(Person personToDelete) {
+        // TODO : lorsqu'on supprime une personne : doit-on également supprimer les MedicalRecords associés ?
         Optional<Person> personInDB = personRepository.selectPersonByName(personToDelete.firstName(), personToDelete.lastName());
 
         personInDB.ifPresentOrElse(p -> {
