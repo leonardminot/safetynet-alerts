@@ -1,10 +1,13 @@
 package com.safetynet.safetynetalerts.services;
 
+import com.safetynet.safetynetalerts.dto.FirestationCoverageDTO;
 import com.safetynet.safetynetalerts.repositories.FirestationRepository;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class FireStationCoverageService {
@@ -18,5 +21,10 @@ public class FireStationCoverageService {
         this.personRepository = personRepository;
         this.medicalRecordRepository = medicalRecordRepository;
         this.firestationRepository = firestationRepository;
+    }
+
+
+    public List<FirestationCoverageDTO> getCoverage(String stationNumber) {
+        return null;
     }
 }
