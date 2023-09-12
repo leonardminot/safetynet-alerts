@@ -11,7 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +33,11 @@ public class FirestationRepository {
         try {
             firestations = objectMapper.readValue(Paths.get(filePath).toFile(), new TypeReference<>() {});
         } catch (IOException e) {
-            firestations = Collections.emptyList();
+            //TODO : moche à travailler
+            // deux cas à considérer :
+            // - La liste est vide
+            // - Le fichier n'est pas trouvé
+            firestations = new ArrayList<>();
         }
         return firestations;
     }
