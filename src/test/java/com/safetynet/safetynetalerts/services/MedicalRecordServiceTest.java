@@ -45,7 +45,7 @@ class MedicalRecordServiceTest {
 
     @BeforeEach
     void setUp() {
-        this.medicalRecordService = new MedicalRecordService(medicalRecordRepository, personRepository);
+        this.medicalRecordService = new MedicalRecordService(new MedicalRecordMessageService(), medicalRecordRepository, personRepository);
     }
 
     @Test
