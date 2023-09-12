@@ -1,7 +1,9 @@
 package com.safetynet.safetynetalerts.services;
 
 import com.safetynet.safetynetalerts.exception.ApiResourceException;
+import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.models.Person;
+import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +15,8 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,12 +36,18 @@ class PersonServiceTest {
     @Mock
     private PersonRepository personRepository;
 
+    @Mock
+    private MedicalRecordRepository medicalRecordRepository;
+
     @Captor
     private ArgumentCaptor<Person> personArgumentCaptor;
 
+    @Captor
+    private ArgumentCaptor<MedicalRecord> medicalRecordArgumentCaptor;
+
     @BeforeEach
     void setUp() {
-        personService = new PersonService(personRepository, new PersonMessageService());
+        personService = new PersonService(personRepository, new PersonMessageService(), medicalRecordRepository);
     }
 
     @AfterEach
@@ -176,6 +186,67 @@ class PersonServiceTest {
         personService.delete(personToDelete);
 
         // Then
+        then(personRepository).should().delete(personArgumentCaptor.capture());
+        assertThat(personArgumentCaptor.getValue()).isEqualTo(personToDelete);
+    }
+
+    @Test
+    void itShouldDeleteAPersonAndHisMedicalRecordIfPresent() {
+        // Given
+        Person personToDelete = new Person(
+                "Maxime",
+                "Vachier-Lagrave",
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        MedicalRecord personToDeleteMedicalRecord = new MedicalRecord(
+                "Maxime",
+                "Vachier-Lagrave",
+                LocalDate.parse("1990-10-21"),
+                List.of(),
+                List.of()
+        );
+
+        // ... and the Person is found
+        given(personRepository.selectPersonByName(any(String.class), any(String.class))).willReturn(Optional.of(personToDelete));
+        // ... and his Medical Record is found
+        given(medicalRecordRepository.selectMedicalRecordByName(any(String.class), any(String.class))).willReturn(Optional.of(personToDeleteMedicalRecord));
+
+        // When
+        personService.delete(personToDelete);
+
+        // Then
+        then(medicalRecordRepository).should().delete(medicalRecordArgumentCaptor.capture());
+        assertThat(medicalRecordArgumentCaptor.getValue()).isEqualTo(personToDeleteMedicalRecord);
+    }
+
+    @Test
+    void itShouldDeleteAPersonAndNotHisMedicalRecordIfNotPresent() {
+        // Given
+        Person personToDelete = new Person(
+                "Maxime",
+                "Vachier-Lagrave",
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        // ... and the Person is found
+        given(personRepository.selectPersonByName(any(String.class), any(String.class))).willReturn(Optional.of(personToDelete));
+        // ... and his Medical Record is not found
+        given(medicalRecordRepository.selectMedicalRecordByName(any(String.class), any(String.class))).willReturn(Optional.empty());
+
+        // When
+        personService.delete(personToDelete);
+
+        // Then
+        then(medicalRecordRepository).should(never()).delete(any(MedicalRecord.class));
         then(personRepository).should().delete(personArgumentCaptor.capture());
         assertThat(personArgumentCaptor.getValue()).isEqualTo(personToDelete);
     }

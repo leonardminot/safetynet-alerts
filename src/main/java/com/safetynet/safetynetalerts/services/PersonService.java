@@ -2,6 +2,7 @@ package com.safetynet.safetynetalerts.services;
 
 import com.safetynet.safetynetalerts.exception.ApiResourceException;
 import com.safetynet.safetynetalerts.models.Person;
+import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,13 @@ public class PersonService {
     private final PersonRepository personRepository;
     private final PersonMessageService messageService;
 
+    private final MedicalRecordRepository medicalRecordRepository;
+
     @Autowired
-    public PersonService(PersonRepository personRepository, PersonMessageService messageService) {
+    public PersonService(PersonRepository personRepository, PersonMessageService messageService, MedicalRecordRepository medicalRecordRepository) {
         this.personRepository = personRepository;
         this.messageService = messageService;
+        this.medicalRecordRepository = medicalRecordRepository;
     }
 
     public void createPerson(Person person) {
@@ -56,9 +60,18 @@ public class PersonService {
     }
 
     public void delete(Person personToDelete) {
-        // TODO : lorsqu'on supprime une personne : on doit supprimer le Medical Record associé
         throwIfPersonNotFound(personToDelete, messageService.deleteErrorNoPersonFoundLogMess(personToDelete));
         personRepository.delete(personToDelete);
         log.info(messageService.deleteSuccessLogMess(personToDelete));
+        deleteAssociatedMedicalRecordIfPresent(personToDelete);
+    }
+
+    private void deleteAssociatedMedicalRecordIfPresent(Person personToDelete) {
+        medicalRecordRepository.selectMedicalRecordByName(personToDelete.firstName(), personToDelete.lastName())
+                .ifPresentOrElse((mr) -> {
+                            medicalRecordRepository.delete(mr);
+                            log.info(messageService.deleteMedicalRecordIsPresent(personToDelete));
+                        },
+                        () -> log.info(messageService.deleteMedicalRecordIsNotPresent(personToDelete)));
     }
 }

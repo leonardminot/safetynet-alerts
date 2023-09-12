@@ -49,4 +49,18 @@ public class PersonMessageService {
                 personToDelete.firstName(),
                 personToDelete.lastName());
     }
+
+    String deleteMedicalRecordIsNotPresent(Person personToDelete) {
+        return String.format("DELETE /person - Payload: [%s] - No medical record associate to [%s %s], nothing to delete",
+                personToDelete,
+                personToDelete.firstName(),
+                personToDelete.lastName());
+    }
+
+    String deleteMedicalRecordIsPresent(Person personToDelete) {
+        return String.format("DELETE /person - Payload: [%s] - Medical record associate to [%s %s] successfully deleted",
+                personToDelete,
+                personToDelete.firstName(),
+                personToDelete.lastName());
+    }
 }
