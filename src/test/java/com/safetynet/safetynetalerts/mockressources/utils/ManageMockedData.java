@@ -60,11 +60,22 @@ public class ManageMockedData {
                 "gari@email.com"
         );
 
+        Person miniMagnus = new Person(
+                "miniMagnus",
+                "miniCarlsen",
+                "007 Rue de la Dame",
+                "Oslo",
+                "63429",
+                null,
+                null
+        );
+
 
         mockedList.add(magnus);
         mockedList.add(maxime);
         mockedList.add(alireza);
         mockedList.add(gari);
+        mockedList.add(miniMagnus);
 
         return mockedList;
     }
@@ -118,6 +129,14 @@ public class ManageMockedData {
                 List.of("nillacilan")
         );
 
+        MedicalRecord miniMagnusRecord = new MedicalRecord(
+                "miniMagnus",
+                "miniCarlsen",
+                LocalDate.parse("2020-11-30"),
+                List.of(),
+                List.of()
+        );
+
         MedicalRecord maximeRecord = new MedicalRecord(
                 "Maxime",
                 "Vachier-Lagrave",
@@ -126,8 +145,18 @@ public class ManageMockedData {
                 List.of()
         );
 
+        MedicalRecord gariRecord = new MedicalRecord(
+                "Gari",
+                "Kasparov",
+                LocalDate.parse("1963-04-13"),
+                List.of(),
+                List.of()
+        );
+
         mockedList.add(magnusRecord);
         mockedList.add(maximeRecord);
+        mockedList.add(miniMagnusRecord);
+        mockedList.add(gariRecord);
 
         return mockedList;
     }

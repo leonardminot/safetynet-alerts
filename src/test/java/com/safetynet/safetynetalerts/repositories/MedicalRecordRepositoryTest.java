@@ -36,7 +36,7 @@ class MedicalRecordRepositoryTest {
     }
 
     @Test
-    void itShouldReturnTwoMedicalRecords() {
+    void itShouldReturnFourMedicalRecords() {
         // Given
         List<MedicalRecord> medicalRecordList;
 
@@ -44,7 +44,7 @@ class MedicalRecordRepositoryTest {
         medicalRecordList = medicalRecordRepository.getMedicalRecords();
 
         // Then
-        assertThat(medicalRecordList).hasSize(2);
+        assertThat(medicalRecordList).hasSize(4);
     }
 
     @Test
@@ -63,7 +63,7 @@ class MedicalRecordRepositoryTest {
 
         // Then
         List<MedicalRecord> allMedicalRecords = medicalRecordRepository.getMedicalRecords();
-        assertThat(allMedicalRecords).hasSize(3);
+        assertThat(allMedicalRecords).hasSize(5);
         assertThat(allMedicalRecords.get(allMedicalRecords.size() - 1)).isEqualTo(alirezaRecord);
 
     }
@@ -132,7 +132,7 @@ class MedicalRecordRepositoryTest {
                 .filter(mr -> mr.firstName().equals(currentRecord.firstName()) && mr.lastName().equals(currentRecord.lastName()))
                 .findFirst();
 
-        assertThat(medicalRecords).hasSize(2);
+        assertThat(medicalRecords).hasSize(4);
         assertThat(optionalMedicalRecord)
                 .isPresent()
                 .hasValueSatisfying(mr -> assertThat(mr).isEqualTo(finalRecord));
@@ -157,7 +157,7 @@ class MedicalRecordRepositoryTest {
         Optional<MedicalRecord> optionalMedicalRecord = medicalRecords.stream()
                 .filter(mr -> mr.firstName().equals(recordToDelete.firstName()) && mr.lastName().equals(recordToDelete.lastName()))
                 .findAny();
-        assertThat(medicalRecords).hasSize(1);
+        assertThat(medicalRecords).hasSize(3);
         assertThat(optionalMedicalRecord).isNotPresent();
     }
 }
