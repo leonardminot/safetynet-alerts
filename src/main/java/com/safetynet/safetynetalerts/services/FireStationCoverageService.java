@@ -54,28 +54,23 @@ public class FireStationCoverageService {
     }
 
     public long getTotalAdults(String stationNumber) {
-
-        LocalDate now = LocalDate.now();
-        LocalDate majorDate = now.minusYears(18);
-
-        Map<FirestationCoverageDTO, LocalDate> personWithBirthdate = new HashMap<>();
-
-        List<MedicalRecord> medicalRecords = medicalRecordRepository.getMedicalRecords();
+        LocalDate majorDate = LocalDate.now().minusYears(18);
 
         List<FirestationCoverageDTO> firestationCoverage = getCoverageForAStationNumber(stationNumber);
+        List<MedicalRecord> medicalRecords = medicalRecordRepository.getMedicalRecords();
 
-        for (FirestationCoverageDTO firestationCoverageDTO : firestationCoverage) {
-            Optional<LocalDate> birthDate = medicalRecords.stream()
-                    .filter(mr -> mr.firstName().equals(firestationCoverageDTO.firstName()) && mr.lastName().equals(firestationCoverageDTO.lastName()))
-                    .map(MedicalRecord::birthdate)
-                    .findAny();
-            personWithBirthdate.put(firestationCoverageDTO, birthDate.orElse(LocalDate.now()));
-            // TODO : Behavior when medical record is not fill to do
-        }
-
-        return personWithBirthdate.entrySet().stream()
-                .filter(entry -> entry.getValue().isBefore(majorDate) || entry.getValue().isEqual(majorDate))
+        // TODO : Gérer le cas où un dossier médical est absent
+        return firestationCoverage.stream()
+                .map(coverage -> getBirthDate(coverage, medicalRecords))
+                .filter(birthdate -> birthdate.isBefore(majorDate) || birthdate.isEqual(majorDate))
                 .count();
+    }
 
+    private LocalDate getBirthDate(FirestationCoverageDTO firestationCoverageDTO, List<MedicalRecord> medicalRecords) {
+        return medicalRecords.stream()
+                .filter(mr -> mr.firstName().equals(firestationCoverageDTO.firstName()) && mr.lastName().equals(firestationCoverageDTO.lastName()))
+                .map(MedicalRecord::birthdate)
+                .findAny()
+                .orElse(LocalDate.now());
     }
 }
