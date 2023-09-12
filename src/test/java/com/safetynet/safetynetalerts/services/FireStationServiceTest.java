@@ -58,7 +58,7 @@ class FireStationServiceTest {
 
     @Test
     void itShouldThrowWhenMappingAlreadyExists() {
-        // Given a existant mapping
+        // Given an existing mapping
         Firestation rueDeLaDame = new Firestation(
                 "007 Rue de la Dame",
                 "1"
@@ -81,9 +81,33 @@ class FireStationServiceTest {
     }
 
     @Test
+    void itShouldThrowWhenAddressAlreadyExists() {
+        // Given an existing address but with a new station number
+        Firestation rueDeLaDame = new Firestation(
+                "007 Rue de la Dame",
+                "7" // Instead of "1" in the existing database
+        );
+
+        // ... the mapping doesn't exist
+        when(firestationRepository.isMappingExist(any(Firestation.class))).thenReturn(Optional.empty());
+        when(firestationRepository.isAddressExist(any(Firestation.class))).thenReturn(true);
+
+        // When
+        // Then
+        assertThatThrownBy(() -> fireStationService.createMapping(rueDeLaDame))
+                .isInstanceOf(ApiResourceException.class)
+                .hasMessageContaining(
+                        String.format("POST /firestation - Payload: [%s] - Error: A Firestation for address [%s] already exists",
+                                rueDeLaDame,
+                                rueDeLaDame.address())
+                );
+        then(firestationRepository).should(never()).createMapping(any(Firestation.class));
+    }
+
+    @Test
     void itShouldUpdateTheStationNumber() {
         // Given
-        // ... existant mapping
+        // ... existing mapping
         Firestation currentMapping = new Firestation(
                 "007 Rue de la Dame",
                 "1"

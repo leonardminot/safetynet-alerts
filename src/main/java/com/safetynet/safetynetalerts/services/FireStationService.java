@@ -22,9 +22,17 @@ public class FireStationService {
 
     public void createMapping(Firestation firestation) {
         throwIfFirestationExists(firestation);
+        throwIfAddressHasAStation(firestation);
         firestationRepository.createMapping(firestation);
         log.info(fsMessageService.postSuccessLogMessage(firestation));
-        // TODO : vérifier le cas : on ne peut pas avoir deux stations pour une seule adresse
+    }
+
+    private void throwIfAddressHasAStation(Firestation firestation) {
+        Boolean isAddressExist = firestationRepository.isAddressExist(firestation);
+        if (isAddressExist) {
+            log.error(fsMessageService.postErrorAddressHasStationLogMess(firestation));
+            throw new ApiResourceException(fsMessageService.postErrorAddressHasStationLogMess(firestation));
+        }
     }
 
     private void throwIfFirestationExists(Firestation firestation) {

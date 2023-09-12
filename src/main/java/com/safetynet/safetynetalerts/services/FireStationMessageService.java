@@ -58,4 +58,10 @@ public class FireStationMessageService {
                 stationNumber,
                 stationNumber);
     }
+
+    String postErrorAddressHasStationLogMess(Firestation firestation) {
+        return String.format("POST /firestation - Payload: [%s] - Error: A Firestation for address [%s] already exists",
+                firestation,
+                firestation.address());
+    }
 }
