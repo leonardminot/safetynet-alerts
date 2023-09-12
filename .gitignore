@@ -4,6 +4,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 src/test/java/com/safetynet/safetynetalerts/mockressources/*.json
+TestRequest.http
+.idea/httpRequests
 
 ### STS ###
 .apt_generated
