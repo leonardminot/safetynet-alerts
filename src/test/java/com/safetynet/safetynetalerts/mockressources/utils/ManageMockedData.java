@@ -16,9 +16,8 @@ import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ManageMockedData {
-    public static void createPersonMockedData(String filePath) throws IOException {
 
-        ObjectMapper objectMapper = MyAppConfig.objectMapper();
+    public static List<Person> createPersonMockedDataList() {
         List<Person> mockedList = new ArrayList<>();
 
         Person magnus = new Person(
@@ -67,11 +66,17 @@ public class ManageMockedData {
         mockedList.add(alireza);
         mockedList.add(gari);
 
+        return mockedList;
+    }
+
+    public static void createPersonMockedData(String filePath) throws IOException {
+
+        ObjectMapper objectMapper = MyAppConfig.objectMapper();
+        List<Person> mockedList = createPersonMockedDataList();
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(filePath).toFile(), mockedList);
     }
 
-    public static void createFirestationsMockedData(String filePath) throws IOException {
-        ObjectMapper objectMapper = MyAppConfig.objectMapper();
+    public static List<Firestation> createFirestationsMockedDataList() {
         List<Firestation> mockedList = new ArrayList<>();
 
         Firestation rueDeLaDame = new Firestation(
@@ -93,11 +98,16 @@ public class ManageMockedData {
         mockedList.add(rueDeLaTour);
         mockedList.add(rueDuFou);
 
+        return mockedList;
+    }
+
+    public static void createFirestationsMockedData(String filePath) throws IOException {
+        ObjectMapper objectMapper = MyAppConfig.objectMapper();
+        List<Firestation> mockedList = createFirestationsMockedDataList();
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(filePath).toFile(), mockedList);
     }
 
-    public static void createMedicalRecordsMockedData(String filePath) throws IOException {
-        ObjectMapper objectMapper = MyAppConfig.objectMapper();
+    public static List<MedicalRecord> createMedicalRecordsMockedDataList() {
         List<MedicalRecord> mockedList = new ArrayList<>();
 
         MedicalRecord magnusRecord = new MedicalRecord(
@@ -119,6 +129,12 @@ public class ManageMockedData {
         mockedList.add(magnusRecord);
         mockedList.add(maximeRecord);
 
+        return mockedList;
+    }
+
+    public static void createMedicalRecordsMockedData(String filePath) throws IOException {
+        ObjectMapper objectMapper = MyAppConfig.objectMapper();
+        List<MedicalRecord> mockedList = createMedicalRecordsMockedDataList();
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(filePath).toFile(), mockedList);
     }
 
