@@ -1,6 +1,6 @@
 package com.safetynet.safetynetalerts.services;
 
-import com.safetynet.safetynetalerts.dto.FirestationCoverageDTO;
+import com.safetynet.safetynetalerts.dto.PersonsCoveredByFirestationDTO;
 import com.safetynet.safetynetalerts.models.Firestation;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.models.Person;
@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class FireStationCoverageService {
@@ -24,20 +21,22 @@ public class FireStationCoverageService {
     private final FirestationRepository firestationRepository;
 
     @Autowired
-    public FireStationCoverageService(PersonRepository personRepository, MedicalRecordRepository medicalRecordRepository, FirestationRepository firestationRepository) {
+    public FireStationCoverageService(PersonRepository personRepository,
+                                      MedicalRecordRepository medicalRecordRepository,
+                                      FirestationRepository firestationRepository) {
         this.personRepository = personRepository;
         this.medicalRecordRepository = medicalRecordRepository;
         this.firestationRepository = firestationRepository;
     }
 
 
-    public List<FirestationCoverageDTO> getCoverageForAStationNumber(String stationNumber) {
+    public List<PersonsCoveredByFirestationDTO> getCoverageForAStationNumber(String stationNumber) {
         List<String> addresses = getAddressesForAStationNumber(stationNumber);
         List<Person> persons = personRepository.getPersons();
 
         return persons.stream()
                 .filter(person -> addresses.contains(person.address()))
-                .map(person -> new FirestationCoverageDTO(
+                .map(person -> new PersonsCoveredByFirestationDTO(
                         person.firstName(),
                         person.lastName(),
                         person.address(),
@@ -56,7 +55,7 @@ public class FireStationCoverageService {
     public long getTotalAdults(String stationNumber) {
         LocalDate majorDate = LocalDate.now().minusYears(18);
 
-        List<FirestationCoverageDTO> firestationCoverage = getCoverageForAStationNumber(stationNumber);
+        List<PersonsCoveredByFirestationDTO> firestationCoverage = getCoverageForAStationNumber(stationNumber);
         List<MedicalRecord> medicalRecords = medicalRecordRepository.getMedicalRecords();
 
         // TODO : Gérer le cas où un dossier médical est absent
@@ -66,11 +65,17 @@ public class FireStationCoverageService {
                 .count();
     }
 
-    private LocalDate getBirthDate(FirestationCoverageDTO firestationCoverageDTO, List<MedicalRecord> medicalRecords) {
+    private LocalDate getBirthDate(PersonsCoveredByFirestationDTO personsCoveredByFirestationDTO, List<MedicalRecord> medicalRecords) {
         return medicalRecords.stream()
-                .filter(mr -> mr.firstName().equals(firestationCoverageDTO.firstName()) && mr.lastName().equals(firestationCoverageDTO.lastName()))
+                .filter(mr -> mr.firstName().equals(personsCoveredByFirestationDTO.firstName()) && mr.lastName().equals(personsCoveredByFirestationDTO.lastName()))
                 .map(MedicalRecord::birthdate)
                 .findAny()
                 .orElse(LocalDate.now());
+    }
+
+
+    public long getTotalChildren(String stationNumber) {
+        long totalPerson = getCoverageForAStationNumber(stationNumber).size();
+        return totalPerson - getTotalAdults(stationNumber);
     }
 }

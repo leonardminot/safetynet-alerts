@@ -1,6 +1,6 @@
 package com.safetynet.safetynetalerts.services;
 
-import com.safetynet.safetynetalerts.dto.FirestationCoverageDTO;
+import com.safetynet.safetynetalerts.dto.PersonsCoveredByFirestationDTO;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.repositories.FirestationRepository;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
@@ -50,21 +50,21 @@ public class FireStationCoverageServiceTest {
     void itShouldThreePersonsForFireStation1() {
         // Given
         String stationNumber = "1";
-        FirestationCoverageDTO magnus = new FirestationCoverageDTO(
+        PersonsCoveredByFirestationDTO magnus = new PersonsCoveredByFirestationDTO(
                 "Magnus",
                 "Carlsen",
                 "007 Rue de la Dame",
                 "123-456-7890"
         );
 
-        FirestationCoverageDTO miniMagnus = new FirestationCoverageDTO(
+        PersonsCoveredByFirestationDTO miniMagnus = new PersonsCoveredByFirestationDTO(
                 "miniMagnus",
                 "miniCarlsen",
                 "007 Rue de la Dame",
                 null
         );
 
-        FirestationCoverageDTO gari = new FirestationCoverageDTO(
+        PersonsCoveredByFirestationDTO gari = new PersonsCoveredByFirestationDTO(
                 "Gari",
                 "Kasparov",
                 "105 Rue du Fou",
@@ -75,7 +75,7 @@ public class FireStationCoverageServiceTest {
         given(firestationRepository.getFirestations()).willReturn(ManageMockedData.createFirestationsMockedDataList());
 
         // When
-        List<FirestationCoverageDTO> firestationCoverageList = fireStationCoverageService.getCoverageForAStationNumber(stationNumber);
+        List<PersonsCoveredByFirestationDTO> firestationCoverageList = fireStationCoverageService.getCoverageForAStationNumber(stationNumber);
 
         // Then
         assertThat(firestationCoverageList).hasSize(3);
@@ -95,6 +95,22 @@ public class FireStationCoverageServiceTest {
 
         // Then
         assertThat(adults).isEqualTo(2);
+
+    }
+
+    @Test
+    void itShouldReturn1Child() {
+        // Given
+        String stationNumber = "1";
+        given(personRepository.getPersons()).willReturn(ManageMockedData.createPersonMockedDataList());
+        given(firestationRepository.getFirestations()).willReturn(ManageMockedData.createFirestationsMockedDataList());
+        given(medicalRecordRepository.getMedicalRecords()).willReturn(ManageMockedData.createMedicalRecordsMockedDataList());
+
+        // When
+        long childs = fireStationCoverageService.getTotalChildren(stationNumber);
+
+        // Then
+        assertThat(childs).isEqualTo(1);
 
     }
 }

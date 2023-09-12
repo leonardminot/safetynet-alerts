@@ -1,6 +1,6 @@
 package com.safetynet.safetynetalerts.dto;
 
-public record FirestationCoverageDTO(
+public record PersonsCoveredByFirestationDTO(
         String firstName,
         String lastName,
         String address,
