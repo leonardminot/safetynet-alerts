@@ -37,7 +37,7 @@ class FireStationServiceTest {
 
     @BeforeEach
     void setUp() {
-        fireStationService = new FireStationService(firestationRepository);
+        fireStationService = new FireStationService(firestationRepository, new FireStationMessageService());
     }
 
     @Test
