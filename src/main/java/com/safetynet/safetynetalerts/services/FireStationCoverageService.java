@@ -29,13 +29,9 @@ public class FireStationCoverageService {
 
 
     public List<FirestationCoverageDTO> getCoverage(String stationNumber) {
-        List<Firestation> firestations = firestationRepository.getFirestations();
-        List<String> addresses = firestations.stream()
-                .filter(fs -> fs.station().equals(stationNumber))
-                .map(Firestation::address)
-                .toList();
-
+        List<String> addresses = getAddressesForAStationNumber(stationNumber);
         List<Person> persons = personRepository.getPersons();
+
         return persons.stream()
                 .filter(person -> addresses.contains(person.address()))
                 .map(person -> new FirestationCoverageDTO(
@@ -44,5 +40,13 @@ public class FireStationCoverageService {
                         person.address(),
                         person.phone()
                 )).toList();
+    }
+
+    private List<String> getAddressesForAStationNumber(String stationNumber) {
+        List<Firestation> firestations = firestationRepository.getFirestations();
+        return firestations.stream()
+                .filter(fs -> fs.station().equals(stationNumber))
+                .map(Firestation::address)
+                .toList();
     }
 }
