@@ -15,44 +15,32 @@ import java.util.Optional;
 public class PersonService {
 
     private final PersonRepository personRepository;
+    private final PersonMessageService messageService;
 
     @Autowired
-    public PersonService(PersonRepository personRepository) {
+    public PersonService(PersonRepository personRepository, PersonMessageService messageService) {
         this.personRepository = personRepository;
+        this.messageService = messageService;
     }
 
     public void createPerson(Person person) {
         throwIfPersonExists(person);
         personRepository.savePerson(person);
-        log.info(postSuccessLogMess(person));
+        log.info(messageService.postSuccessLogMess(person));
     }
 
     private void throwIfPersonExists(Person person) {
         Optional<Person> personInDB = personRepository.selectPersonByName(person.firstName(), person.lastName());
         personInDB.ifPresent(p -> {
-            log.error(postErrorPersonExistsLogMess(person));
-            throw new ApiResourceException(postErrorPersonExistsLogMess(person));
+            log.error(messageService.postErrorPersonExistsLogMess(person));
+            throw new ApiResourceException(messageService.postErrorPersonExistsLogMess(person));
         });
     }
 
-    private String postSuccessLogMess(Person person) {
-        return String.format("POST /person - Payload: [%s] - Success: Person [%s %s] successfully registered",
-                person,
-                person.firstName(),
-                person.lastName());
-    }
-
-    private String postErrorPersonExistsLogMess(Person person) {
-        return String.format("POST /person - Payload: [%s] - Error: Person with name [%s %s] already exists",
-                person,
-                person.firstName(),
-                person.lastName());
-    }
-
     public void updatePerson(Person person) {
-        throwIfPersonNotFound(person, putErrorPersonExistsLogMess(person));
+        throwIfPersonNotFound(person, messageService.putErrorPersonExistsLogMess(person));
         personRepository.update(person);
-        log.info(putSuccessLogMess(person));
+        log.info(messageService.putSuccessLogMess(person));
     }
 
     private void throwIfPersonNotFound(Person person, String logMessage) {
@@ -63,42 +51,14 @@ public class PersonService {
         });
     }
 
-    private String putSuccessLogMess(Person person) {
-        return String.format("PUT /person - Payload: [%s] - Success: Person [%s %s] successfully updated",
-                person,
-                person.firstName(),
-                person.lastName());
-    }
-
-    private String putErrorPersonExistsLogMess(Person person) {
-        return String.format("PUT /person - Payload: [%s] - Error: Person with name [%s %s] does not exist",
-                person,
-                person.firstName(),
-                person.lastName());
-    }
-
     public List<Person> persons() {
         return personRepository.getPersons();
     }
 
     public void delete(Person personToDelete) {
         // TODO : lorsqu'on supprime une personne : on doit supprimer le Medical Record associé
-        throwIfPersonNotFound(personToDelete, deleteErrorNoPersonFoundLogMess(personToDelete));
+        throwIfPersonNotFound(personToDelete, messageService.deleteErrorNoPersonFoundLogMess(personToDelete));
         personRepository.delete(personToDelete);
-        log.info(deleteSuccessLogMess(personToDelete));
-    }
-
-    private String deleteSuccessLogMess(Person personToDelete) {
-        return String.format("DELETE /person - Payload: [%s] - Success: Person [%s %s] successfully deleted",
-                personToDelete,
-                personToDelete.firstName(),
-                personToDelete.lastName());
-    }
-
-    private String deleteErrorNoPersonFoundLogMess(Person personToDelete) {
-        return String.format("DELETE /person - Payload: [%s] - Error: Person with name [%s %s] does not exist",
-                personToDelete,
-                personToDelete.firstName(),
-                personToDelete.lastName());
+        log.info(messageService.deleteSuccessLogMess(personToDelete));
     }
 }

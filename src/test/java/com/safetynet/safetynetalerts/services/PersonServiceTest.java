@@ -37,7 +37,7 @@ class PersonServiceTest {
 
     @BeforeEach
     void setUp() {
-        personService = new PersonService(personRepository);
+        personService = new PersonService(personRepository, new PersonMessageService());
     }
 
     @AfterEach
