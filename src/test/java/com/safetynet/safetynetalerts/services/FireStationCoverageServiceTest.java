@@ -47,7 +47,7 @@ public class FireStationCoverageServiceTest {
 
 
     @Test
-    void itShouldTwoPersonsForFireStation1() {
+    void itShouldThreePersonsForFireStation1() {
         // Given
         String stationNumber = "1";
         FirestationCoverageDTO magnus = new FirestationCoverageDTO(
@@ -55,6 +55,13 @@ public class FireStationCoverageServiceTest {
                 "Carlsen",
                 "007 Rue de la Dame",
                 "123-456-7890"
+        );
+
+        FirestationCoverageDTO miniMagnus = new FirestationCoverageDTO(
+                "miniMagnus",
+                "miniCarlsen",
+                "007 Rue de la Dame",
+                null
         );
 
         FirestationCoverageDTO gari = new FirestationCoverageDTO(
@@ -68,10 +75,26 @@ public class FireStationCoverageServiceTest {
         given(firestationRepository.getFirestations()).willReturn(ManageMockedData.createFirestationsMockedDataList());
 
         // When
-        List<FirestationCoverageDTO> firestationCoverageList = fireStationCoverageService.getCoverage(stationNumber);
+        List<FirestationCoverageDTO> firestationCoverageList = fireStationCoverageService.getCoverageForAStationNumber(stationNumber);
 
         // Then
-        assertThat(firestationCoverageList).hasSize(2);
-        assertThat(firestationCoverageList).contains(magnus).contains(gari);
+        assertThat(firestationCoverageList).hasSize(3);
+        assertThat(firestationCoverageList).contains(magnus).contains(gari).contains(miniMagnus);
+    }
+
+    @Test
+    void itShouldReturn2Adults() {
+        // Given
+        String stationNumber = "1";
+        given(personRepository.getPersons()).willReturn(ManageMockedData.createPersonMockedDataList());
+        given(firestationRepository.getFirestations()).willReturn(ManageMockedData.createFirestationsMockedDataList());
+        given(medicalRecordRepository.getMedicalRecords()).willReturn(ManageMockedData.createMedicalRecordsMockedDataList());
+
+        // When
+        long adults = fireStationCoverageService.getTotalAdults(stationNumber);
+
+        // Then
+        assertThat(adults).isEqualTo(2);
+
     }
 }
