@@ -37,9 +37,8 @@ public class FireStationController {
         fireStationService.deleteMapping(firestation);
     }
 
-    // TODO : vérifier si le endpoint suivant serait valable dans le projet ?
-    @DeleteMapping("/stationNumber")
-    void deleteStationNumber(@RequestParam String stationNumber) {
+    @DeleteMapping("/{stationNumber}")
+    void deleteStationNumber(@PathVariable String stationNumber) {
         log.info("New request : DELETE /firestation - All station number (request param): " + stationNumber);
         fireStationService.deleteStation(stationNumber);
     }

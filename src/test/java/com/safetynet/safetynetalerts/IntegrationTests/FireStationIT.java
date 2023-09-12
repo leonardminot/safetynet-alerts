@@ -217,9 +217,8 @@ public class FireStationIT {
         String stationNumber = "1";
 
         // When
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/firestation/stationNumber")
-                .contentType(MediaType.APPLICATION_JSON)
-                .param("stationNumber", stationNumber));
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/firestation/1")
+                .contentType(MediaType.APPLICATION_JSON));
 
         // Then
         List<Firestation> firestations = firestationRepository.getFirestations();
