@@ -22,49 +22,59 @@ public class PersonService {
     }
 
     public void createPerson(Person person) {
-        Optional<Person> personInDB = personRepository.selectPersonByName(person.firstName(), person.lastName());
+        throwIfPersonExists(person);
+        personRepository.savePerson(person);
+        log.info(postSuccessLogMess(person));
+    }
 
-        personInDB.ifPresentOrElse(p -> {
-                    log.error(String.format("POST /person - Payload: [%s] - Error: Person with name [%s %s] already exists",
-                            person,
-                            person.firstName(),
-                            person.lastName()));
-                    throw new ApiResourceException(
-                            String.format("POST /person - Payload: [%s] - Error: Person with name [%s %s] already exists",
-                                    person,
-                                    person.firstName(),
-                                    person.lastName()));
-                },
-                () -> {
-                    log.info(String.format("POST /person - Payload: [%s] - Success: Person [%s %s] successfully registered",
-                            person,
-                            person.firstName(),
-                            person.lastName()));
-                    personRepository.savePerson(person);
-                });
+    private void throwIfPersonExists(Person person) {
+        Optional<Person> personInDB = personRepository.selectPersonByName(person.firstName(), person.lastName());
+        personInDB.ifPresent(p -> {
+            log.error(postErrorPersonExistsLogMess(person));
+            throw new ApiResourceException(postErrorPersonExistsLogMess(person));
+        });
+    }
+
+    private String postSuccessLogMess(Person person) {
+        return String.format("POST /person - Payload: [%s] - Success: Person [%s %s] successfully registered",
+                person,
+                person.firstName(),
+                person.lastName());
+    }
+
+    private String postErrorPersonExistsLogMess(Person person) {
+        return String.format("POST /person - Payload: [%s] - Error: Person with name [%s %s] already exists",
+                person,
+                person.firstName(),
+                person.lastName());
     }
 
     public void updatePerson(Person person) {
-        Optional<Person> personInDB = personRepository.selectPersonByName(person.firstName(), person.lastName());
+        throwIfPersonNotFound(person, putErrorPersonExistsLogMess(person));
+        personRepository.update(person);
+        log.info(putSuccessLogMess(person));
+    }
 
-        personInDB.ifPresentOrElse(p -> {
-                    log.info(String.format("PUT /person - Payload: [%s] - Success: Person [%s %s] successfully updated",
-                            person,
-                            person.firstName(),
-                            person.lastName()));
-                    personRepository.update(person);
-                },
-                () -> {
-                    log.error(String.format("PUT /person - Payload: [%s] - Error: Person with name [%s %s] does not exist",
-                            person,
-                            person.firstName(),
-                            person.lastName()));
-                    throw new ApiResourceException(
-                            String.format("PUT /person - Payload: [%s] - Error: Person with name [%s %s] does not exist",
-                                    person,
-                                    person.firstName(),
-                                    person.lastName()));
-                });
+    private void throwIfPersonNotFound(Person person, String logMessage) {
+        Optional<Person> personInDB = personRepository.selectPersonByName(person.firstName(), person.lastName());
+        personInDB.orElseThrow(() -> {
+            log.error(logMessage);
+            return new ApiResourceException(logMessage);
+        });
+    }
+
+    private String putSuccessLogMess(Person person) {
+        return String.format("PUT /person - Payload: [%s] - Success: Person [%s %s] successfully updated",
+                person,
+                person.firstName(),
+                person.lastName());
+    }
+
+    private String putErrorPersonExistsLogMess(Person person) {
+        return String.format("PUT /person - Payload: [%s] - Error: Person with name [%s %s] does not exist",
+                person,
+                person.firstName(),
+                person.lastName());
     }
 
     public List<Person> persons() {
@@ -72,23 +82,23 @@ public class PersonService {
     }
 
     public void delete(Person personToDelete) {
-        // TODO : lorsqu'on supprime une personne : doit-on également supprimer les MedicalRecords associés ?
-        Optional<Person> personInDB = personRepository.selectPersonByName(personToDelete.firstName(), personToDelete.lastName());
+        // TODO : lorsqu'on supprime une personne : on doit supprimer le Medical Record associé
+        throwIfPersonNotFound(personToDelete, deleteErrorNoPersonFoundLogMess(personToDelete));
+        personRepository.delete(personToDelete);
+        log.info(deleteSuccessLogMess(personToDelete));
+    }
 
-        personInDB.ifPresentOrElse(p -> {
-                    log.info(String.format("DELETE /person - Payload: [%s] - Success: Person [%s %s] successfully deleted", personToDelete, personToDelete.firstName(), personToDelete.lastName()));
-                    personRepository.delete(personToDelete);
-                },
-                () -> {
-                    log.error(String.format("PUT /person - Payload: [%s] - Error: Person with name [%s %s] does not exist",
-                            personToDelete,
-                            personToDelete.firstName(),
-                            personToDelete.lastName()));
-                    throw new ApiResourceException(
-                            String.format("PUT /person - Payload: [%s] - Error: Person with name [%s %s] does not exist",
-                                    personToDelete,
-                                    personToDelete.firstName(),
-                                    personToDelete.lastName()));
-                });
+    private String deleteSuccessLogMess(Person personToDelete) {
+        return String.format("DELETE /person - Payload: [%s] - Success: Person [%s %s] successfully deleted",
+                personToDelete,
+                personToDelete.firstName(),
+                personToDelete.lastName());
+    }
+
+    private String deleteErrorNoPersonFoundLogMess(Person personToDelete) {
+        return String.format("DELETE /person - Payload: [%s] - Error: Person with name [%s %s] does not exist",
+                personToDelete,
+                personToDelete.firstName(),
+                personToDelete.lastName());
     }
 }

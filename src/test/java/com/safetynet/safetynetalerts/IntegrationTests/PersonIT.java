@@ -230,7 +230,7 @@ public class PersonIT {
         String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
 
         resultActions.andExpect(status().is4xxClientError());
-        assertThat(contentAsString).contains(String.format("PUT /person - Payload: [%s] - Error: Person with name [%s %s] does not exist",
+        assertThat(contentAsString).contains(String.format("DELETE /person - Payload: [%s] - Error: Person with name [%s %s] does not exist",
                 unknownPerson,
                 unknownPerson.firstName(),
                 unknownPerson.lastName()));

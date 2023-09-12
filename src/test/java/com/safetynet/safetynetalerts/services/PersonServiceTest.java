@@ -200,7 +200,7 @@ class PersonServiceTest {
         // Then
         assertThatThrownBy(() -> personService.delete(personThatDoesntExist))
                 .isInstanceOf(ApiResourceException.class)
-                .hasMessageContaining(String.format("PUT /person - Payload: [%s] - Error: Person with name [%s %s] does not exist",
+                .hasMessageContaining(String.format("DELETE /person - Payload: [%s] - Error: Person with name [%s %s] does not exist",
                         personThatDoesntExist,
                         personThatDoesntExist.firstName(),
                         personThatDoesntExist.lastName()));

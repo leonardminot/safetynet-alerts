@@ -2,6 +2,7 @@ package com.safetynet.safetynetalerts.services;
 
 import com.safetynet.safetynetalerts.exception.ApiResourceException;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
+import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -27,34 +28,35 @@ public class MedicalRecordService {
     public void createRecord(MedicalRecord medicalRecord) {
         throwIfMedicalRecordIsPresent(medicalRecord);
         throwIfPersonIsUnknown(medicalRecord);
-
         medicalRecordRepository.saveRecord(medicalRecord);
-        log.info(postSuccessLog(medicalRecord));
+        log.info(postSuccessLogMess(medicalRecord));
     }
 
     private void throwIfPersonIsUnknown(MedicalRecord medicalRecord) {
-        personRepository.selectPersonByName(medicalRecord.firstName(), medicalRecord.lastName()).orElseThrow(() -> {
-                    log.error(postErrorUnknownPersonLog(medicalRecord));
-                    return new ApiResourceException(postErrorUnknownPersonLog(medicalRecord));
+        Optional<Person> optionalPerson = personRepository.selectPersonByName(medicalRecord.firstName(), medicalRecord.lastName());
+        optionalPerson.orElseThrow(() -> {
+                    log.error(postErrorPersonNotFoundLogMess(medicalRecord));
+                    return new ApiResourceException(postErrorPersonNotFoundLogMess(medicalRecord));
                 }
         );
     }
 
     private void throwIfMedicalRecordIsPresent(MedicalRecord medicalRecord) {
-        medicalRecordRepository.selectMedicalRecordByName(medicalRecord.firstName(), medicalRecord.lastName()).ifPresent((mr) -> {
-                    log.error(postErrorMedicalRecordExistsLog(medicalRecord));
-                    throw new ApiResourceException(postErrorMedicalRecordExistsLog(medicalRecord));
-                });
+        Optional<MedicalRecord> optionalMedicalRecord = medicalRecordRepository.selectMedicalRecordByName(medicalRecord.firstName(), medicalRecord.lastName());
+        optionalMedicalRecord.ifPresent((mr) -> {
+            log.error(postErrorMedicalRecordExistsLog(medicalRecord));
+            throw new ApiResourceException(postErrorMedicalRecordExistsLog(medicalRecord));
+        });
     }
 
-    private String postSuccessLog(MedicalRecord medicalRecord) {
+    private String postSuccessLogMess(MedicalRecord medicalRecord) {
         return String.format("POST /medicalRecord - Payload: [%s] - Success: Medical record for [%s %s] successfully registered",
                 medicalRecord,
                 medicalRecord.firstName(),
                 medicalRecord.lastName());
     }
 
-    private String postErrorUnknownPersonLog(MedicalRecord medicalRecord) {
+    private String postErrorPersonNotFoundLogMess(MedicalRecord medicalRecord) {
         return String.format("POST /medicalRecord - Payload: [%s] - Error: Person with name [%s %s] does not exist",
                 medicalRecord,
                 medicalRecord.firstName(),
@@ -69,7 +71,7 @@ public class MedicalRecordService {
     }
 
     public void update(MedicalRecord medicalRecord) {
-        throwIfCurrentMedicalRecordNotFound(medicalRecord);
+        throwIfMedicalRecordIsNotFound(medicalRecord, putErrorNoMedRecordLog(medicalRecord));
         medicalRecordRepository.update(medicalRecord);
         log.info(putSuccessLog(medicalRecord));
     }
@@ -81,12 +83,12 @@ public class MedicalRecordService {
                 medicalRecord.lastName());
     }
 
-    private void throwIfCurrentMedicalRecordNotFound(MedicalRecord medicalRecord) {
+    private void throwIfMedicalRecordIsNotFound(MedicalRecord medicalRecord, String logMessage) {
         Optional<MedicalRecord> optionalMedicalRecord = medicalRecordRepository.selectMedicalRecordByName(medicalRecord.firstName(), medicalRecord.lastName());
         optionalMedicalRecord.orElseThrow(() -> {
-                    log.error(putErrorNoMedRecordLog(medicalRecord));
-                    return new ApiResourceException(putErrorNoMedRecordLog(medicalRecord));
-                });
+            log.error(logMessage);
+            return new ApiResourceException(logMessage);
+        });
     }
 
     private String putErrorNoMedRecordLog(MedicalRecord medicalRecord) {
@@ -97,27 +99,19 @@ public class MedicalRecordService {
     }
 
     public void delete(MedicalRecord medicalRecord) {
-        throwIfMedicalRecordIsNotFound(medicalRecord);
+        throwIfMedicalRecordIsNotFound(medicalRecord, deleteErrorNoMedRecordLogMess(medicalRecord));
         medicalRecordRepository.delete(medicalRecord);
-        log.info(deleteSuccessLog(medicalRecord));
+        log.info(deleteSuccessLogMess(medicalRecord));
     }
 
-    private void throwIfMedicalRecordIsNotFound(MedicalRecord medicalRecord) {
-        Optional<MedicalRecord> optionalMedicalRecord = medicalRecordRepository.selectMedicalRecordByName(medicalRecord.firstName(), medicalRecord.lastName());
-        optionalMedicalRecord.orElseThrow(() -> {
-            log.error(deleteErrorNoMedRecordLog(medicalRecord));
-            return new ApiResourceException(deleteErrorNoMedRecordLog(medicalRecord));
-        });
-    }
-
-    private String deleteSuccessLog(MedicalRecord medicalRecord) {
+    private String deleteSuccessLogMess(MedicalRecord medicalRecord) {
         return String.format("DELETE /medicalRecord - Payload: [%s] - Success: Medical Record for [%s %s] successfully deleted",
                 medicalRecord,
                 medicalRecord.firstName(),
                 medicalRecord.lastName());
     }
 
-    private String deleteErrorNoMedRecordLog(MedicalRecord medicalRecord) {
+    private String deleteErrorNoMedRecordLogMess(MedicalRecord medicalRecord) {
         return String.format("DELETE /medicalRecord - Payload: [%s] - Error: Medical Record for [%s %s] does not exist",
                 medicalRecord,
                 medicalRecord.firstName(),
