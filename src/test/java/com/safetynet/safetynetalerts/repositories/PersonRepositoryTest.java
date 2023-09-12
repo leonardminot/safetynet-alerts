@@ -38,7 +38,7 @@ class PersonRepositoryTest {
     }
 
     @Test
-    void itShouldReturnThreePersons() {
+    void itShouldReturnFourPersons() {
         // Given
         List<Person> personList;
 
@@ -46,7 +46,7 @@ class PersonRepositoryTest {
         personList = personRepository.getPersons();
 
         // Then
-        assertThat(personList).hasSize(3);
+        assertThat(personList).hasSize(4);
     }
 
     @Test
@@ -109,7 +109,7 @@ class PersonRepositoryTest {
 
         // Then
         List<Person> allPerson = personRepository.getPersons();
-        assertThat(allPerson).hasSize(4);
+        assertThat(allPerson).hasSize(5);
         assertThat(allPerson.get(allPerson.size() - 1)).isEqualTo(personToSave);
 
     }
@@ -136,7 +136,7 @@ class PersonRepositoryTest {
                 .filter(p -> p.firstName().equals(maximeToUpdate.firstName()) && p.lastName().equals(maximeToUpdate.lastName()))
                 .findFirst();
 
-        assertThat(allPerson).hasSize(3);
+        assertThat(allPerson).hasSize(4);
         assertThat(maximeInDB).isPresent().hasValueSatisfying(person -> assertThat(person).isEqualTo(maximeToUpdate));
 
     }
@@ -174,7 +174,7 @@ class PersonRepositoryTest {
                 .filter(p -> p.firstName().equals(maximeToUpdate.firstName()) && p.lastName().equals(maximeToUpdate.lastName()))
                 .findFirst();
 
-        assertThat(allPerson).hasSize(3);
+        assertThat(allPerson).hasSize(4);
         assertThat(maximeInDB).isPresent().hasValueSatisfying(person -> assertThat(person).isEqualTo(finalMaxime));
 
     }
@@ -200,7 +200,7 @@ class PersonRepositoryTest {
         Optional<Person> maximeInDB = allPerson.stream()
                 .filter(p -> p.firstName().equals(personToDelete.firstName()) && p.lastName().equals(personToDelete.lastName()))
                 .findFirst();
-        assertThat(allPerson).hasSize(2);
+        assertThat(allPerson).hasSize(3);
         assertThat(maximeInDB).isNotPresent();
     }
 }

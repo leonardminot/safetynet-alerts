@@ -51,9 +51,21 @@ public class ManageMockedData {
                 "alireza@email.com"
         );
 
+        Person gari = new Person(
+                "Gari",
+                "Kasparov",
+                "105 Rue du Fou",
+                "Oslo",
+                "63429",
+                "741-852-9630",
+                "gari@email.com"
+        );
+
+
         mockedList.add(magnus);
         mockedList.add(maxime);
         mockedList.add(alireza);
+        mockedList.add(gari);
 
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(filePath).toFile(), mockedList);
     }
