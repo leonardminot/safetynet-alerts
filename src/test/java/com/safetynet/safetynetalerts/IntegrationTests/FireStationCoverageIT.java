@@ -104,9 +104,9 @@ public class FireStationCoverageIT {
                         .contentType(MediaType.APPLICATION_JSON));
 
         // Then
-
         resultActions.andExpect(status().isOk())
                 .andExpect(content().string(expectedResult));
+
     }
 
     private String personsCoveredToJson(FirestationStationNumberDTO personsCoveredByFirestationDTO) {

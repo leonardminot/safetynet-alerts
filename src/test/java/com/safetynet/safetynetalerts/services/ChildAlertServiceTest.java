@@ -119,6 +119,7 @@ public class ChildAlertServiceTest {
         List<ChildAlertDTO> actualResult = childAlertService.getAlertFromAddress("1990 Rue de la Tour");
 
         // Then
+        System.out.println(actualResult);
         assertThat(actualResult).hasSize(2);
         assertThat(actualResult).contains(miniMaxime).contains(miniAlireza);
 
