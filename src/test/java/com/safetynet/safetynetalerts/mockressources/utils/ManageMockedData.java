@@ -46,7 +46,7 @@ public class ManageMockedData {
                 "1990 Rue de la Tour",
                 "Paris",
                 "75001",
-                "1990 Rue de la Tour",
+                "000-111-2222",
                 "alireza@email.com"
         );
 
@@ -86,7 +86,7 @@ public class ManageMockedData {
                 "1990 Rue de la Tour",
                 "Paris",
                 "75001",
-                "1990 Rue de la Tour",
+                "000-111-2222",
                 "alireza@email.com"
         );
 
@@ -163,7 +163,7 @@ public class ManageMockedData {
                 "Maxime",
                 "Vachier-Lagrave",
                 LocalDate.parse("1990-10-21"),
-                List.of(),
+                List.of("aznol:350mg", "hydrapermazol:100mg"),
                 List.of()
         );
 
@@ -180,15 +180,15 @@ public class ManageMockedData {
                 "mini-Vachier-Lagrave",
                 LocalDate.parse("2019-10-21"),
                 List.of(),
-                List.of()
+                List.of("Shellfish")
         );
 
         MedicalRecord miniAlirezaRecord = new MedicalRecord(
                 "mini-Alireza",
                 "mini-Firouzja",
                 LocalDate.parse("2023-06-18"),
-                List.of(),
-                List.of()
+                List.of("hydrapermazol:100mg"),
+                List.of("Aspirin")
         );
 
         mockedList.add(magnusRecord);

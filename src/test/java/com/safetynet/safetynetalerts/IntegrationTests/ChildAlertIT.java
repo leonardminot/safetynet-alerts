@@ -78,7 +78,7 @@ public class ChildAlertIT {
                 "1990 Rue de la Tour",
                 "Paris",
                 "75001",
-                "1990 Rue de la Tour",
+                "000-111-2222",
                 "alireza@email.com"
         );
 
