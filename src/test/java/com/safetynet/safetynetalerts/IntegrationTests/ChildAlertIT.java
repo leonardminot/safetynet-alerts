@@ -110,6 +110,7 @@ public class ChildAlertIT {
                 .contentType(MediaType.APPLICATION_JSON));
 
         // Then
+        assert expectedResultString != null;
         resultActions.andExpect(status().isOk())
                 .andExpect(content().string(expectedResultString));
     }
