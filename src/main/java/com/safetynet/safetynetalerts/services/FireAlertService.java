@@ -37,16 +37,21 @@ public class FireAlertService {
 
         List<FireAlertPersonDTO> fireAlertPersons = persons.stream()
                 .filter(person -> person.address().equals(address))
-                .map(person -> new FireAlertPersonDTO(
-                        person.firstName(),
-                        person.lastName(),
-                        person.phone(),
-                        getPersonAge(person, medicalRecords),
-                        getMedications(medicalRecords, person),
-                        getAllergies(medicalRecords, person)
-                )).toList();
+                .map(person -> getFireAlertPersonDTO(person, medicalRecords))
+                .toList();
 
         return new FireAlertDTO(getStationNumberAtAddress(address, firestations), fireAlertPersons);
+    }
+
+    private FireAlertPersonDTO getFireAlertPersonDTO(Person person, List<MedicalRecord> medicalRecords) {
+        return new FireAlertPersonDTO(
+                person.firstName(),
+                person.lastName(),
+                person.phone(),
+                getPersonAge(person, medicalRecords),
+                getMedications(medicalRecords, person),
+                getAllergies(medicalRecords, person)
+        );
     }
 
     private String getStationNumberAtAddress(String address, List<Firestation> firestations) {
@@ -54,6 +59,6 @@ public class FireAlertService {
                 .filter(firestation -> firestation.address().equals(address))
                 .findFirst()
                 .map(Firestation::station)
-                .orElse("0");
+                .orElse("UnknownStation");
     }
 }
