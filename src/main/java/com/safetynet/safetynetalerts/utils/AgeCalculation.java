@@ -1,5 +1,6 @@
 package com.safetynet.safetynetalerts.utils;
 
+import com.safetynet.safetynetalerts.dto.PersonsCoveredByFirestationDTO;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.models.Person;
 
@@ -19,5 +20,18 @@ public class AgeCalculation {
                 .map(AgeCalculation::calculateAgeFromMedicalRecord)
                 .findAny()
                 .orElse(0L);
+    }
+
+    public static long getPersonAge(PersonsCoveredByFirestationDTO personDTO, List<MedicalRecord> medicalRecords) {
+        Person person = new Person(
+                personDTO.firstName(),
+                personDTO.lastName(),
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+        return getPersonAge(person, medicalRecords);
     }
 }

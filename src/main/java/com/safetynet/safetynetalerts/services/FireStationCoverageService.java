@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.safetynet.safetynetalerts.utils.AgeCalculation.getPersonAge;
+
 @Service
 public class FireStationCoverageService {
 
@@ -53,26 +55,15 @@ public class FireStationCoverageService {
     }
 
     public long getTotalAdults(String stationNumber) {
-        LocalDate majorDate = LocalDate.now().minusYears(18);
-
         List<PersonsCoveredByFirestationDTO> firestationCoverage = getCoverageForAStationNumber(stationNumber);
         List<MedicalRecord> medicalRecords = medicalRecordRepository.getMedicalRecords();
 
         // TODO : Gérer le cas où un dossier médical est absent
         return firestationCoverage.stream()
-                .map(coverage -> getBirthDate(coverage, medicalRecords))
-                .filter(birthdate -> birthdate.isBefore(majorDate) || birthdate.isEqual(majorDate))
+                .map(coverage -> getPersonAge(coverage, medicalRecords))
+                .filter(age -> age >= 18)
                 .count();
     }
-
-    private LocalDate getBirthDate(PersonsCoveredByFirestationDTO personsCoveredByFirestationDTO, List<MedicalRecord> medicalRecords) {
-        return medicalRecords.stream()
-                .filter(mr -> mr.firstName().equals(personsCoveredByFirestationDTO.firstName()) && mr.lastName().equals(personsCoveredByFirestationDTO.lastName()))
-                .map(MedicalRecord::birthdate)
-                .findAny()
-                .orElse(LocalDate.now());
-    }
-
 
     public long getTotalChildren(String stationNumber) {
         long totalPerson = getCoverageForAStationNumber(stationNumber).size();
