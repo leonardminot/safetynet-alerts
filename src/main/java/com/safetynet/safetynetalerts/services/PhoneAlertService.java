@@ -9,11 +9,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.safetynet.safetynetalerts.utils.AddressesResearch.getAddressesForStationNumber;
+
 @Service
 public class PhoneAlertService {
 
-    private PersonRepository personRepository;
-    private FirestationRepository firestationRepository;
+    private final PersonRepository personRepository;
+    private final FirestationRepository firestationRepository;
 
     @Autowired
     public PhoneAlertService(PersonRepository personRepository, FirestationRepository firestationRepository) {
@@ -25,15 +27,13 @@ public class PhoneAlertService {
         List<Firestation> firestations = firestationRepository.getFirestations();
         List<Person> persons = personRepository.getPersons();
 
-        List<String> addresses = firestations.stream()
-                .filter(fs -> fs.station().equals(stationNumber))
-                .map(Firestation::address)
-                .toList();
+        List<String> addresses = getAddressesForStationNumber(firestations, stationNumber);
 
         List<String> phoneNumbersForFireStation = persons.stream()
                 .filter(person -> addresses.contains(person.address()))
                 .map(Person::phone)
                 .toList();
+
 
         return phoneNumbersForFireStation;
     }

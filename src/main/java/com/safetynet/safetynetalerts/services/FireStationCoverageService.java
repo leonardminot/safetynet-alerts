@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.safetynet.safetynetalerts.utils.AddressesResearch.getAddressesForStationNumber;
 import static com.safetynet.safetynetalerts.utils.AgeCalculation.getPersonAge;
 
 @Service
@@ -34,10 +35,11 @@ public class FireStationCoverageService {
 
 
     public List<PersonsCoveredByFirestationDTO> getCoverageForAStationNumber(String stationNumber) {
-        List<String> addresses = getAddressesForAStationNumber(stationNumber);
+        List<Firestation> firestations = firestationRepository.getFirestations();
+        List<String> addresses = getAddressesForStationNumber(firestations, stationNumber);
         List<Person> persons = personRepository.getPersons();
 
-        List<PersonsCoveredByFirestationDTO> listOfCoveredPersons = persons.stream()
+        return persons.stream()
                 .filter(person -> addresses.contains(person.address()))
                 .map(person -> new PersonsCoveredByFirestationDTO(
                         person.firstName(),
@@ -45,16 +47,6 @@ public class FireStationCoverageService {
                         person.address(),
                         person.phone()
                 )).toList();
-
-        return listOfCoveredPersons;
-    }
-
-    private List<String> getAddressesForAStationNumber(String stationNumber) {
-        List<Firestation> firestations = firestationRepository.getFirestations();
-        return firestations.stream()
-                .filter(fs -> fs.station().equals(stationNumber))
-                .map(Firestation::address)
-                .toList();
     }
 
     public long getTotalAdults(String stationNumber) {
