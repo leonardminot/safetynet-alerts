@@ -88,7 +88,7 @@ public class FireAlertServiceTest {
         when(medicalRecordRepository.getMedicalRecords()).thenReturn(ManageMockedData.createMedicalRecordsMockedDataListWithAllEntries());
 
         // When
-        FireAlertDTO actualResult = fireAlertService.getFireAlertDTO(address);
+        FireAlertDTO actualResult = fireAlertService.getFireAlert(address);
 
         // Then
         assertThat(actualResult).isEqualTo(expected);

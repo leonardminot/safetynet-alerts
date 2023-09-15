@@ -23,6 +23,6 @@ public class FireAlertController {
     @GetMapping
     FireAlertDTO getFireAlert(@RequestParam("address") String address) {
         log.info("New request : GET /fire?address=" + address);
-        return fireAlertService.getFireAlertDTO(address);
+        return fireAlertService.getFireAlert(address);
     }
 }

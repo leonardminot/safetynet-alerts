@@ -41,12 +41,12 @@ public class FireAlertService {
         medicalRecords = List.of();
     }
 
-    public FireAlertDTO getFireAlertDTO(String address) {
+    public FireAlertDTO getFireAlert(String address) {
         getResourcesFromRepositories();
-        List<FireAlertPersonDTO> fireAlertPersons = getListFireAlertPersonsAtAddress(address);
-        FireAlertDTO fireAlertDTO = new FireAlertDTO(getStationNumberAtAddress(address), fireAlertPersons);
-        log.info(fireAlertMessageService.getSuccessFireAlertLogMess(address, fireAlertDTO));
-        return fireAlertDTO;
+        List<FireAlertPersonDTO> listOfResidentsAtFireLocation = getPersonsAtAddress(address);
+        FireAlertDTO fireAlert = new FireAlertDTO(getStationNumberAtAddress(address), listOfResidentsAtFireLocation);
+        log.info(fireAlertMessageService.getSuccessFireAlertLogMess(address, fireAlert));
+        return fireAlert;
     }
 
     private void getResourcesFromRepositories() {
@@ -55,7 +55,7 @@ public class FireAlertService {
         medicalRecords = medicalRecordRepository.getMedicalRecords();
     }
 
-    private List<FireAlertPersonDTO> getListFireAlertPersonsAtAddress(String address) {
+    private List<FireAlertPersonDTO> getPersonsAtAddress(String address) {
         return persons.stream()
                 .filter(person -> person.address().equals(address))
                 .map(this::transformPersonToFireAlertPersonDTO)
