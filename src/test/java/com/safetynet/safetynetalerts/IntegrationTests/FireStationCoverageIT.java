@@ -2,11 +2,13 @@ package com.safetynet.safetynetalerts.IntegrationTests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.safetynet.safetynetalerts.dto.FirestationStationNumberDTO;
 import com.safetynet.safetynetalerts.dto.PersonsCoveredByFirestationDTO;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.models.Firestation;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -88,7 +90,14 @@ public class FireStationCoverageIT {
         personsCoveredByFirestationDTOS.add(magnus);
         personsCoveredByFirestationDTOS.add(gari);
         personsCoveredByFirestationDTOS.add(miniMagnus);
-        String expectedResult = personsCoveredToJson(personsCoveredByFirestationDTOS);
+
+        FirestationStationNumberDTO responseBody = new FirestationStationNumberDTO(
+                2,
+                1,
+                personsCoveredByFirestationDTOS
+        );
+
+        String expectedResult = personsCoveredToJson(responseBody);
 
         // When
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/firestation?stationNumber=1")
@@ -97,12 +106,10 @@ public class FireStationCoverageIT {
         // Then
 
         resultActions.andExpect(status().isOk())
-                .andExpect(header().string("Adults-Count", "2"))
-                .andExpect(header().string("Children-Count", "1"))
                 .andExpect(content().string(expectedResult));
     }
 
-    private String personsCoveredToJson(List<PersonsCoveredByFirestationDTO> personsCoveredByFirestationDTO) {
+    private String personsCoveredToJson(FirestationStationNumberDTO personsCoveredByFirestationDTO) {
         try {
             return new ObjectMapper().writeValueAsString(personsCoveredByFirestationDTO);
         } catch (JsonProcessingException e) {

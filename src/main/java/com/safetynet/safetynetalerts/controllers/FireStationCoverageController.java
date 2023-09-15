@@ -1,5 +1,6 @@
 package com.safetynet.safetynetalerts.controllers;
 
+import com.safetynet.safetynetalerts.dto.FirestationStationNumberDTO;
 import com.safetynet.safetynetalerts.dto.PersonsCoveredByFirestationDTO;
 import com.safetynet.safetynetalerts.services.FireStationCoverageService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,16 +27,15 @@ public class FireStationCoverageController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PersonsCoveredByFirestationDTO>> getPersonCoverage(@RequestParam String stationNumber) {
+    public FirestationStationNumberDTO getPersonCoverage(@RequestParam String stationNumber) {
         List<PersonsCoveredByFirestationDTO> personsCoveredByFirestationDTOS = fireStationCoverageService.getCoverageForAStationNumber(stationNumber);
         long totalOfAdults = fireStationCoverageService.getTotalAdults(stationNumber);
         long totalOfChildren = fireStationCoverageService.getTotalChildren(stationNumber);
 
-        HttpHeaders responseHeaders = new HttpHeaders();
-
-        responseHeaders.set("Adults-Count", String.valueOf(totalOfAdults));
-        responseHeaders.set("Children-Count", String.valueOf(totalOfChildren));
-
-        return ResponseEntity.ok().headers(responseHeaders).body(personsCoveredByFirestationDTOS);
+        return new FirestationStationNumberDTO(
+                totalOfAdults,
+                totalOfChildren,
+                personsCoveredByFirestationDTOS
+        );
     }
 }

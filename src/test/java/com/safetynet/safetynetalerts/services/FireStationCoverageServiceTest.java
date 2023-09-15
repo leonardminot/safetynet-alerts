@@ -6,6 +6,7 @@ import com.safetynet.safetynetalerts.repositories.FirestationRepository;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,13 +39,6 @@ public class FireStationCoverageServiceTest {
                 medicalRecordRepository,
                 firestationRepository);
     }
-
-    // TODO :
-    //  1 - On recherche toutes les adresses couvertes par le numéro de la station
-    //  2 - On recherche toutes les personnes couvertes par cette adresse
-    //  3 - On recherche les dates de naissances
-    //  4 - On compte le nombre d'enfants
-
 
     @Test
     void itShouldThreePersonsForFireStation1() {
