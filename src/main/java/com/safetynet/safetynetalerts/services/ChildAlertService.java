@@ -10,52 +10,60 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ChildAlertService {
 
-    private PersonRepository personRepository;
-    private MedicalRecordRepository medicalRecordRepository;
+    private final PersonRepository personRepository;
+    private final MedicalRecordRepository medicalRecordRepository;
+
+    List<Person> persons;
+    List<MedicalRecord> medicalRecords;
 
     @Autowired
     public ChildAlertService(PersonRepository personRepository, MedicalRecordRepository medicalRecordRepository) {
         this.personRepository = personRepository;
         this.medicalRecordRepository = medicalRecordRepository;
+        this.persons = new ArrayList<>();
+        this.medicalRecords = new ArrayList<>();
     }
 
-    public long getAge(MedicalRecord medicalRecord) {
-        LocalDate birthdate = medicalRecord.birthdate();
-        return ChronoUnit.YEARS.between(birthdate, LocalDate.now());
-    }
+    public List<ChildAlertDTO> getAlertFromAddress(String alertAddress) {
+        persons = personRepository.getPersons();
+        medicalRecords = medicalRecordRepository.getMedicalRecords();
 
-    public List<ChildAlertDTO> getAlertFromAddress(String address) {
-        List<Person> persons = personRepository.getPersons();
-        List<MedicalRecord> medicalRecords = medicalRecordRepository.getMedicalRecords();
-
-        List<Person> otherMembers = persons.stream()
-                .filter(person -> person.address().equals(address))
-                .filter(person -> getPersonAge(medicalRecords, person) >= 18)
-                .toList();
+        List<Person> adultsAtGivenAddress = getAdultsAtAddress(alertAddress);
 
         return persons.stream()
-                .filter(person -> person.address().equals(address))
-                .filter(person -> getPersonAge(medicalRecords, person) < 18)
+                .filter(person -> person.address().equals(alertAddress))
+                .filter(person -> getPersonAge(person) < 18)
                 .map(person -> new ChildAlertDTO(
                         person.firstName(),
                         person.lastName(),
-                        getPersonAge(medicalRecords, person),
-                        otherMembers
-                ))
+                        getPersonAge(person),
+                        adultsAtGivenAddress))
                 .toList();
-
     }
 
-    private long getPersonAge(List<MedicalRecord> medicalRecords, Person person) {
+    private List<Person> getAdultsAtAddress(String address) {
+        return persons.stream()
+                .filter(person -> person.address().equals(address))
+                .filter(person -> getPersonAge(person) >= 18)
+                .toList();
+    }
+
+    private long getPersonAge(Person person) {
         return medicalRecords.stream()
                 .filter(mr -> mr.firstName().equals(person.firstName()) && mr.lastName().equals(person.lastName()))
-                .map(this::getAge)
+                .map(this::calculateAge)
                 .findAny()
                 .orElse(0L);
+    }
+
+    public long calculateAge(MedicalRecord medicalRecord) {
+        LocalDate birthdate = medicalRecord.birthdate();
+        return ChronoUnit.YEARS.between(birthdate, LocalDate.now());
     }
 }

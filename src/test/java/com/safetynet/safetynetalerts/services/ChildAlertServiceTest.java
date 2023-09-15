@@ -4,7 +4,6 @@ import com.safetynet.safetynetalerts.dto.ChildAlertDTO;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.models.Person;
-import com.safetynet.safetynetalerts.repositories.FirestationRepository;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,8 +40,6 @@ public class ChildAlertServiceTest {
     @Test
     void itShouldReturnTheAge() {
         // Given
-        LocalDate today = LocalDate.of(2023, 9, 15);
-
         MedicalRecord adultRecord = new MedicalRecord(
                 "Adult",
                 "Adult",
@@ -60,8 +57,8 @@ public class ChildAlertServiceTest {
         );
 
         // When
-        long expectedAdultAge = childAlertService.getAge(adultRecord);
-        long expectedChildAge = childAlertService.getAge(childRecord);
+        long expectedAdultAge = childAlertService.calculateAge(adultRecord);
+        long expectedChildAge = childAlertService.calculateAge(childRecord);
 
         // Then
         assertThat(expectedAdultAge).isEqualTo(18);
