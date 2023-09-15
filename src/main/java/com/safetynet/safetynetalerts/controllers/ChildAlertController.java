@@ -25,6 +25,6 @@ public class ChildAlertController {
     @GetMapping
     List<ChildAlertDTO> getChildAlert(@RequestParam String address) {
         log.info("New request : GET /childAlert?address=" + address);
-        return childAlertService.getAlertFromAddress(address);
+        return childAlertService.getChildAlertAtAddress(address);
     }
 }

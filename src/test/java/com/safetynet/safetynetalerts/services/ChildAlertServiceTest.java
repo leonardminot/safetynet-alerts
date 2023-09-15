@@ -2,7 +2,6 @@ package com.safetynet.safetynetalerts.services;
 
 import com.safetynet.safetynetalerts.dto.ChildAlertDTO;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
-import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,7 +86,7 @@ public class ChildAlertServiceTest {
         when(medicalRecordRepository.getMedicalRecords()).thenReturn(ManageMockedData.createMedicalRecordsMockedDataListWithAllEntries());
 
         // When
-        List<ChildAlertDTO> actualResult = childAlertService.getAlertFromAddress("1990 Rue de la Tour");
+        List<ChildAlertDTO> actualResult = childAlertService.getChildAlertAtAddress("1990 Rue de la Tour");
 
         // Then
         System.out.println(actualResult);
@@ -106,7 +104,7 @@ public class ChildAlertServiceTest {
         when(medicalRecordRepository.getMedicalRecords()).thenReturn(ManageMockedData.createMedicalRecordsMockedDataListWithAllEntries());
 
         // When
-        List<ChildAlertDTO> actualResult = childAlertService.getAlertFromAddress("2023 unknown address");
+        List<ChildAlertDTO> actualResult = childAlertService.getChildAlertAtAddress("2023 unknown address");
 
         // Then
         assertThat(actualResult).hasSize(0);

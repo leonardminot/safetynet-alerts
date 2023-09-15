@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 @Service
 @Slf4j
@@ -26,6 +27,8 @@ public class ChildAlertService {
 
     List<Person> persons;
     List<MedicalRecord> medicalRecords;
+    private final int MAJORITY_AGE = 18;
+
 
     @Autowired
     public ChildAlertService(PersonRepository personRepository, MedicalRecordRepository medicalRecordRepository) {
@@ -35,29 +38,43 @@ public class ChildAlertService {
         this.medicalRecords = new ArrayList<>();
     }
 
-    public List<ChildAlertDTO> getAlertFromAddress(String alertAddress) {
-        persons = personRepository.getPersons();
-        medicalRecords = medicalRecordRepository.getMedicalRecords();
-
-        List<Person> adultsAtGivenAddress = getAdultsAtAddress(alertAddress);
-
-        List<ChildAlertDTO> listOfChildrenAtAddress = persons.stream()
-                .filter(person -> person.address().equals(alertAddress))
-                .filter(person -> AgeCalculation.getAge(person, medicalRecords) < 18)
-                .map(person -> new ChildAlertDTO(
-                        person.firstName(),
-                        person.lastName(),
-                        AgeCalculation.getAge(person, medicalRecords),
-                        adultsAtGivenAddress))
-                .toList();
+    public List<ChildAlertDTO> getChildAlertAtAddress(String alertAddress) {
+        getResourcesFromRepositories();
+        List<ChildAlertDTO> listOfChildrenAtAddress = getChildrenInAlertAddress(alertAddress);
         log.info(childAlertMessageService.getSuccessChildAlertLogMess(alertAddress, listOfChildrenAtAddress));
         return listOfChildrenAtAddress;
+    }
+
+    private void getResourcesFromRepositories() {
+        persons = personRepository.getPersons();
+        medicalRecords = medicalRecordRepository.getMedicalRecords();
+    }
+
+    private List<ChildAlertDTO> getChildrenInAlertAddress(String alertAddress) {
+        return persons.stream()
+                .filter(person -> person.address().equals(alertAddress))
+                .filter(isMinor())
+                .map(person -> transformPersonToChildAlertDTO(person, alertAddress))
+                .toList();
+    }
+
+    private Predicate<Person> isMinor() {
+        return person -> getAge(person, medicalRecords) < MAJORITY_AGE;
+    }
+
+    private ChildAlertDTO transformPersonToChildAlertDTO(Person person, String alertAddress) {
+        List<Person> adultsAtGivenAddress = getAdultsAtAddress(alertAddress);
+        return new ChildAlertDTO(
+                person.firstName(),
+                person.lastName(),
+                getAge(person, medicalRecords),
+                adultsAtGivenAddress);
     }
 
     private List<Person> getAdultsAtAddress(String address) {
         return persons.stream()
                 .filter(person -> person.address().equals(address))
-                .filter(person -> AgeCalculation.getAge(person, medicalRecords) >= 18)
+                .filter(person -> AgeCalculation.getAge(person, medicalRecords) >= MAJORITY_AGE)
                 .toList();
     }
 
