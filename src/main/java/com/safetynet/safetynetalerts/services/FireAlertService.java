@@ -8,6 +8,7 @@ import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.FirestationRepository;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +19,12 @@ import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getAllergies
 import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getMedications;
 
 @Service
+@Slf4j
 public class FireAlertService {
     private final PersonRepository personRepository;
     private final FirestationRepository firestationRepository;
     private final MedicalRecordRepository medicalRecordRepository;
+    private final FireAlertMessageService fireAlertMessageService = new FireAlertMessageService();
 
     private List<Person> persons;
     private List<Firestation> firestations;
@@ -40,8 +43,10 @@ public class FireAlertService {
 
     public FireAlertDTO getFireAlertDTO(String address) {
         getResourcesFromRepositories();
-        List<FireAlertPersonDTO> fireAlertPersons = getListFireAlertPersons(address);
-        return new FireAlertDTO(getStationNumberAtAddress(address), fireAlertPersons);
+        List<FireAlertPersonDTO> fireAlertPersons = getListFireAlertPersonsAtAddress(address);
+        FireAlertDTO fireAlertDTO = new FireAlertDTO(getStationNumberAtAddress(address), fireAlertPersons);
+        log.info(fireAlertMessageService.getSuccessFireAlertLogMess(address, fireAlertDTO));
+        return fireAlertDTO;
     }
 
     private void getResourcesFromRepositories() {
@@ -50,14 +55,14 @@ public class FireAlertService {
         medicalRecords = medicalRecordRepository.getMedicalRecords();
     }
 
-    private List<FireAlertPersonDTO> getListFireAlertPersons(String address) {
+    private List<FireAlertPersonDTO> getListFireAlertPersonsAtAddress(String address) {
         return persons.stream()
                 .filter(person -> person.address().equals(address))
-                .map(this::getFireAlertPersonDTO)
+                .map(this::transformPersonToFireAlertPersonDTO)
                 .toList();
     }
 
-    private FireAlertPersonDTO getFireAlertPersonDTO(Person person) {
+    private FireAlertPersonDTO transformPersonToFireAlertPersonDTO(Person person) {
         return new FireAlertPersonDTO(
                 person.firstName(),
                 person.lastName(),
