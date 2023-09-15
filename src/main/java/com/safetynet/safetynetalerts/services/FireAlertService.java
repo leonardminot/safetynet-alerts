@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.safetynet.safetynetalerts.utils.AgeCalculation.getPersonAge;
+import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getAllergies;
+import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getMedications;
 
 @Service
 public class FireAlertService {
@@ -45,22 +47,6 @@ public class FireAlertService {
                 )).toList();
 
         return new FireAlertDTO(getStationNumberAtAddress(address, firestations), fireAlertPersons);
-    }
-
-    private List<String> getMedications(List<MedicalRecord> medicalRecords, Person person) {
-        return medicalRecords.stream()
-                .filter(mr -> mr.firstName().equals(person.firstName()) && mr.lastName().equals(person.lastName()))
-                .findFirst()
-                .map(MedicalRecord::medications)
-                .orElse(List.of());
-    }
-
-    private List<String> getAllergies(List<MedicalRecord> medicalRecords, Person person) {
-        return medicalRecords.stream()
-                .filter(mr -> mr.firstName().equals(person.firstName()) && mr.lastName().equals(person.lastName()))
-                .findFirst()
-                .map(MedicalRecord::allergies)
-                .orElse(List.of());
     }
 
     private String getStationNumberAtAddress(String address, List<Firestation> firestations) {
