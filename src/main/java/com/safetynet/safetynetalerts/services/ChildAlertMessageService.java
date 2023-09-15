@@ -9,7 +9,7 @@ public class ChildAlertMessageService {
     }
 
     String getSuccessChildAlertLogMess(String alertAddress, List<ChildAlertDTO> listOfChildrenAtAddress) {
-        return String.format("GET /childAlert?address=%s - Success: request return with body %s",
+        return String.format("GET /childAlert?address=%s - Success: request return with body [%s]",
                 alertAddress,
                 listOfChildrenAtAddress);
     }

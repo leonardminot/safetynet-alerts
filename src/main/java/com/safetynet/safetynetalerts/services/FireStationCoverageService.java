@@ -24,6 +24,8 @@ public class FireStationCoverageService {
     private final MedicalRecordRepository medicalRecordRepository;
     private final FirestationRepository firestationRepository;
 
+    private final int MAJORITY_AGE = 18;
+
     @Autowired
     public FireStationCoverageService(PersonRepository personRepository,
                                       MedicalRecordRepository medicalRecordRepository,
@@ -56,7 +58,7 @@ public class FireStationCoverageService {
         // TODO : Gérer le cas où un dossier médical est absent
         return firestationCoverage.stream()
                 .map(coverage -> getPersonAge(coverage, medicalRecords))
-                .filter(age -> age >= 18)
+                .filter(age -> age >= MAJORITY_AGE)
                 .count();
     }
 
