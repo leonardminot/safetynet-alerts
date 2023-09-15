@@ -37,34 +37,6 @@ public class ChildAlertServiceTest {
         childAlertService = new ChildAlertService(personRepository, medicalRecordRepository);
     }
 
-    @Test
-    void itShouldReturnTheAge() {
-        // Given
-        MedicalRecord adultRecord = new MedicalRecord(
-                "Adult",
-                "Adult",
-                LocalDate.of(2005, 9, 15),
-                List.of(),
-                List.of()
-        );
-
-        MedicalRecord childRecord = new MedicalRecord(
-                "Child",
-                "Child",
-                LocalDate.of(2005, 9, 16),
-                List.of(),
-                List.of()
-        );
-
-        // When
-        long expectedAdultAge = childAlertService.calculateAge(adultRecord);
-        long expectedChildAge = childAlertService.calculateAge(childRecord);
-
-        // Then
-        assertThat(expectedAdultAge).isEqualTo(18);
-        assertThat(expectedChildAge).isEqualTo(17);
-
-    }
 
     @Test
     void itShouldReturnTwoChildrenAndTwoAdults() {

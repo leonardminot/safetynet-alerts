@@ -5,12 +5,12 @@ import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
+import static com.safetynet.safetynetalerts.utils.AgeCalculation.getPersonAge;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,11 +41,11 @@ public class ChildAlertService {
 
         List<ChildAlertDTO> listOfChildrenAtAddress = persons.stream()
                 .filter(person -> person.address().equals(alertAddress))
-                .filter(person -> getPersonAge(person) < 18)
+                .filter(person -> getPersonAge(person, medicalRecords) < 18)
                 .map(person -> new ChildAlertDTO(
                         person.firstName(),
                         person.lastName(),
-                        getPersonAge(person),
+                        getPersonAge(person, medicalRecords),
                         adultsAtGivenAddress))
                 .toList();
         log.info(childAlertMessageService.getSuccessChildAlertLogMess(alertAddress, listOfChildrenAtAddress));
@@ -55,20 +55,8 @@ public class ChildAlertService {
     private List<Person> getAdultsAtAddress(String address) {
         return persons.stream()
                 .filter(person -> person.address().equals(address))
-                .filter(person -> getPersonAge(person) >= 18)
+                .filter(person -> getPersonAge(person, medicalRecords) >= 18)
                 .toList();
     }
 
-    private long getPersonAge(Person person) {
-        return medicalRecords.stream()
-                .filter(mr -> mr.firstName().equals(person.firstName()) && mr.lastName().equals(person.lastName()))
-                .map(this::calculateAge)
-                .findAny()
-                .orElse(0L);
-    }
-
-    public long calculateAge(MedicalRecord medicalRecord) {
-        LocalDate birthdate = medicalRecord.birthdate();
-        return ChronoUnit.YEARS.between(birthdate, LocalDate.now());
-    }
 }
