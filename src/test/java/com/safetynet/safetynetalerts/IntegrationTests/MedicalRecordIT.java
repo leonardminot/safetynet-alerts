@@ -90,7 +90,7 @@ public class MedicalRecordIT {
         // Then
         List<MedicalRecord> medicalRecords = medicalRecordRepository.getMedicalRecords();
         resultActions.andExpect(status().isOk());
-        assertThat(medicalRecords).hasSize(5);
+        assertThat(medicalRecords).hasSize(7);
         assertThat(medicalRecords.get(medicalRecords.size() - 1)).isEqualTo(alirezaRecord);
     }
 
@@ -120,7 +120,7 @@ public class MedicalRecordIT {
                         unknownPersonMedicalRecord.firstName(),
                         unknownPersonMedicalRecord.lastName()));
         List<MedicalRecord> medicalRecords = medicalRecordRepository.getMedicalRecords();
-        assertThat(medicalRecords).hasSize(4);
+        assertThat(medicalRecords).hasSize(6);
     }
 
     @Test
@@ -196,7 +196,7 @@ public class MedicalRecordIT {
                         unknownPersonMedicalRecord.firstName(),
                         unknownPersonMedicalRecord.lastName()));
         List<MedicalRecord> medicalRecords = medicalRecordRepository.getMedicalRecords();
-        assertThat(medicalRecords).hasSize(4);
+        assertThat(medicalRecords).hasSize(6);
     }
 
     @Test
@@ -251,7 +251,7 @@ public class MedicalRecordIT {
                         unknownPersonMedicalRecord.firstName(),
                         unknownPersonMedicalRecord.lastName()));
         List<MedicalRecord> medicalRecords = medicalRecordRepository.getMedicalRecords();
-        assertThat(medicalRecords).hasSize(4);
+        assertThat(medicalRecords).hasSize(6);
     }
 
     private String medicalRecordToJson(MedicalRecord medicalRecord) {

@@ -77,7 +77,7 @@ public class PersonIT {
         // Then
         List<Person> persons = personRepository.getPersons();
         resultActions.andExpect(status().isOk());
-        assertThat(persons).hasSize(6);
+        assertThat(persons).hasSize(8);
         assertThat(persons.get(persons.size() - 1)).isEqualTo(newPerson);
     }
 
@@ -109,7 +109,7 @@ public class PersonIT {
                 magnus.firstName(),
                 magnus.lastName()));
         List<Person> persons = personRepository.getPersons();
-        assertThat(persons).hasSize(5);
+        assertThat(persons).hasSize(7);
 
     }
 
@@ -146,7 +146,7 @@ public class PersonIT {
         List<Person> persons = personRepository.getPersons();
         Optional<Person> maximeInDB = persons.stream().filter(p -> p.firstName().equals(maximeToUpdate.firstName()) && p.lastName().equals(maximeToUpdate.lastName())).findFirst();
         resultActions.andExpect(status().isOk());
-        assertThat(persons).hasSize(5);
+        assertThat(persons).hasSize(7);
         assertThat(maximeInDB)
                 .isPresent()
                 .hasValueSatisfying(p -> assertThat(p).isEqualTo(finalMaxime));
@@ -203,7 +203,7 @@ public class PersonIT {
         List<Person> persons = personRepository.getPersons();
         Optional<Person> maximeInDB = persons.stream().filter(p -> p.firstName().equals(personToDelete.firstName()) && p.lastName().equals(personToDelete.lastName())).findFirst();
         resultActions.andExpect(status().isOk());
-        assertThat(persons).hasSize(4);
+        assertThat(persons).hasSize(6);
         assertThat(maximeInDB)
                 .isNotPresent();
     }

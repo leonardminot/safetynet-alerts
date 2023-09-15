@@ -70,12 +70,34 @@ public class ManageMockedData {
                 null
         );
 
+        Person miniMaxime = new Person(
+                "mini-Maxime",
+                "mini-Vachier-Lagrave",
+                "1990 Rue de la Tour",
+                "Paris",
+                "75001",
+                "987-654-3210",
+                "maxime@email.com"
+        );
+
+        Person miniAlireza = new Person(
+                "mini-Alireza",
+                "mini-Firouzja",
+                "1990 Rue de la Tour",
+                "Paris",
+                "75001",
+                "1990 Rue de la Tour",
+                "alireza@email.com"
+        );
+
 
         mockedList.add(magnus);
         mockedList.add(maxime);
         mockedList.add(alireza);
         mockedList.add(gari);
         mockedList.add(miniMagnus);
+        mockedList.add(miniMaxime);
+        mockedList.add(miniAlireza);
 
         return mockedList;
     }
@@ -153,10 +175,43 @@ public class ManageMockedData {
                 List.of()
         );
 
+        MedicalRecord miniMaximeRecord = new MedicalRecord(
+                "Maxime",
+                "Vachier-Lagrave",
+                LocalDate.parse("2021-10-21"),
+                List.of(),
+                List.of()
+        );
+
+        MedicalRecord miniAlirezaRecord = new MedicalRecord(
+                "mini-Alireza",
+                "mini-Firouzja",
+                LocalDate.parse("2023-06-18"),
+                List.of(),
+                List.of()
+        );
+
         mockedList.add(magnusRecord);
         mockedList.add(maximeRecord);
         mockedList.add(miniMagnusRecord);
         mockedList.add(gariRecord);
+        mockedList.add(miniMaximeRecord);
+        mockedList.add(miniAlirezaRecord);
+
+        return mockedList;
+    }
+
+    public static List<MedicalRecord> createMedicalRecordsMockedDataListWithAllEntries() {
+        MedicalRecord alirezaRecord = new MedicalRecord(
+                "Alireza",
+                "Firouzja",
+                LocalDate.parse("2003-06-18"),
+                List.of(),
+                List.of()
+        );
+
+        List<MedicalRecord> mockedList = createMedicalRecordsMockedDataList();
+        mockedList.add(alirezaRecord);
 
         return mockedList;
     }
@@ -164,6 +219,12 @@ public class ManageMockedData {
     public static void createMedicalRecordsMockedData(String filePath) throws IOException {
         ObjectMapper objectMapper = MyAppConfig.objectMapper();
         List<MedicalRecord> mockedList = createMedicalRecordsMockedDataList();
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(filePath).toFile(), mockedList);
+    }
+
+    public static void createMedicalRecordsMockedDataWithAllEntries(String filePath) throws IOException {
+        ObjectMapper objectMapper = MyAppConfig.objectMapper();
+        List<MedicalRecord> mockedList = createMedicalRecordsMockedDataListWithAllEntries();
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(filePath).toFile(), mockedList);
     }
 
