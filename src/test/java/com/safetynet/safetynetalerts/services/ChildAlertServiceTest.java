@@ -123,4 +123,20 @@ public class ChildAlertServiceTest {
         assertThat(actualResult).contains(miniMaxime).contains(miniAlireza);
 
     }
+
+    @Test
+    void itShouldReturnAnEmptyListWhenNoChildATheAddress() {
+        // Given
+        List<ChildAlertDTO> expectedResult = new ArrayList<>();
+
+        when(personRepository.getPersons()).thenReturn(ManageMockedData.createPersonMockedDataList());
+        when(medicalRecordRepository.getMedicalRecords()).thenReturn(ManageMockedData.createMedicalRecordsMockedDataListWithAllEntries());
+
+        // When
+        List<ChildAlertDTO> actualResult = childAlertService.getAlertFromAddress("2023 unknown address");
+
+        // Then
+        assertThat(actualResult).hasSize(0);
+
+    }
 }
