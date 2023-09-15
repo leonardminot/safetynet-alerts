@@ -176,9 +176,9 @@ public class ManageMockedData {
         );
 
         MedicalRecord miniMaximeRecord = new MedicalRecord(
-                "Maxime",
-                "Vachier-Lagrave",
-                LocalDate.parse("2021-10-21"),
+                "mini-Maxime",
+                "mini-Vachier-Lagrave",
+                LocalDate.parse("2019-10-21"),
                 List.of(),
                 List.of()
         );

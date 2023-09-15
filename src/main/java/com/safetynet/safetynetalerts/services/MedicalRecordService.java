@@ -28,6 +28,7 @@ public class MedicalRecordService {
     }
 
     public void createRecord(MedicalRecord medicalRecord) {
+        // TODO : it should throw when birthdate is in the future
         throwIfMedicalRecordIsPresent(medicalRecord);
         throwIfPersonIsUnknown(medicalRecord);
         medicalRecordRepository.saveRecord(medicalRecord);
