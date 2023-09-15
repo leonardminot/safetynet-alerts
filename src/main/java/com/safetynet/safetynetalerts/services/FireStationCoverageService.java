@@ -7,6 +7,7 @@ import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.FirestationRepository;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,7 @@ public class FireStationCoverageService {
         List<String> addresses = getAddressesForAStationNumber(stationNumber);
         List<Person> persons = personRepository.getPersons();
 
-        return persons.stream()
+        List<PersonsCoveredByFirestationDTO> listOfCoveredPersons = persons.stream()
                 .filter(person -> addresses.contains(person.address()))
                 .map(person -> new PersonsCoveredByFirestationDTO(
                         person.firstName(),
@@ -44,6 +45,8 @@ public class FireStationCoverageService {
                         person.address(),
                         person.phone()
                 )).toList();
+
+        return listOfCoveredPersons;
     }
 
     private List<String> getAddressesForAStationNumber(String stationNumber) {

@@ -28,14 +28,20 @@ public class FireStationCoverageController {
 
     @GetMapping
     public FirestationStationNumberDTO getPersonCoverage(@RequestParam String stationNumber) {
+        log.info("New Request : GET /firestation?stationNumber=" + stationNumber);
         List<PersonsCoveredByFirestationDTO> personsCoveredByFirestationDTOS = fireStationCoverageService.getCoverageForAStationNumber(stationNumber);
         long totalOfAdults = fireStationCoverageService.getTotalAdults(stationNumber);
         long totalOfChildren = fireStationCoverageService.getTotalChildren(stationNumber);
 
-        return new FirestationStationNumberDTO(
+        FirestationStationNumberDTO responseBody = new FirestationStationNumberDTO(
                 totalOfAdults,
                 totalOfChildren,
                 personsCoveredByFirestationDTOS
         );
+
+        log.info(String.format("GET /firestation?stationNumber=%s - Success: request return with body %s",
+                stationNumber,
+                responseBody));
+        return responseBody;
     }
 }
