@@ -5,7 +5,9 @@ import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
-import static com.safetynet.safetynetalerts.utils.AgeCalculation.getPersonAge;
+import static com.safetynet.safetynetalerts.utils.AgeCalculation.getAge;
+
+import com.safetynet.safetynetalerts.utils.AgeCalculation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,11 +43,11 @@ public class ChildAlertService {
 
         List<ChildAlertDTO> listOfChildrenAtAddress = persons.stream()
                 .filter(person -> person.address().equals(alertAddress))
-                .filter(person -> getPersonAge(person, medicalRecords) < 18)
+                .filter(person -> AgeCalculation.getAge(person, medicalRecords) < 18)
                 .map(person -> new ChildAlertDTO(
                         person.firstName(),
                         person.lastName(),
-                        getPersonAge(person, medicalRecords),
+                        AgeCalculation.getAge(person, medicalRecords),
                         adultsAtGivenAddress))
                 .toList();
         log.info(childAlertMessageService.getSuccessChildAlertLogMess(alertAddress, listOfChildrenAtAddress));
@@ -55,7 +57,7 @@ public class ChildAlertService {
     private List<Person> getAdultsAtAddress(String address) {
         return persons.stream()
                 .filter(person -> person.address().equals(address))
-                .filter(person -> getPersonAge(person, medicalRecords) >= 18)
+                .filter(person -> AgeCalculation.getAge(person, medicalRecords) >= 18)
                 .toList();
     }
 

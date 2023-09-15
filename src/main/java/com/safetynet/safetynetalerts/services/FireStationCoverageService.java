@@ -7,15 +7,13 @@ import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.FirestationRepository;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static com.safetynet.safetynetalerts.utils.AddressesResearch.getAddressesForStationNumber;
-import static com.safetynet.safetynetalerts.utils.AgeCalculation.getPersonAge;
+import static com.safetynet.safetynetalerts.utils.AgeCalculation.getAge;
 
 @Service
 public class FireStationCoverageService {
@@ -57,7 +55,7 @@ public class FireStationCoverageService {
 
         // TODO : Gérer le cas où un dossier médical est absent
         return firestationCoverage.stream()
-                .map(coverage -> getPersonAge(coverage, medicalRecords))
+                .map(coverage -> getAge(coverage, medicalRecords))
                 .filter(age -> age >= MAJORITY_AGE)
                 .count();
     }

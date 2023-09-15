@@ -6,7 +6,7 @@ import com.safetynet.safetynetalerts.models.Person;
 import java.util.List;
 
 public class GetMedicalHistory {
-    public static List<String> getMedications(List<MedicalRecord> medicalRecords, Person person) {
+    public static List<String> getMedications(Person person, List<MedicalRecord> medicalRecords) {
         return medicalRecords.stream()
                 .filter(mr -> mr.firstName().equals(person.firstName()) && mr.lastName().equals(person.lastName()))
                 .findFirst()
@@ -14,7 +14,7 @@ public class GetMedicalHistory {
                 .orElse(List.of());
     }
 
-    public static List<String> getAllergies(List<MedicalRecord> medicalRecords, Person person) {
+    public static List<String> getAllergies(Person person, List<MedicalRecord> medicalRecords) {
         return medicalRecords.stream()
                 .filter(mr -> mr.firstName().equals(person.firstName()) && mr.lastName().equals(person.lastName()))
                 .findFirst()

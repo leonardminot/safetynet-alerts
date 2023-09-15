@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.safetynet.safetynetalerts.utils.AgeCalculation.calculateAgeFromMedicalRecord;
-import static com.safetynet.safetynetalerts.utils.AgeCalculation.getPersonAge;
+import static com.safetynet.safetynetalerts.utils.AgeCalculation.getAge;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AgeCalculationTest {
@@ -59,7 +59,7 @@ public class AgeCalculationTest {
         );
 
         // When
-        long actualAge = getPersonAge(gari, medicalRecords);
+        long actualAge = AgeCalculation.getAge(gari, medicalRecords);
 
         // Then
         assertThat(actualAge).isEqualTo(60);

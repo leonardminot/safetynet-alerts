@@ -14,7 +14,7 @@ public class AgeCalculation {
         return ChronoUnit.YEARS.between(birthdate, LocalDate.now());
     }
 
-    public static long getPersonAge(Person person, List<MedicalRecord> medicalRecords) {
+    public static long getAge(Person person, List<MedicalRecord> medicalRecords) {
         return medicalRecords.stream()
                 .filter(mr -> mr.firstName().equals(person.firstName()) && mr.lastName().equals(person.lastName()))
                 .map(AgeCalculation::calculateAgeFromMedicalRecord)
@@ -22,7 +22,7 @@ public class AgeCalculation {
                 .orElse(0L);
     }
 
-    public static long getPersonAge(PersonsCoveredByFirestationDTO personDTO, List<MedicalRecord> medicalRecords) {
+    public static long getAge(PersonsCoveredByFirestationDTO personDTO, List<MedicalRecord> medicalRecords) {
         Person person = new Person(
                 personDTO.firstName(),
                 personDTO.lastName(),
@@ -32,6 +32,6 @@ public class AgeCalculation {
                 null,
                 null
         );
-        return getPersonAge(person, medicalRecords);
+        return getAge(person, medicalRecords);
     }
 }

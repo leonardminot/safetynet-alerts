@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.safetynet.safetynetalerts.utils.AgeCalculation.getPersonAge;
+import static com.safetynet.safetynetalerts.utils.AgeCalculation.getAge;
 import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getAllergies;
 import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getMedications;
 
@@ -23,38 +23,52 @@ public class FireAlertService {
     private final FirestationRepository firestationRepository;
     private final MedicalRecordRepository medicalRecordRepository;
 
+    private List<Person> persons;
+    private List<Firestation> firestations;
+    private List<MedicalRecord> medicalRecords;
+
+
     @Autowired
     public FireAlertService(PersonRepository personRepository, FirestationRepository firestationRepository, MedicalRecordRepository medicalRecordRepository) {
         this.personRepository = personRepository;
         this.firestationRepository = firestationRepository;
         this.medicalRecordRepository = medicalRecordRepository;
+        persons = List.of();
+        firestations = List.of();
+        medicalRecords = List.of();
     }
 
-    public FireAlertDTO getPersonsAtAddress(String address) {
-        List<Person> persons = personRepository.getPersons();
-        List<Firestation> firestations = firestationRepository.getFirestations();
-        List<MedicalRecord> medicalRecords = medicalRecordRepository.getMedicalRecords();
+    public FireAlertDTO getFireAlertDTO(String address) {
+        getResourcesFromRepositories();
+        List<FireAlertPersonDTO> fireAlertPersons = getListFireAlertPersons(address);
+        return new FireAlertDTO(getStationNumberAtAddress(address), fireAlertPersons);
+    }
 
-        List<FireAlertPersonDTO> fireAlertPersons = persons.stream()
+    private void getResourcesFromRepositories() {
+        persons = personRepository.getPersons();
+        firestations = firestationRepository.getFirestations();
+        medicalRecords = medicalRecordRepository.getMedicalRecords();
+    }
+
+    private List<FireAlertPersonDTO> getListFireAlertPersons(String address) {
+        return persons.stream()
                 .filter(person -> person.address().equals(address))
-                .map(person -> getFireAlertPersonDTO(person, medicalRecords))
+                .map(this::getFireAlertPersonDTO)
                 .toList();
-
-        return new FireAlertDTO(getStationNumberAtAddress(address, firestations), fireAlertPersons);
     }
 
-    private FireAlertPersonDTO getFireAlertPersonDTO(Person person, List<MedicalRecord> medicalRecords) {
+    private FireAlertPersonDTO getFireAlertPersonDTO(Person person) {
         return new FireAlertPersonDTO(
                 person.firstName(),
                 person.lastName(),
                 person.phone(),
-                getPersonAge(person, medicalRecords),
-                getMedications(medicalRecords, person),
-                getAllergies(medicalRecords, person)
+                getAge(person, medicalRecords),
+                getMedications(person, medicalRecords),
+                getAllergies(person, medicalRecords)
         );
     }
 
-    private String getStationNumberAtAddress(String address, List<Firestation> firestations) {
+    private String getStationNumberAtAddress(String address) {
         return firestations.stream()
                 .filter(firestation -> firestation.address().equals(address))
                 .findFirst()
