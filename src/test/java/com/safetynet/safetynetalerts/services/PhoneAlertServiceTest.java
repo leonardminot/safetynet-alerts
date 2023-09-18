@@ -3,6 +3,7 @@ package com.safetynet.safetynetalerts.services;
 import com.safetynet.safetynetalerts.mockressources.utils.FireStationMockedData;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.mockressources.utils.PersonsMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.PhoneNumbersMockedData;
 import com.safetynet.safetynetalerts.repositories.FirestationRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,8 +39,7 @@ public class PhoneAlertServiceTest {
     @Test
     void itShouldReturn3PhoneNumber() {
         // Given
-        List<String> expectedPhoneNumbers = new ArrayList<>(List.of("123-456-7890", "741-852-9630"));
-        expectedPhoneNumbers.add(null);
+        List<String> expectedPhoneNumbers = PhoneNumbersMockedData.getPhoneNumbersForStation1();
         String stationNumber = "1";
 
         when(firestationRepository.getFirestations()).thenReturn(FireStationMockedData.createFirestationsMockedDataList());
@@ -49,7 +49,7 @@ public class PhoneAlertServiceTest {
         List<String> actualPhoneNumbers = phoneAlertService.getPhoneNumbersForFireStation(stationNumber);
 
         // Then
-        assertThat(actualPhoneNumbers).isEqualTo(expectedPhoneNumbers);
+        assertThat(actualPhoneNumbers).containsExactlyInAnyOrderElementsOf(expectedPhoneNumbers);
 
     }
 }
