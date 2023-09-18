@@ -38,7 +38,7 @@ public class FloodAlertServiceTest {
 
     @BeforeEach
     void setUp() {
-        floodAlertService = new FloodAlertService(personRepository, firestationRepository, medicalRecordRepository);
+        floodAlertService = new FloodAlertService(personRepository, firestationRepository, medicalRecordRepository, new FloodAlertMessageService());
 
     }
 

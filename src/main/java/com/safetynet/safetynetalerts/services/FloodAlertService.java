@@ -9,6 +9,7 @@ import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.FirestationRepository;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,23 +20,28 @@ import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getAllergies
 import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getMedications;
 
 @Service
+@Slf4j
 public class FloodAlertService {
 
     private final PersonRepository personRepository;
     private final FirestationRepository firestationRepository;
     private final MedicalRecordRepository medicalRecordRepository;
+    private final FloodAlertMessageService floodAlertMessageService;
 
     @Autowired
-    public FloodAlertService(PersonRepository personRepository, FirestationRepository firestationRepository, MedicalRecordRepository medicalRecordRepository) {
+    public FloodAlertService(PersonRepository personRepository, FirestationRepository firestationRepository, MedicalRecordRepository medicalRecordRepository, FloodAlertMessageService floodAlertMessageService) {
         this.personRepository = personRepository;
         this.firestationRepository = firestationRepository;
         this.medicalRecordRepository = medicalRecordRepository;
+        this.floodAlertMessageService = floodAlertMessageService;
     }
 
     public List<FloodAlertDTO> getFloodAlert(List<String> stationsAlert) {
-        return stationsAlert.stream()
+        List<FloodAlertDTO> responseBody = stationsAlert.stream()
                 .map(this::generateFloodAlertForGivenFireStation)
                 .toList();
+        log.info(floodAlertMessageService.getSuccessFloodAlertLogMess(stationsAlert, responseBody));
+        return responseBody;
     }
 
     public FloodAlertDTO generateFloodAlertForGivenFireStation(String stationNumber) {
