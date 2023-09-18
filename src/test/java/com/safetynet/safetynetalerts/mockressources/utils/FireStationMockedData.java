@@ -19,9 +19,12 @@ public class FireStationMockedData {
 
         Firestation rueDeLaTour = getRueDeLaTour();
 
+        Firestation rueDuGambitDame = getRueDuGambitDame();
+
         mockedList.add(rueDeLaDame);
         mockedList.add(rueDeLaTour);
         mockedList.add(rueDuFou);
+        mockedList.add(rueDuGambitDame);
 
         return mockedList;
     }
@@ -44,6 +47,13 @@ public class FireStationMockedData {
         return new Firestation(
                 "007 Rue de la Dame",
                 "1"
+        );
+    }
+
+    public static Firestation getRueDuGambitDame() {
+        return new Firestation(
+                "123 Rue du Gambit Dame",
+                "50"
         );
     }
 

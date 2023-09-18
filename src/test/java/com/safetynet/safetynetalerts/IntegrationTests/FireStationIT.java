@@ -73,7 +73,7 @@ public class FireStationIT {
         // Then
         List<Firestation> firestations = firestationRepository.getFirestations();
         resultActions.andExpect(status().isOk());
-        assertThat(firestations).hasSize(4);
+        assertThat(firestations).hasSize(5);
         assertThat(firestations.get(firestations.size() - 1)).isEqualTo(firestation);
     }
 
@@ -100,7 +100,7 @@ public class FireStationIT {
                         rueDeLaDame.station(),
                         rueDeLaDame.address()));
         List<Firestation> firestations = firestationRepository.getFirestations();
-        assertThat(firestations).hasSize(3);
+        assertThat(firestations).hasSize(4);
     }
 
     @Test
@@ -126,7 +126,7 @@ public class FireStationIT {
         // Then
         List<Firestation> firestations = firestationRepository.getFirestations();
         resultActions.andExpect(status().isOk());
-        assertThat(firestations).hasSize(3);
+        assertThat(firestations).hasSize(4);
         Optional<Firestation> optionalFirestation = firestations.stream()
                 .filter(fs -> fs.address().equals(currentMapping.address()))
                 .findAny();
@@ -157,7 +157,7 @@ public class FireStationIT {
                         unknownAddress,
                         unknownAddress.address()));
         List<Firestation> firestations = firestationRepository.getFirestations();
-        assertThat(firestations).hasSize(3);
+        assertThat(firestations).hasSize(4);
 
     }
 
@@ -178,7 +178,7 @@ public class FireStationIT {
         // Then
         List<Firestation> firestations = firestationRepository.getFirestations();
         resultActions.andExpect(status().isOk());
-        assertThat(firestations).hasSize(2);
+        assertThat(firestations).hasSize(3);
 
         Optional<Firestation> optionalFirestation = firestations.stream()
                 .filter(fs -> fs.address().equals(existingAddress.address()))
@@ -208,7 +208,7 @@ public class FireStationIT {
                         unknownAddress,
                         unknownAddress.address()));
         List<Firestation> firestations = firestationRepository.getFirestations();
-        assertThat(firestations).hasSize(3);
+        assertThat(firestations).hasSize(4);
 
     }
 
@@ -224,7 +224,7 @@ public class FireStationIT {
         // Then
         List<Firestation> firestations = firestationRepository.getFirestations();
         resultActions.andExpect(status().isOk());
-        assertThat(firestations).hasSize(1);
+        assertThat(firestations).hasSize(2);
 
         Optional<Firestation> optionalFirestation = firestations.stream()
                 .filter(fs -> fs.station().equals(stationNumber))

@@ -46,7 +46,7 @@ class FirestationRepositoryTest {
         firestationList = firestationRepository.getFirestations();
 
         // Then
-        assertThat(firestationList).hasSize(3);
+        assertThat(firestationList).hasSize(4);
     }
 
     @Test
@@ -77,7 +77,7 @@ class FirestationRepositoryTest {
 
         // Then
         List<Firestation> allFirestations = firestationRepository.getFirestations();
-        assertThat(allFirestations).hasSize(4);
+        assertThat(allFirestations).hasSize(5);
         assertThat(allFirestations.get(allFirestations.size() - 1)).isEqualTo(firestation);
 
     }
@@ -122,7 +122,7 @@ class FirestationRepositoryTest {
 
         // Then
         List<Firestation> firestations = firestationRepository.getFirestations();
-        assertThat(firestations).hasSize(3);
+        assertThat(firestations).hasSize(4);
 
         Optional<Firestation> optionalFirestation = firestations.stream()
                 .filter(fs -> fs.address().equals(newMapping.address()))
@@ -183,7 +183,7 @@ class FirestationRepositoryTest {
 
         // Then
         List<Firestation> firestations = firestationRepository.getFirestations();
-        assertThat(firestations).hasSize(2);
+        assertThat(firestations).hasSize(3);
 
         Optional<Firestation> optionalFirestation = firestations.stream()
                 .filter(fs -> fs.address().equals(existingAddress.address()))
@@ -203,7 +203,7 @@ class FirestationRepositoryTest {
 
         // Then
         List<Firestation> firestations = firestationRepository.getFirestations();
-        assertThat(firestations).hasSize(1);
+        assertThat(firestations).hasSize(2);
 
         Optional<Firestation> optionalFirestation = firestations.stream()
                 .filter(fs -> fs.station().equals(stationNumber))
