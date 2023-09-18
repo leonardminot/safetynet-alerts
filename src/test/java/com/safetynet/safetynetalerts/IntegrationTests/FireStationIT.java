@@ -2,6 +2,7 @@ package com.safetynet.safetynetalerts.IntegrationTests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.safetynet.safetynetalerts.mockressources.utils.FireStationMockedData;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.models.Firestation;
 import com.safetynet.safetynetalerts.repositories.FirestationRepository;
@@ -48,7 +49,7 @@ public class FireStationIT {
 
     @BeforeEach
     void setUp() throws IOException {
-        ManageMockedData.createFirestationsMockedData(filePathMockFireStations);
+        FireStationMockedData.createFirestationsMockedData(filePathMockFireStations);
     }
 
     @AfterEach

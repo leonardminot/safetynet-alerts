@@ -1,6 +1,7 @@
 package com.safetynet.safetynetalerts.repositories;
 
 import com.safetynet.safetynetalerts.configuration.MyAppConfig;
+import com.safetynet.safetynetalerts.mockressources.utils.FireStationMockedData;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.models.Firestation;
 import org.junit.jupiter.api.AfterEach;
@@ -8,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import javax.swing.text.html.Option;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
@@ -25,7 +25,7 @@ class FirestationRepositoryTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        ManageMockedData.createFirestationsMockedData(filePathMockFirestations);
+        FireStationMockedData.createFirestationsMockedData(filePathMockFirestations);
 
         firestationRepository = new FirestationRepository(
                 filePathMockFirestations,
@@ -95,10 +95,7 @@ class FirestationRepositoryTest {
         );
 
         // ... known firestation
-        Firestation knownFirestation = new Firestation(
-                "007 Rue de la Dame",
-                "1"
-        );
+        Firestation knownFirestation = FireStationMockedData.getRueDeLaDame();
 
         // When
         optionalFireStationThatExists = firestationRepository.isMappingExist(knownFirestation);
@@ -138,7 +135,7 @@ class FirestationRepositoryTest {
     }
 
     @Test
-    void itShouldIfAddressExist() {
+    void itShouldReturnIfAddressExist() {
         // Given
         // ... unknown address
         Firestation unknownAddress = new Firestation(
@@ -147,10 +144,7 @@ class FirestationRepositoryTest {
         );
 
         // ... known address
-        Firestation knownAddress = new Firestation(
-                "007 Rue de la Dame",
-                "1"
-        );
+        Firestation knownAddress = FireStationMockedData.getRueDeLaDame();
 
         // When
         Boolean mustBeTrue = firestationRepository.isAddressExist(knownAddress);

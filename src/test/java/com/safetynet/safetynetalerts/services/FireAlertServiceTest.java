@@ -2,7 +2,10 @@ package com.safetynet.safetynetalerts.services;
 
 import com.safetynet.safetynetalerts.dto.FireAlertDTO;
 import com.safetynet.safetynetalerts.dto.FireAlertPersonDTO;
+import com.safetynet.safetynetalerts.mockressources.utils.FireStationMockedData;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.MedicalRecordsMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.PersonsMockedData;
 import com.safetynet.safetynetalerts.repositories.FirestationRepository;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
@@ -83,9 +86,9 @@ public class FireAlertServiceTest {
 
         FireAlertDTO expected = new FireAlertDTO("2", fireAlertPersonDTOList);
 
-        when(personRepository.getPersons()).thenReturn(ManageMockedData.createPersonMockedDataList());
-        when(firestationRepository.getFirestations()).thenReturn(ManageMockedData.createFirestationsMockedDataList());
-        when(medicalRecordRepository.getMedicalRecords()).thenReturn(ManageMockedData.createMedicalRecordsMockedDataListWithAllEntries());
+        when(personRepository.getPersons()).thenReturn(PersonsMockedData.createPersonMockedDataList());
+        when(firestationRepository.getFirestations()).thenReturn(FireStationMockedData.createFirestationsMockedDataList());
+        when(medicalRecordRepository.getMedicalRecords()).thenReturn(MedicalRecordsMockedData.createMedicalRecordsMockedDataListWithAllEntries());
 
         // When
         FireAlertDTO actualResult = fireAlertService.getFireAlert(address);

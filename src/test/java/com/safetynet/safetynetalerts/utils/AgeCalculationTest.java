@@ -1,6 +1,7 @@
 package com.safetynet.safetynetalerts.utils;
 
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.MedicalRecordsMockedData;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.models.Person;
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,7 @@ public class AgeCalculationTest {
     @Test
     void itShouldGetPersonAge() {
         // Given
-        List<MedicalRecord> medicalRecords = ManageMockedData.createMedicalRecordsMockedDataListWithAllEntries();
+        List<MedicalRecord> medicalRecords = MedicalRecordsMockedData.createMedicalRecordsMockedDataListWithAllEntries();
 
         Person gari = new Person(
                 "Gari",

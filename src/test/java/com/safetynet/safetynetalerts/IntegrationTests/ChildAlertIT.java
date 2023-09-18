@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalerts.dto.ChildAlertDTO;
 import com.safetynet.safetynetalerts.dto.FirestationStationNumberDTO;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.MedicalRecordsMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.PersonsMockedData;
 import com.safetynet.safetynetalerts.models.Person;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,8 +49,8 @@ public class ChildAlertIT {
 
     @BeforeEach
     void setUp() throws IOException {
-        ManageMockedData.createPersonMockedData(filePathMockPersons);
-        ManageMockedData.createMedicalRecordsMockedDataWithAllEntries(filePathMockMedicalRecords);
+        PersonsMockedData.createPersonMockedData(filePathMockPersons);
+        MedicalRecordsMockedData.createMedicalRecordsMockedDataWithAllEntries(filePathMockMedicalRecords);
     }
 
     @AfterEach

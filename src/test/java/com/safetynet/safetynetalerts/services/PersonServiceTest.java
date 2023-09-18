@@ -1,6 +1,8 @@
 package com.safetynet.safetynetalerts.services;
 
 import com.safetynet.safetynetalerts.exception.ApiResourceException;
+import com.safetynet.safetynetalerts.mockressources.utils.MedicalRecordsMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.PersonsMockedData;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
@@ -108,15 +110,7 @@ class PersonServiceTest {
     void itShouldUpdateAPerson() {
         // Given
         // ... an existing person
-        Person maximeExisting = new Person(
-                "Maxime",
-                "Vachier-Lagrave",
-                "1990 Rue de la Tour",
-                "Paris",
-                "75001",
-                "987-654-3210",
-                "maxime@email.com"
-        );
+        Person maximeExisting = PersonsMockedData.getMaxime();
 
         // ... A person in the DB with new values for email and phone number
 
@@ -203,13 +197,7 @@ class PersonServiceTest {
                 null
         );
 
-        MedicalRecord personToDeleteMedicalRecord = new MedicalRecord(
-                "Maxime",
-                "Vachier-Lagrave",
-                LocalDate.parse("1990-10-21"),
-                List.of(),
-                List.of()
-        );
+        MedicalRecord personToDeleteMedicalRecord = MedicalRecordsMockedData.getMaximeRecord();
 
         // ... and the Person is found
         given(personRepository.selectPersonByName(any(String.class), any(String.class))).willReturn(Optional.of(personToDelete));

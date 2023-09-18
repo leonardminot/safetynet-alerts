@@ -2,6 +2,7 @@ package com.safetynet.safetynetalerts.repositories;
 
 import com.safetynet.safetynetalerts.configuration.MyAppConfig;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.MedicalRecordsMockedData;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.models.Person;
 import org.junit.jupiter.api.AfterEach;
@@ -26,7 +27,7 @@ class MedicalRecordRepositoryTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        ManageMockedData.createMedicalRecordsMockedData(pathToFile);
+        MedicalRecordsMockedData.createMedicalRecordsMockedData(pathToFile);
         medicalRecordRepository = new MedicalRecordRepository(pathToFile, MyAppConfig.objectMapper());
     }
 

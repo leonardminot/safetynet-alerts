@@ -3,6 +3,7 @@ package com.safetynet.safetynetalerts.IntegrationTests;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.PersonsMockedData;
 import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -48,7 +49,7 @@ public class PersonIT {
 
     @BeforeEach
     void setUp() throws IOException {
-        ManageMockedData.createPersonMockedData(filePathMockPersons);
+        PersonsMockedData.createPersonMockedData(filePathMockPersons);
     }
 
     @AfterEach

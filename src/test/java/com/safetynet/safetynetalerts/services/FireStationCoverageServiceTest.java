@@ -1,7 +1,7 @@
 package com.safetynet.safetynetalerts.services;
 
 import com.safetynet.safetynetalerts.dto.PersonsCoveredByFirestationDTO;
-import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.*;
 import com.safetynet.safetynetalerts.repositories.FirestationRepository;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
@@ -43,29 +43,14 @@ public class FireStationCoverageServiceTest {
     void itShouldThreePersonsForFireStation1() {
         // Given
         String stationNumber = "1";
-        PersonsCoveredByFirestationDTO magnus = new PersonsCoveredByFirestationDTO(
-                "Magnus",
-                "Carlsen",
-                "007 Rue de la Dame",
-                "123-456-7890"
-        );
+        PersonsCoveredByFirestationDTO magnus = FireStationCoverageMockedData.getMagnus();
 
-        PersonsCoveredByFirestationDTO miniMagnus = new PersonsCoveredByFirestationDTO(
-                "miniMagnus",
-                "miniCarlsen",
-                "007 Rue de la Dame",
-                null
-        );
+        PersonsCoveredByFirestationDTO miniMagnus = FireStationCoverageMockedData.getMiniMagnus();
 
-        PersonsCoveredByFirestationDTO gari = new PersonsCoveredByFirestationDTO(
-                "Gari",
-                "Kasparov",
-                "105 Rue du Fou",
-                "741-852-9630"
-        );
+        PersonsCoveredByFirestationDTO gari = FireStationCoverageMockedData.getGari();
 
-        given(personRepository.getPersons()).willReturn(ManageMockedData.createPersonMockedDataList());
-        given(firestationRepository.getFirestations()).willReturn(ManageMockedData.createFirestationsMockedDataList());
+        given(personRepository.getPersons()).willReturn(PersonsMockedData.createPersonMockedDataList());
+        given(firestationRepository.getFirestations()).willReturn(FireStationMockedData.createFirestationsMockedDataList());
 
         // When
         List<PersonsCoveredByFirestationDTO> firestationCoverageList = fireStationCoverageService.findPersonsCoveredByFirestation(stationNumber);
@@ -79,9 +64,9 @@ public class FireStationCoverageServiceTest {
     void itShouldReturn2Adults() {
         // Given
         String stationNumber = "1";
-        given(personRepository.getPersons()).willReturn(ManageMockedData.createPersonMockedDataList());
-        given(firestationRepository.getFirestations()).willReturn(ManageMockedData.createFirestationsMockedDataList());
-        given(medicalRecordRepository.getMedicalRecords()).willReturn(ManageMockedData.createMedicalRecordsMockedDataList());
+        given(personRepository.getPersons()).willReturn(PersonsMockedData.createPersonMockedDataList());
+        given(firestationRepository.getFirestations()).willReturn(FireStationMockedData.createFirestationsMockedDataList());
+        given(medicalRecordRepository.getMedicalRecords()).willReturn(MedicalRecordsMockedData.createMedicalRecordsMockedDataList());
 
         // When
         long adults = fireStationCoverageService.getTotalAdults(stationNumber);
@@ -95,9 +80,9 @@ public class FireStationCoverageServiceTest {
     void itShouldReturn1Child() {
         // Given
         String stationNumber = "1";
-        given(personRepository.getPersons()).willReturn(ManageMockedData.createPersonMockedDataList());
-        given(firestationRepository.getFirestations()).willReturn(ManageMockedData.createFirestationsMockedDataList());
-        given(medicalRecordRepository.getMedicalRecords()).willReturn(ManageMockedData.createMedicalRecordsMockedDataList());
+        given(personRepository.getPersons()).willReturn(PersonsMockedData.createPersonMockedDataList());
+        given(firestationRepository.getFirestations()).willReturn(FireStationMockedData.createFirestationsMockedDataList());
+        given(medicalRecordRepository.getMedicalRecords()).willReturn(MedicalRecordsMockedData.createMedicalRecordsMockedDataList());
 
         // When
         long childs = fireStationCoverageService.getTotalChildren(stationNumber);

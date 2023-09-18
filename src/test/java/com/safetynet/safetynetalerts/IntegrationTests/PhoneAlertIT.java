@@ -2,7 +2,10 @@ package com.safetynet.safetynetalerts.IntegrationTests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.safetynet.safetynetalerts.mockressources.utils.FireStationMockedData;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.PersonsMockedData;
+import com.safetynet.safetynetalerts.models.Person;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,8 +49,8 @@ public class PhoneAlertIT {
 
     @BeforeEach
     void setUp() throws IOException {
-        ManageMockedData.createPersonMockedData(filePathMockPersons);
-        ManageMockedData.createFirestationsMockedData(filePathMockFireStations);
+        PersonsMockedData.createPersonMockedData(filePathMockPersons);
+        FireStationMockedData.createFirestationsMockedData(filePathMockFireStations);
     }
 
     @AfterEach

@@ -4,7 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalerts.dto.FirestationStationNumberDTO;
 import com.safetynet.safetynetalerts.dto.PersonsCoveredByFirestationDTO;
+import com.safetynet.safetynetalerts.mockressources.utils.FireStationMockedData;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.MedicalRecordsMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.PersonsMockedData;
 import com.safetynet.safetynetalerts.models.Firestation;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,9 +53,9 @@ public class FireStationCoverageIT {
 
     @BeforeEach
     void setUp() throws IOException {
-        ManageMockedData.createPersonMockedData(filePathMockPersons);
-        ManageMockedData.createFirestationsMockedData(filePathMockFireStations);
-        ManageMockedData.createMedicalRecordsMockedData(filePathMockMedicalRecords);
+        PersonsMockedData.createPersonMockedData(filePathMockPersons);
+        FireStationMockedData.createFirestationsMockedData(filePathMockFireStations);
+        MedicalRecordsMockedData.createMedicalRecordsMockedData(filePathMockMedicalRecords);
     }
 
     @AfterEach

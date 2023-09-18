@@ -5,7 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalerts.dto.ChildAlertDTO;
 import com.safetynet.safetynetalerts.dto.FireAlertDTO;
 import com.safetynet.safetynetalerts.dto.FireAlertPersonDTO;
+import com.safetynet.safetynetalerts.mockressources.utils.FireStationMockedData;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.MedicalRecordsMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.PersonsMockedData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,9 +52,9 @@ public class FireAlertIT {
 
     @BeforeEach
     void setUp() throws IOException {
-        ManageMockedData.createPersonMockedData(filePathMockPersons);
-        ManageMockedData.createFirestationsMockedData(filePathMockFirestations);
-        ManageMockedData.createMedicalRecordsMockedDataWithAllEntries(filePathMockMedicalRecords);
+        PersonsMockedData.createPersonMockedData(filePathMockPersons);
+        FireStationMockedData.createFirestationsMockedData(filePathMockFirestations);
+        MedicalRecordsMockedData.createMedicalRecordsMockedDataWithAllEntries(filePathMockMedicalRecords);
     }
 
     @AfterEach

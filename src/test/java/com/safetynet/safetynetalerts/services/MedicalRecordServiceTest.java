@@ -1,6 +1,7 @@
 package com.safetynet.safetynetalerts.services;
 
 import com.safetynet.safetynetalerts.exception.ApiResourceException;
+import com.safetynet.safetynetalerts.mockressources.utils.MedicalRecordsMockedData;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
@@ -51,13 +52,7 @@ class MedicalRecordServiceTest {
     @Test
     void itShouldCreateANewMedicalRecord() {
         // Given
-        MedicalRecord alirezaRecord = new MedicalRecord(
-                "Alireza",
-                "Firouzja",
-                LocalDate.parse("2003-06-18"),
-                List.of("aznol:350mg", "hydrapermazol:100mg"),
-                List.of("nillacilan")
-        );
+        MedicalRecord alirezaRecord = MedicalRecordsMockedData.getAlirezaRecord();
 
         Person alirezaPerson = new Person(
                 "Alireza",
@@ -115,13 +110,7 @@ class MedicalRecordServiceTest {
     @Test
     void itShouldThrowWhenMedicalRecordAlreadyExists() {
         // When
-        MedicalRecord currentRecord = new MedicalRecord(
-                "Magnus",
-                "Carlsen",
-                LocalDate.parse("1990-11-30"),
-                List.of("aznol:350mg", "hydrapermazol:100mg"),
-                List.of("nillacilan")
-        );
+        MedicalRecord currentRecord = MedicalRecordsMockedData.getMagnusRecord();
 
         // ... already a medical record in the DB
         when(medicalRecordRepository.selectMedicalRecordByName(any(String.class), any(String.class))).thenReturn(Optional.of(currentRecord));
@@ -144,13 +133,7 @@ class MedicalRecordServiceTest {
     void itShouldUpdateAMedicalRecord() {
         // Given
         // ... the current record
-        MedicalRecord currentRecord = new MedicalRecord(
-                "Magnus",
-                "Carlsen",
-                LocalDate.parse("1990-11-30"),
-                List.of("aznol:350mg", "hydrapermazol:100mg"),
-                List.of("nillacilan")
-        );
+        MedicalRecord currentRecord = MedicalRecordsMockedData.getMagnusRecord();
 
         // ... the update request
         MedicalRecord updateRequest = new MedicalRecord(
@@ -159,15 +142,6 @@ class MedicalRecordServiceTest {
                 null,
                 List.of("aznol:350mg", "hydrapermazol:100mg", "ketamine:1000mg"),
                 List.of("nillacilan","peanut butter")
-        );
-
-        // ... the final record after request
-        MedicalRecord finalRecord = new MedicalRecord(
-                "Magnus",
-                "Carlsen",
-                LocalDate.parse("1990-11-30"),
-                List.of("aznol:350mg", "hydrapermazol:100mg"),
-                List.of("nillacilan")
         );
 
         when(medicalRecordRepository.selectMedicalRecordByName(any(String.class), any(String.class))).thenReturn(Optional.of(currentRecord));

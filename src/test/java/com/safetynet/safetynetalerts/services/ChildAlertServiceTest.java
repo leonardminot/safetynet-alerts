@@ -1,7 +1,10 @@
 package com.safetynet.safetynetalerts.services;
 
 import com.safetynet.safetynetalerts.dto.ChildAlertDTO;
+import com.safetynet.safetynetalerts.mockressources.utils.ChildAlertMockedData;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.MedicalRecordsMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.PersonsMockedData;
 import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
@@ -39,51 +42,12 @@ public class ChildAlertServiceTest {
     @Test
     void itShouldReturnTwoChildrenAndTwoAdults() {
         // Given
-        List<ChildAlertDTO> expectedResult = new ArrayList<>();
+        // ... Children living at "1990 rue de la Tour"
+        ChildAlertDTO miniMaxime = ChildAlertMockedData.getMiniMaxime();
+        ChildAlertDTO miniAlireza = ChildAlertMockedData.getMiniAlireza();
 
-        Person maxime = new Person(
-                "Maxime",
-                "Vachier-Lagrave",
-                "1990 Rue de la Tour",
-                "Paris",
-                "75001",
-                "987-654-3210",
-                "maxime@email.com"
-        );
-
-        Person alireza = new Person(
-                "Alireza",
-                "Firouzja",
-                "1990 Rue de la Tour",
-                "Paris",
-                "75001",
-                "000-111-2222",
-                "alireza@email.com"
-        );
-
-        List<Person> otherMembers = new ArrayList<>();
-        otherMembers.add(maxime);
-        otherMembers.add(alireza);
-
-        ChildAlertDTO miniMaxime = new ChildAlertDTO(
-                "mini-Maxime",
-                "mini-Vachier-Lagrave",
-                3,
-                otherMembers
-        );
-
-        ChildAlertDTO miniAlireza = new ChildAlertDTO(
-                "mini-Alireza",
-                "mini-Firouzja",
-                0,
-                otherMembers
-        );
-
-        expectedResult.add(miniMaxime);
-        expectedResult.add(miniAlireza);
-
-        when(personRepository.getPersons()).thenReturn(ManageMockedData.createPersonMockedDataList());
-        when(medicalRecordRepository.getMedicalRecords()).thenReturn(ManageMockedData.createMedicalRecordsMockedDataListWithAllEntries());
+        when(personRepository.getPersons()).thenReturn(PersonsMockedData.createPersonMockedDataList());
+        when(medicalRecordRepository.getMedicalRecords()).thenReturn(MedicalRecordsMockedData.createMedicalRecordsMockedDataListWithAllEntries());
 
         // When
         List<ChildAlertDTO> actualResult = childAlertService.getChildAlertAtAddress("1990 Rue de la Tour");
@@ -100,8 +64,8 @@ public class ChildAlertServiceTest {
         // Given
         List<ChildAlertDTO> expectedResult = new ArrayList<>();
 
-        when(personRepository.getPersons()).thenReturn(ManageMockedData.createPersonMockedDataList());
-        when(medicalRecordRepository.getMedicalRecords()).thenReturn(ManageMockedData.createMedicalRecordsMockedDataListWithAllEntries());
+        when(personRepository.getPersons()).thenReturn(PersonsMockedData.createPersonMockedDataList());
+        when(medicalRecordRepository.getMedicalRecords()).thenReturn(MedicalRecordsMockedData.createMedicalRecordsMockedDataListWithAllEntries());
 
         // When
         List<ChildAlertDTO> actualResult = childAlertService.getChildAlertAtAddress("2023 unknown address");

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalerts.configuration.MyAppConfig;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.MedicalRecordsMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.PersonsMockedData;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
@@ -58,8 +60,8 @@ public class MedicalRecordIT {
 
     @BeforeEach
     void setUp() throws IOException {
-        ManageMockedData.createMedicalRecordsMockedData(filePathMockMedicalRecords);
-        ManageMockedData.createPersonMockedData(filePathMockPersons);
+        MedicalRecordsMockedData.createMedicalRecordsMockedData(filePathMockMedicalRecords);
+        PersonsMockedData.createPersonMockedData(filePathMockPersons);
     }
 
     @AfterEach

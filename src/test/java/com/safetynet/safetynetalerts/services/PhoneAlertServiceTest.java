@@ -1,6 +1,8 @@
 package com.safetynet.safetynetalerts.services;
 
+import com.safetynet.safetynetalerts.mockressources.utils.FireStationMockedData;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.PersonsMockedData;
 import com.safetynet.safetynetalerts.repositories.FirestationRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,8 +42,8 @@ public class PhoneAlertServiceTest {
         expectedPhoneNumbers.add(null);
         String stationNumber = "1";
 
-        when(firestationRepository.getFirestations()).thenReturn(ManageMockedData.createFirestationsMockedDataList());
-        when(personRepository.getPersons()).thenReturn(ManageMockedData.createPersonMockedDataList());
+        when(firestationRepository.getFirestations()).thenReturn(FireStationMockedData.createFirestationsMockedDataList());
+        when(personRepository.getPersons()).thenReturn(PersonsMockedData.createPersonMockedDataList());
 
         // When
         List<String> actualPhoneNumbers = phoneAlertService.getPhoneNumbersForFireStation(stationNumber);

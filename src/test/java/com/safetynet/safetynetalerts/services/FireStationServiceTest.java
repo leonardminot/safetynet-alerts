@@ -1,6 +1,7 @@
 package com.safetynet.safetynetalerts.services;
 
 import com.safetynet.safetynetalerts.exception.ApiResourceException;
+import com.safetynet.safetynetalerts.mockressources.utils.FireStationMockedData;
 import com.safetynet.safetynetalerts.models.Firestation;
 import com.safetynet.safetynetalerts.repositories.FirestationRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,10 +60,7 @@ class FireStationServiceTest {
     @Test
     void itShouldThrowWhenMappingAlreadyExists() {
         // Given an existing mapping
-        Firestation rueDeLaDame = new Firestation(
-                "007 Rue de la Dame",
-                "1"
-        );
+        Firestation rueDeLaDame = FireStationMockedData.getRueDeLaDame();
 
         // ... firestation exist
         when(firestationRepository.isMappingExist(any(Firestation.class))).thenReturn(Optional.of(rueDeLaDame));
@@ -108,10 +106,7 @@ class FireStationServiceTest {
     void itShouldUpdateTheStationNumber() {
         // Given
         // ... existing mapping
-        Firestation currentMapping = new Firestation(
-                "007 Rue de la Dame",
-                "1"
-        );
+        Firestation currentMapping = FireStationMockedData.getRueDeLaDame();
 
         // ... to update to a new mapping
         Firestation futureMapping = new Firestation(
