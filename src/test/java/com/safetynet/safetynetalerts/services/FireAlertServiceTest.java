@@ -1,8 +1,10 @@
 package com.safetynet.safetynetalerts.services;
 
 import com.safetynet.safetynetalerts.dto.FireAlertDTO;
-import com.safetynet.safetynetalerts.dto.FireAlertPersonDTO;
-import com.safetynet.safetynetalerts.mockressources.utils.*;
+import com.safetynet.safetynetalerts.mockressources.utils.FireAlertMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.FireStationMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.MedicalRecordsMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.PersonsMockedData;
 import com.safetynet.safetynetalerts.repositories.FirestationRepository;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
@@ -12,8 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;

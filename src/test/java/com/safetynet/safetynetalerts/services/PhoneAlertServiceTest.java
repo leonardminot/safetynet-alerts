@@ -1,7 +1,6 @@
 package com.safetynet.safetynetalerts.services;
 
 import com.safetynet.safetynetalerts.mockressources.utils.FireStationMockedData;
-import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.mockressources.utils.PersonsMockedData;
 import com.safetynet.safetynetalerts.mockressources.utils.PhoneNumbersMockedData;
 import com.safetynet.safetynetalerts.repositories.FirestationRepository;
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
