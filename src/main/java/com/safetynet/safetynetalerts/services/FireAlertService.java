@@ -1,7 +1,7 @@
 package com.safetynet.safetynetalerts.services;
 
 import com.safetynet.safetynetalerts.dto.FireAlertDTO;
-import com.safetynet.safetynetalerts.dto.FireAlertPersonDTO;
+import com.safetynet.safetynetalerts.dto.PersonEmergencyInformationDTO;
 import com.safetynet.safetynetalerts.models.Firestation;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.models.Person;
@@ -43,7 +43,7 @@ public class FireAlertService {
 
     public FireAlertDTO getFireAlert(String address) {
         getResourcesFromRepositories();
-        List<FireAlertPersonDTO> listOfResidentsAtFireLocation = getPersonsAtAddress(address);
+        List<PersonEmergencyInformationDTO> listOfResidentsAtFireLocation = getPersonsAtAddress(address);
         FireAlertDTO fireAlert = new FireAlertDTO(getStationNumberAtAddress(address), listOfResidentsAtFireLocation);
         log.info(fireAlertMessageService.getSuccessFireAlertLogMess(address, fireAlert));
         return fireAlert;
@@ -55,15 +55,15 @@ public class FireAlertService {
         medicalRecords = medicalRecordRepository.getMedicalRecords();
     }
 
-    private List<FireAlertPersonDTO> getPersonsAtAddress(String address) {
+    private List<PersonEmergencyInformationDTO> getPersonsAtAddress(String address) {
         return persons.stream()
                 .filter(person -> person.address().equals(address))
                 .map(this::transformPersonToFireAlertPersonDTO)
                 .toList();
     }
 
-    private FireAlertPersonDTO transformPersonToFireAlertPersonDTO(Person person) {
-        return new FireAlertPersonDTO(
+    private PersonEmergencyInformationDTO transformPersonToFireAlertPersonDTO(Person person) {
+        return new PersonEmergencyInformationDTO(
                 person.firstName(),
                 person.lastName(),
                 person.phone(),

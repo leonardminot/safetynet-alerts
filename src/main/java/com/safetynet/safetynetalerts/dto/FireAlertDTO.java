@@ -4,6 +4,6 @@ import java.util.List;
 
 public record FireAlertDTO(
         String FireStationNumber,
-        List<FireAlertPersonDTO> personsAtAddress
+        List<PersonEmergencyInformationDTO> personsAtAddress
 ) {
 }

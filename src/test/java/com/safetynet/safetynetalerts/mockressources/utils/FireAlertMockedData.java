@@ -1,7 +1,7 @@
 package com.safetynet.safetynetalerts.mockressources.utils;
 
 import com.safetynet.safetynetalerts.dto.FireAlertDTO;
-import com.safetynet.safetynetalerts.dto.FireAlertPersonDTO;
+import com.safetynet.safetynetalerts.dto.PersonEmergencyInformationDTO;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ public class FireAlertMockedData {
     public static FireAlertDTO getMockedData() {
         // Mocked data for address "1990 Rue de la Tour"
 
-        FireAlertPersonDTO maxime = new FireAlertPersonDTO(
+        PersonEmergencyInformationDTO maxime = new PersonEmergencyInformationDTO(
                 PersonsMockedData.getMaxime().firstName(),
                 PersonsMockedData.getMaxime().lastName(),
                 PersonsMockedData.getMaxime().phone(),
@@ -18,7 +18,7 @@ public class FireAlertMockedData {
                 MedicalRecordsMockedData.getMaximeRecord().allergies()
         );
 
-        FireAlertPersonDTO alireza = new FireAlertPersonDTO(
+        PersonEmergencyInformationDTO alireza = new PersonEmergencyInformationDTO(
                 PersonsMockedData.getAlireza().firstName(),
                 PersonsMockedData.getAlireza().lastName(),
                 PersonsMockedData.getAlireza().phone(),
@@ -27,7 +27,7 @@ public class FireAlertMockedData {
                 MedicalRecordsMockedData.getAlirezaRecord().allergies()
         );
 
-        FireAlertPersonDTO miniMaxime = new FireAlertPersonDTO(
+        PersonEmergencyInformationDTO miniMaxime = new PersonEmergencyInformationDTO(
                 PersonsMockedData.getMiniMaxime().firstName(),
                 PersonsMockedData.getMiniMaxime().lastName(),
                 PersonsMockedData.getMiniMaxime().phone(),
@@ -36,7 +36,7 @@ public class FireAlertMockedData {
                 MedicalRecordsMockedData.getMiniMaximeRecord().allergies()
         );
 
-        FireAlertPersonDTO miniAlireza = new FireAlertPersonDTO(
+        PersonEmergencyInformationDTO miniAlireza = new PersonEmergencyInformationDTO(
                 PersonsMockedData.getMiniAlireza().firstName(),
                 PersonsMockedData.getMiniAlireza().lastName(),
                 PersonsMockedData.getMiniAlireza().phone(),
@@ -45,7 +45,7 @@ public class FireAlertMockedData {
                 MedicalRecordsMockedData.getMiniAlirezaRecord().allergies()
         );
 
-        List<FireAlertPersonDTO> fireAlertPersonDTOList = List.of(miniMaxime, maxime, alireza, miniAlireza);
+        List<PersonEmergencyInformationDTO> fireAlertPersonDTOList = List.of(miniMaxime, maxime, alireza, miniAlireza);
 
         return new FireAlertDTO("2", fireAlertPersonDTOList);
 
