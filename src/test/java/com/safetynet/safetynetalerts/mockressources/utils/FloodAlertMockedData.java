@@ -12,7 +12,7 @@ import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getAllergies
 import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getMedications;
 
 public class FloodAlertMockedData {
-    public static List<FloodAlertDTO> getFloodAlertMockedDataForStation1() {
+    public static FloodAlertDTO getFloodAlertMockedDataForStation1() {
         // Simulation of station 1
         // - station 1: 2 addresses:
         //       - "105 Rue du Fou"
@@ -36,15 +36,50 @@ public class FloodAlertMockedData {
 
         PersonsAtAddressDTO rueDeLaDame = new PersonsAtAddressDTO(
                 "007 Rue de la Dame",
-                List.of(miniMagnus, magnus)
+                List.of(magnus, miniMagnus)
         );
 
         FloodAlertDTO floodAlertDTO = new FloodAlertDTO(
                 "1",
-                List.of(rueDuFou, rueDeLaDame)
+                List.of(rueDeLaDame, rueDuFou)
         );
 
-        return List.of(floodAlertDTO);
+        return floodAlertDTO;
+
+    }
+
+    public static FloodAlertDTO getFloodAlertMockedDataForStation2() {
+        // Simulation of station 1
+        // - station 2: 1 address:
+        //       - "1990 Rue de la Tour"
+        //          - mini-Alireza
+        //          - mini-Maxime
+        //          - Alireza
+        //          - Maxime
+
+
+        List<MedicalRecord> mockedMedicalRecords = MedicalRecordsMockedData.createMedicalRecordsMockedDataListWithAllEntries();
+
+        PersonEmergencyInformationDTO miniAlireza = getEmergencyMiniAlireza(mockedMedicalRecords);
+
+        PersonEmergencyInformationDTO miniMaxime = getEmergencyMiniMaxime(mockedMedicalRecords);
+
+        PersonEmergencyInformationDTO alireza = getEmergencyAlireza(mockedMedicalRecords);
+
+        PersonEmergencyInformationDTO maxime = getEmergencyMaxime(mockedMedicalRecords);
+
+        PersonsAtAddressDTO rueDeLaTour = new PersonsAtAddressDTO(
+                "1990 Rue de la Tour",
+                List.of(maxime, alireza, miniMaxime, miniAlireza)
+        );
+
+
+        FloodAlertDTO floodAlertDTO = new FloodAlertDTO(
+                "2",
+                List.of(rueDeLaTour)
+        );
+
+        return floodAlertDTO;
 
     }
 
@@ -78,6 +113,50 @@ public class FloodAlertMockedData {
                 getAge(PersonsMockedData.getGari(), mockedMedicalRecords),
                 getMedications(PersonsMockedData.getGari(), mockedMedicalRecords),
                 getAllergies(PersonsMockedData.getGari(), mockedMedicalRecords)
+        );
+    }
+
+    public static PersonEmergencyInformationDTO getEmergencyMiniAlireza(List<MedicalRecord> mockedMedicalRecords) {
+        return new PersonEmergencyInformationDTO(
+                PersonsMockedData.getMiniAlireza().firstName(),
+                PersonsMockedData.getMiniAlireza().lastName(),
+                PersonsMockedData.getMiniAlireza().phone(),
+                getAge(PersonsMockedData.getMiniAlireza(), mockedMedicalRecords),
+                getMedications(PersonsMockedData.getMiniAlireza(), mockedMedicalRecords),
+                getAllergies(PersonsMockedData.getMiniAlireza(), mockedMedicalRecords)
+        );
+    }
+
+    public static PersonEmergencyInformationDTO getEmergencyMiniMaxime(List<MedicalRecord> mockedMedicalRecords) {
+        return new PersonEmergencyInformationDTO(
+                PersonsMockedData.getMiniMaxime().firstName(),
+                PersonsMockedData.getMiniMaxime().lastName(),
+                PersonsMockedData.getMiniMaxime().phone(),
+                getAge(PersonsMockedData.getMiniMaxime(), mockedMedicalRecords),
+                getMedications(PersonsMockedData.getMiniMaxime(), mockedMedicalRecords),
+                getAllergies(PersonsMockedData.getMiniMaxime(), mockedMedicalRecords)
+        );
+    }
+
+    public static PersonEmergencyInformationDTO getEmergencyAlireza(List<MedicalRecord> mockedMedicalRecords) {
+        return new PersonEmergencyInformationDTO(
+                PersonsMockedData.getAlireza().firstName(),
+                PersonsMockedData.getAlireza().lastName(),
+                PersonsMockedData.getAlireza().phone(),
+                getAge(PersonsMockedData.getAlireza(), mockedMedicalRecords),
+                getMedications(PersonsMockedData.getAlireza(), mockedMedicalRecords),
+                getAllergies(PersonsMockedData.getAlireza(), mockedMedicalRecords)
+        );
+    }
+
+    public static PersonEmergencyInformationDTO getEmergencyMaxime(List<MedicalRecord> mockedMedicalRecords) {
+        return new PersonEmergencyInformationDTO(
+                PersonsMockedData.getMaxime().firstName(),
+                PersonsMockedData.getMaxime().lastName(),
+                PersonsMockedData.getMaxime().phone(),
+                getAge(PersonsMockedData.getMaxime(), mockedMedicalRecords),
+                getMedications(PersonsMockedData.getMaxime(), mockedMedicalRecords),
+                getAllergies(PersonsMockedData.getMaxime(), mockedMedicalRecords)
         );
     }
 }

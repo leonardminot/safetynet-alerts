@@ -3,10 +3,7 @@ package com.safetynet.safetynetalerts.services;
 import com.safetynet.safetynetalerts.dto.FloodAlertDTO;
 import com.safetynet.safetynetalerts.dto.PersonEmergencyInformationDTO;
 import com.safetynet.safetynetalerts.dto.PersonsAtAddressDTO;
-import com.safetynet.safetynetalerts.mockressources.utils.FireStationMockedData;
-import com.safetynet.safetynetalerts.mockressources.utils.FloodAlertMockedData;
-import com.safetynet.safetynetalerts.mockressources.utils.MedicalRecordsMockedData;
-import com.safetynet.safetynetalerts.mockressources.utils.PersonsMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.*;
 import com.safetynet.safetynetalerts.models.Firestation;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.repositories.FirestationRepository;
@@ -42,29 +39,6 @@ public class FloodAlertServiceTest {
     void setUp() {
         floodAlertService = new FloodAlertService(personRepository, firestationRepository, medicalRecordRepository);
 
-    }
-
-    @Test
-    @Disabled
-    void itShouldReturnAFloodAlertDTOForStation1() {
-        // Given
-        List<FloodAlertDTO> expectedResult = FloodAlertMockedData.getFloodAlertMockedDataForStation1();
-        List<String> stationsAlert = List.of("1");
-
-        when(personRepository.getPersons()).thenReturn(PersonsMockedData.createPersonMockedDataList());
-        when(firestationRepository.getFirestations()).thenReturn(FireStationMockedData.createFirestationsMockedDataList());
-        when(medicalRecordRepository.getMedicalRecords()).thenReturn(
-                MedicalRecordsMockedData.createMedicalRecordsMockedDataListWithAllEntries());
-
-        // When
-        List<FloodAlertDTO> actualResult = floodAlertService.getFloodAlert(stationsAlert);
-
-        // Then
-        assertThat(actualResult).hasSize(1);
-        FloodAlertDTO station1Result = actualResult.get(0);
-        assertThat(station1Result.stationNumber()).isEqualTo("1");
-        assertThat(station1Result.personsAtAddress()).hasSize(2);
-        assertThat(station1Result).isEqualTo(expectedResult.get(0));
     }
 
     @Test
@@ -105,5 +79,49 @@ public class FloodAlertServiceTest {
         // Then
         assertThat(actualRueDeLaDame.address()).isEqualTo("007 Rue de la Dame");
         assertThat(actualRueDeLaDame.personsEmergencyInformation()).containsExactlyInAnyOrder(emergencyMagnus, emergencyMiniMagnus);
+    }
+
+    @Test
+    void itShouldReturnAFloodAlertDTO() {
+        // Given
+        List<MedicalRecord> mockedMedicalRecords = MedicalRecordsMockedData.createMedicalRecordsMockedDataList();
+        FloodAlertDTO expectedAlert = FloodAlertMockedData.getFloodAlertMockedDataForStation1();
+        String givenStationNumber = "1";
+
+        when(personRepository.getPersons()).thenReturn(PersonsMockedData.createPersonMockedDataList());
+        when(firestationRepository.getFirestations()).thenReturn(FireStationMockedData.createFirestationsMockedDataList());
+        when(medicalRecordRepository.getMedicalRecords()).thenReturn(
+                MedicalRecordsMockedData.createMedicalRecordsMockedDataListWithAllEntries());
+
+        // When
+        FloodAlertDTO actualFloodAlert = floodAlertService.generateFloodAlertForStationNumber(givenStationNumber);
+
+        // Then
+        assertThat(actualFloodAlert.stationNumber()).isEqualTo(givenStationNumber);
+        assertThat(actualFloodAlert.personsAtAddress()).hasSize(2);
+        assertThat(actualFloodAlert).isEqualTo(expectedAlert);
+    }
+
+    @Test
+    void itShouldReturnAListOfFloodAlertDTO() {
+        // Given
+        List<String> alertedFireStations = List.of("1", "2");
+        List<FloodAlertDTO> expectedResults = List.of(
+                FloodAlertMockedData.getFloodAlertMockedDataForStation1(),
+                FloodAlertMockedData.getFloodAlertMockedDataForStation2());
+
+
+        when(personRepository.getPersons()).thenReturn(PersonsMockedData.createPersonMockedDataList());
+        when(firestationRepository.getFirestations()).thenReturn(FireStationMockedData.createFirestationsMockedDataList());
+        when(medicalRecordRepository.getMedicalRecords()).thenReturn(
+                MedicalRecordsMockedData.createMedicalRecordsMockedDataListWithAllEntries());
+
+        // When
+        List<FloodAlertDTO> actualResults = floodAlertService.getFloodAlert(alertedFireStations);
+
+        // Then
+        assertThat(actualResults).hasSize(2);
+        assertThat(actualResults).isEqualTo(expectedResults);
+
     }
 }

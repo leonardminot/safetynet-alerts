@@ -9,6 +9,7 @@ import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.FirestationRepository;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getAllergies
 import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getMedications;
 
 @Service
+@Slf4j
 public class FloodAlertService {
 
     private final PersonRepository personRepository;
@@ -33,8 +35,9 @@ public class FloodAlertService {
     }
 
     public List<FloodAlertDTO> getFloodAlert(List<String> stationsAlert) {
-
-        return null;
+        return stationsAlert.stream()
+                .map(this::generateFloodAlertForStationNumber)
+                .toList();
     }
 
     public List<String> getAddressesForStationNumber(String stationNumber) {
@@ -63,5 +66,15 @@ public class FloodAlertService {
                 getMedications(person, medicalRecords),
                 getAllergies(person, medicalRecords)
         );
+    }
+
+    public FloodAlertDTO generateFloodAlertForStationNumber(String stationNumber) {
+        List<PersonsAtAddressDTO> personsAtAddress = getAddressesForStationNumber(stationNumber).stream()
+                .map(this::getPersonsAtAddress)
+                .toList();
+        FloodAlertDTO floodAlert = new FloodAlertDTO(stationNumber, personsAtAddress);
+        log.debug(floodAlert.toString());
+        System.out.println(floodAlert);
+        return floodAlert;
     }
 }
