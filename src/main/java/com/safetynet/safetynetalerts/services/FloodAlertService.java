@@ -2,14 +2,13 @@ package com.safetynet.safetynetalerts.services;
 
 import com.safetynet.safetynetalerts.dto.FloodAlertDTO;
 import com.safetynet.safetynetalerts.dto.PersonEmergencyInformationDTO;
-import com.safetynet.safetynetalerts.dto.PersonsAtAddressDTO;
+import com.safetynet.safetynetalerts.dto.EmergencyInfoForAddressDTO;
 import com.safetynet.safetynetalerts.models.Firestation;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.FirestationRepository;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,6 @@ import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getAllergies
 import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getMedications;
 
 @Service
-@Slf4j
 public class FloodAlertService {
 
     private final PersonRepository personRepository;
@@ -36,7 +34,18 @@ public class FloodAlertService {
 
     public List<FloodAlertDTO> getFloodAlert(List<String> stationsAlert) {
         return stationsAlert.stream()
-                .map(this::generateFloodAlertForStationNumber)
+                .map(this::generateFloodAlertForGivenFireStation)
+                .toList();
+    }
+
+    public FloodAlertDTO generateFloodAlertForGivenFireStation(String stationNumber) {
+        List<EmergencyInfoForAddressDTO> personsCoveredByStationNumberGroupByAddress = getPersonsCoveredByStationNumberGroupByAddress(stationNumber);
+        return new FloodAlertDTO(stationNumber, personsCoveredByStationNumberGroupByAddress);
+    }
+
+    private List<EmergencyInfoForAddressDTO> getPersonsCoveredByStationNumberGroupByAddress(String stationNumber) {
+        return getAddressesForStationNumber(stationNumber).stream()
+                .map(this::getPersonsAtAddress)
                 .toList();
     }
 
@@ -48,13 +57,17 @@ public class FloodAlertService {
                 .toList();
     }
 
-    public PersonsAtAddressDTO getPersonsAtAddress(String address) {
+    public EmergencyInfoForAddressDTO getPersonsAtAddress(String address) {
         List<Person> persons = personRepository.getPersons();
         List<MedicalRecord> medicalRecords = medicalRecordRepository.getMedicalRecords();
-        List<PersonEmergencyInformationDTO> personsLivingAtAddressEmergencyInformation = persons.stream()
+        List<PersonEmergencyInformationDTO> personsLivingAtAddressEmergencyInformation = getPersonsLivingAtGivenAddress(address, persons, medicalRecords);
+        return new EmergencyInfoForAddressDTO(address, personsLivingAtAddressEmergencyInformation);
+    }
+
+    private List<PersonEmergencyInformationDTO> getPersonsLivingAtGivenAddress(String address, List<Person> persons, List<MedicalRecord> medicalRecords) {
+        return persons.stream()
                 .filter(person -> person.address().equals(address))
                 .map(person -> mapToPersonEmergencyInformationDTO(person, medicalRecords)).toList();
-        return new PersonsAtAddressDTO(address, personsLivingAtAddressEmergencyInformation);
     }
 
     private PersonEmergencyInformationDTO mapToPersonEmergencyInformationDTO(Person person, List<MedicalRecord> medicalRecords) {
@@ -66,15 +79,5 @@ public class FloodAlertService {
                 getMedications(person, medicalRecords),
                 getAllergies(person, medicalRecords)
         );
-    }
-
-    public FloodAlertDTO generateFloodAlertForStationNumber(String stationNumber) {
-        List<PersonsAtAddressDTO> personsAtAddress = getAddressesForStationNumber(stationNumber).stream()
-                .map(this::getPersonsAtAddress)
-                .toList();
-        FloodAlertDTO floodAlert = new FloodAlertDTO(stationNumber, personsAtAddress);
-        log.debug(floodAlert.toString());
-        System.out.println(floodAlert);
-        return floodAlert;
     }
 }

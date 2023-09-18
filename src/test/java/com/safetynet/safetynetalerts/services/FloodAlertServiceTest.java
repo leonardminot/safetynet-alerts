@@ -2,15 +2,16 @@ package com.safetynet.safetynetalerts.services;
 
 import com.safetynet.safetynetalerts.dto.FloodAlertDTO;
 import com.safetynet.safetynetalerts.dto.PersonEmergencyInformationDTO;
-import com.safetynet.safetynetalerts.dto.PersonsAtAddressDTO;
-import com.safetynet.safetynetalerts.mockressources.utils.*;
-import com.safetynet.safetynetalerts.models.Firestation;
+import com.safetynet.safetynetalerts.dto.EmergencyInfoForAddressDTO;
+import com.safetynet.safetynetalerts.mockressources.utils.FireStationMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.FloodAlertMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.MedicalRecordsMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.PersonsMockedData;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.repositories.FirestationRepository;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -64,17 +65,12 @@ public class FloodAlertServiceTest {
         PersonEmergencyInformationDTO emergencyMiniMagnus = FloodAlertMockedData.getEmergencyMiniMagnus(mockedMedicalRecords);
         PersonEmergencyInformationDTO emergencyMagnus = FloodAlertMockedData.getEmergencyMagnus(mockedMedicalRecords);
 
-        PersonsAtAddressDTO expectedRueDeLaDame = new PersonsAtAddressDTO(
-                "007 Rue de la Dame",
-                List.of(emergencyMiniMagnus, emergencyMagnus)
-        );
-
         when(personRepository.getPersons()).thenReturn(PersonsMockedData.createPersonMockedDataList());
         when(medicalRecordRepository.getMedicalRecords()).thenReturn(
                 MedicalRecordsMockedData.createMedicalRecordsMockedDataListWithAllEntries());
 
         // When
-        PersonsAtAddressDTO actualRueDeLaDame = floodAlertService.getPersonsAtAddress("007 Rue de la Dame");
+        EmergencyInfoForAddressDTO actualRueDeLaDame = floodAlertService.getPersonsAtAddress("007 Rue de la Dame");
 
         // Then
         assertThat(actualRueDeLaDame.address()).isEqualTo("007 Rue de la Dame");
@@ -84,7 +80,6 @@ public class FloodAlertServiceTest {
     @Test
     void itShouldReturnAFloodAlertDTO() {
         // Given
-        List<MedicalRecord> mockedMedicalRecords = MedicalRecordsMockedData.createMedicalRecordsMockedDataList();
         FloodAlertDTO expectedAlert = FloodAlertMockedData.getFloodAlertMockedDataForStation1();
         String givenStationNumber = "1";
 
@@ -94,7 +89,7 @@ public class FloodAlertServiceTest {
                 MedicalRecordsMockedData.createMedicalRecordsMockedDataListWithAllEntries());
 
         // When
-        FloodAlertDTO actualFloodAlert = floodAlertService.generateFloodAlertForStationNumber(givenStationNumber);
+        FloodAlertDTO actualFloodAlert = floodAlertService.generateFloodAlertForGivenFireStation(givenStationNumber);
 
         // Then
         assertThat(actualFloodAlert.stationNumber()).isEqualTo(givenStationNumber);

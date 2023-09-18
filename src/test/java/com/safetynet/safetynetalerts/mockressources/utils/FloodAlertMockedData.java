@@ -2,7 +2,7 @@ package com.safetynet.safetynetalerts.mockressources.utils;
 
 import com.safetynet.safetynetalerts.dto.FloodAlertDTO;
 import com.safetynet.safetynetalerts.dto.PersonEmergencyInformationDTO;
-import com.safetynet.safetynetalerts.dto.PersonsAtAddressDTO;
+import com.safetynet.safetynetalerts.dto.EmergencyInfoForAddressDTO;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
 
 import java.util.List;
@@ -29,12 +29,12 @@ public class FloodAlertMockedData {
 
         PersonEmergencyInformationDTO magnus = getEmergencyMagnus(mockedMedicalRecords);
 
-        PersonsAtAddressDTO rueDuFou = new PersonsAtAddressDTO(
+        EmergencyInfoForAddressDTO rueDuFou = new EmergencyInfoForAddressDTO(
                 "105 Rue du Fou",
                 List.of(gari)
         );
 
-        PersonsAtAddressDTO rueDeLaDame = new PersonsAtAddressDTO(
+        EmergencyInfoForAddressDTO rueDeLaDame = new EmergencyInfoForAddressDTO(
                 "007 Rue de la Dame",
                 List.of(magnus, miniMagnus)
         );
@@ -68,7 +68,7 @@ public class FloodAlertMockedData {
 
         PersonEmergencyInformationDTO maxime = getEmergencyMaxime(mockedMedicalRecords);
 
-        PersonsAtAddressDTO rueDeLaTour = new PersonsAtAddressDTO(
+        EmergencyInfoForAddressDTO rueDeLaTour = new EmergencyInfoForAddressDTO(
                 "1990 Rue de la Tour",
                 List.of(maxime, alireza, miniMaxime, miniAlireza)
         );
