@@ -1,13 +1,12 @@
 package com.safetynet.safetynetalerts.IntegrationTests;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JavaType;
+import com.safetynet.safetynetalerts.configuration.MyAppConfig;
 import com.safetynet.safetynetalerts.dto.ChildAlertDTO;
-import com.safetynet.safetynetalerts.dto.FirestationStationNumberDTO;
+import com.safetynet.safetynetalerts.mockressources.utils.ChildAlertMockedData;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.mockressources.utils.MedicalRecordsMockedData;
 import com.safetynet.safetynetalerts.mockressources.utils.PersonsMockedData;
-import com.safetynet.safetynetalerts.models.Person;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.io.FileNotFoundException;
@@ -26,9 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.jayway.jsonpath.internal.path.PathCompiler.fail;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -64,65 +61,19 @@ public class ChildAlertIT {
         // Given
         List<ChildAlertDTO> expectedResult = new ArrayList<>();
 
-        Person maxime = new Person(
-                "Maxime",
-                "Vachier-Lagrave",
-                "1990 Rue de la Tour",
-                "Paris",
-                "75001",
-                "987-654-3210",
-                "maxime@email.com"
-        );
+        expectedResult.add(ChildAlertMockedData.getMiniMaxime());
+        expectedResult.add(ChildAlertMockedData.getMiniAlireza());
 
-        Person alireza = new Person(
-                "Alireza",
-                "Firouzja",
-                "1990 Rue de la Tour",
-                "Paris",
-                "75001",
-                "000-111-2222",
-                "alireza@email.com"
-        );
-
-        List<Person> otherMembers = new ArrayList<>();
-        otherMembers.add(maxime);
-        otherMembers.add(alireza);
-
-        ChildAlertDTO miniMaxime = new ChildAlertDTO(
-                "mini-Maxime",
-                "mini-Vachier-Lagrave",
-                3,
-                otherMembers
-        );
-
-        ChildAlertDTO miniAlireza = new ChildAlertDTO(
-                "mini-Alireza",
-                "mini-Firouzja",
-                0,
-                otherMembers
-        );
-
-        expectedResult.add(miniMaxime);
-        expectedResult.add(miniAlireza);
-
-        String expectedResultString = childAlertToJson(expectedResult);
 
         // When
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/childAlert?address=1990 Rue de la Tour")
-                .contentType(MediaType.APPLICATION_JSON));
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/childAlert?address=1990 Rue de la Tour")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
 
         // Then
-        assert expectedResultString != null;
-        resultActions.andExpect(status().isOk())
-                .andExpect(content().string(expectedResultString));
-    }
-
-    private String childAlertToJson(List<ChildAlertDTO> childAlertDTOList) {
-        try {
-            return new ObjectMapper().writeValueAsString(childAlertDTOList);
-        } catch (JsonProcessingException e) {
-            fail("");
-            return null;
-        }
+        String jsonResponse = mvcResult.getResponse().getContentAsString();
+        JavaType type = MyAppConfig.objectMapper().getTypeFactory().constructCollectionType(List.class, ChildAlertDTO.class);
+        List<ChildAlertDTO> actualResult = MyAppConfig.objectMapper().readValue(jsonResponse, type);
+        assertThat(actualResult).containsExactlyInAnyOrderElementsOf(expectedResult);
     }
 }
