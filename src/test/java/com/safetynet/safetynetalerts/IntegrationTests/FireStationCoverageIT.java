@@ -2,7 +2,6 @@ package com.safetynet.safetynetalerts.IntegrationTests;
 
 import com.safetynet.safetynetalerts.configuration.MyAppConfig;
 import com.safetynet.safetynetalerts.dto.FirestationStationNumberDTO;
-import com.safetynet.safetynetalerts.dto.PersonsCoveredByFirestationDTO;
 import com.safetynet.safetynetalerts.mockressources.utils.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,8 +18,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -61,16 +58,7 @@ public class FireStationCoverageIT {
     @Test
     void itShouldGet3PersonsAndReturn2AdultsAnd1Child() throws Exception {
         // Given
-        List<PersonsCoveredByFirestationDTO> personsCoveredByFirestationDTOS = new ArrayList<>();
-        personsCoveredByFirestationDTOS.add(FireStationCoverageMockedData.getMagnus());
-        personsCoveredByFirestationDTOS.add(FireStationCoverageMockedData.getGari());
-        personsCoveredByFirestationDTOS.add(FireStationCoverageMockedData.getMiniMagnus());
-
-        FirestationStationNumberDTO expectedResponseBody = new FirestationStationNumberDTO(
-                2,
-                1,
-                personsCoveredByFirestationDTOS
-        );
+        FirestationStationNumberDTO expectedResponseBody = FireStationCoverageMockedData.getMockedData();
 
         // When
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/firestation?stationNumber=1")

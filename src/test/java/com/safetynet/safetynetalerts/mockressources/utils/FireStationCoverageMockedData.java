@@ -1,6 +1,10 @@
 package com.safetynet.safetynetalerts.mockressources.utils;
 
+import com.safetynet.safetynetalerts.dto.FirestationStationNumberDTO;
 import com.safetynet.safetynetalerts.dto.PersonsCoveredByFirestationDTO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FireStationCoverageMockedData {
     public static PersonsCoveredByFirestationDTO getMagnus() {
@@ -27,6 +31,19 @@ public class FireStationCoverageMockedData {
                 PersonsMockedData.getGari().lastName(),
                 PersonsMockedData.getGari().address(),
                 PersonsMockedData.getGari().phone()
+        );
+    }
+
+    public static FirestationStationNumberDTO getMockedData() {
+        List<PersonsCoveredByFirestationDTO> personsCoveredByFirestationDTOS = new ArrayList<>();
+        personsCoveredByFirestationDTOS.add(getMagnus());
+        personsCoveredByFirestationDTOS.add(getGari());
+        personsCoveredByFirestationDTOS.add(getMiniMagnus());
+
+        return new FirestationStationNumberDTO(
+                2,
+                1,
+                personsCoveredByFirestationDTOS
         );
     }
 }
