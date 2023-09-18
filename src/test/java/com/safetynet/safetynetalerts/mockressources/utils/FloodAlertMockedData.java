@@ -39,12 +39,10 @@ public class FloodAlertMockedData {
                 List.of(magnus, miniMagnus)
         );
 
-        FloodAlertDTO floodAlertDTO = new FloodAlertDTO(
+        return new FloodAlertDTO(
                 "1",
                 List.of(rueDeLaDame, rueDuFou)
         );
-
-        return floodAlertDTO;
 
     }
 
@@ -74,12 +72,10 @@ public class FloodAlertMockedData {
         );
 
 
-        FloodAlertDTO floodAlertDTO = new FloodAlertDTO(
+        return new FloodAlertDTO(
                 "2",
                 List.of(rueDeLaTour)
         );
-
-        return floodAlertDTO;
 
     }
 

@@ -93,7 +93,7 @@ public class FloodAlertServiceTest {
 
         // Then
         assertThat(actualFloodAlert.stationNumber()).isEqualTo(givenStationNumber);
-        assertThat(actualFloodAlert.personsAtAddress()).hasSize(2);
+        assertThat(actualFloodAlert.personsGroupByAddress()).hasSize(2);
         assertThat(actualFloodAlert).isEqualTo(expectedAlert);
     }
 

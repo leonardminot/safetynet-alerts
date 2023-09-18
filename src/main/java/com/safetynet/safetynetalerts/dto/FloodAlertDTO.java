@@ -4,6 +4,6 @@ import java.util.List;
 
 public record FloodAlertDTO(
         String stationNumber,
-        List<EmergencyInfoForAddressDTO> personsAtAddress
+        List<EmergencyInfoForAddressDTO> personsGroupByAddress
 ) {
 }
