@@ -1,11 +1,11 @@
 package com.safetynet.safetynetalerts.IntegrationTests;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JavaType;
+import com.safetynet.safetynetalerts.configuration.MyAppConfig;
 import com.safetynet.safetynetalerts.mockressources.utils.FireStationMockedData;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.mockressources.utils.PersonsMockedData;
-import com.safetynet.safetynetalerts.models.Person;
+import com.safetynet.safetynetalerts.mockressources.utils.PhoneNumbersMockedData;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,17 +17,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-import static com.jayway.jsonpath.internal.path.PathCompiler.fail;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -62,28 +59,20 @@ public class PhoneAlertIT {
     @Test
     void itShouldReturnAListOfPhoneNumbers() throws Exception {
         // Given
-        List<String> expectedPhoneNumbers = new ArrayList<>(List.of("123-456-7890", "741-852-9630"));
-        expectedPhoneNumbers.add(null);
+        List<String> expectedPhoneNumbers = PhoneNumbersMockedData.getPhoneNumbersForStation1();
         String stationNumber = "1";
 
-        String expectedResultString = phoneNumbersToJson(expectedPhoneNumbers);
 
         // When
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/phoneAlert?firestation=" + stationNumber)
-                .contentType(MediaType.APPLICATION_JSON));
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/phoneAlert?firestation=" + stationNumber)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
 
         // Then
-        assert expectedResultString != null;
-        resultActions.andExpect(status().isOk())
-                .andExpect(content().string(expectedResultString));
-    }
+        String jsonResponse = mvcResult.getResponse().getContentAsString();
+        JavaType listStringType = MyAppConfig.objectMapper().getTypeFactory().constructCollectionType(List.class, String.class);
+        List<String> actualResult = MyAppConfig.objectMapper().readValue(jsonResponse, listStringType);
 
-    private String phoneNumbersToJson(List<String> phoneNumbers) {
-        try {
-            return new ObjectMapper().writeValueAsString(phoneNumbers);
-        } catch (JsonProcessingException e) {
-            fail("");
-            return null;
-        }
+        assertThat(actualResult).containsExactlyInAnyOrderElementsOf(expectedPhoneNumbers);
     }
 }
