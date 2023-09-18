@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.safetynet.safetynetalerts.utils.AddressesResearch.getAddressesForStationNumber;
+import static com.safetynet.safetynetalerts.utils.AddressesResearch.getCoveredAddressesByFireStationNumber;
 import static com.safetynet.safetynetalerts.utils.AgeCalculation.getAge;
 
 @Service
@@ -23,6 +23,10 @@ public class FireStationCoverageService {
     private final FirestationRepository firestationRepository;
 
     private final int MAJORITY_AGE = 18;
+    private List<Person> persons;
+    private List<Firestation> firestations;
+    private List<MedicalRecord> medicalRecords;
+
 
     @Autowired
     public FireStationCoverageService(PersonRepository personRepository,
@@ -31,29 +35,45 @@ public class FireStationCoverageService {
         this.personRepository = personRepository;
         this.medicalRecordRepository = medicalRecordRepository;
         this.firestationRepository = firestationRepository;
+        persons = List.of();
     }
 
 
-    public List<PersonsCoveredByFirestationDTO> getCoverageForAStationNumber(String stationNumber) {
-        List<Firestation> firestations = firestationRepository.getFirestations();
-        List<String> addresses = getAddressesForStationNumber(firestations, stationNumber);
-        List<Person> persons = personRepository.getPersons();
+    public List<PersonsCoveredByFirestationDTO> findPersonsCoveredByFirestation(String stationNumber) {
+        getResourcesFromRepositories();
+        List<String> addresses = getCoveredAddressesByFireStationNumber(firestations, stationNumber);
+        return personsCoveredByFireStation(addresses);
+    }
 
+    private void getResourcesFromRepositories() {
+        firestations = firestationRepository.getFirestations();
+        persons = personRepository.getPersons();
+        medicalRecords = medicalRecordRepository.getMedicalRecords();
+    }
+
+    private List<PersonsCoveredByFirestationDTO> personsCoveredByFireStation(List<String> addresses) {
         return persons.stream()
                 .filter(person -> addresses.contains(person.address()))
-                .map(person -> new PersonsCoveredByFirestationDTO(
-                        person.firstName(),
-                        person.lastName(),
-                        person.address(),
-                        person.phone()
-                )).toList();
+                .map(this::transformToPersonsCoveredByFirestationDTO).toList();
+    }
+
+    private PersonsCoveredByFirestationDTO transformToPersonsCoveredByFirestationDTO(Person person) {
+        return new PersonsCoveredByFirestationDTO(
+                person.firstName(),
+                person.lastName(),
+                person.address(),
+                person.phone()
+        );
     }
 
     public long getTotalAdults(String stationNumber) {
-        List<PersonsCoveredByFirestationDTO> firestationCoverage = getCoverageForAStationNumber(stationNumber);
-        List<MedicalRecord> medicalRecords = medicalRecordRepository.getMedicalRecords();
-
+        getResourcesFromRepositories();
+        List<PersonsCoveredByFirestationDTO> firestationCoverage = findPersonsCoveredByFirestation(stationNumber);
         // TODO : Gérer le cas où un dossier médical est absent
+        return countAdultsCoveredByFirestation(firestationCoverage);
+    }
+
+    private long countAdultsCoveredByFirestation(List<PersonsCoveredByFirestationDTO> firestationCoverage) {
         return firestationCoverage.stream()
                 .map(coverage -> getAge(coverage, medicalRecords))
                 .filter(age -> age >= MAJORITY_AGE)
@@ -61,7 +81,7 @@ public class FireStationCoverageService {
     }
 
     public long getTotalChildren(String stationNumber) {
-        long totalPerson = getCoverageForAStationNumber(stationNumber).size();
+        long totalPerson = findPersonsCoveredByFirestation(stationNumber).size();
         return totalPerson - getTotalAdults(stationNumber);
     }
 }

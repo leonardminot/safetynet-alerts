@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.safetynet.safetynetalerts.utils.AddressesResearch.getAddressesForStationNumber;
+import static com.safetynet.safetynetalerts.utils.AddressesResearch.getCoveredAddressesByFireStationNumber;
 
 @Service
 @Slf4j
@@ -30,7 +30,7 @@ public class PhoneAlertService {
         List<Firestation> firestations = firestationRepository.getFirestations();
         List<Person> persons = personRepository.getPersons();
 
-        List<String> addresses = getAddressesForStationNumber(firestations, stationNumber);
+        List<String> addresses = getCoveredAddressesByFireStationNumber(firestations, stationNumber);
 
         List<String> phoneNumbersForFireStation = persons.stream()
                 .filter(person -> addresses.contains(person.address()))

@@ -6,7 +6,6 @@ import com.safetynet.safetynetalerts.repositories.FirestationRepository;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -69,7 +68,7 @@ public class FireStationCoverageServiceTest {
         given(firestationRepository.getFirestations()).willReturn(ManageMockedData.createFirestationsMockedDataList());
 
         // When
-        List<PersonsCoveredByFirestationDTO> firestationCoverageList = fireStationCoverageService.getCoverageForAStationNumber(stationNumber);
+        List<PersonsCoveredByFirestationDTO> firestationCoverageList = fireStationCoverageService.findPersonsCoveredByFirestation(stationNumber);
 
         // Then
         assertThat(firestationCoverageList).hasSize(3);

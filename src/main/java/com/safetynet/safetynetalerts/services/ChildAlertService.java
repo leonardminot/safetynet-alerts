@@ -63,12 +63,11 @@ public class ChildAlertService {
     }
 
     private ChildAlertDTO transformPersonToChildAlertDTO(Person person, String alertAddress) {
-        List<Person> adultsAtGivenAddress = getAdultsAtAddress(alertAddress);
         return new ChildAlertDTO(
                 person.firstName(),
                 person.lastName(),
                 getAge(person, medicalRecords),
-                adultsAtGivenAddress);
+                getAdultsAtAddress(alertAddress));
     }
 
     private List<Person> getAdultsAtAddress(String address) {

@@ -9,13 +9,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.safetynet.safetynetalerts.utils.AgeCalculation.calculateAgeFromMedicalRecord;
-import static com.safetynet.safetynetalerts.utils.AgeCalculation.getAge;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AgeCalculationTest {
 
     @Test
     void itShouldReturnTheAge() {
+        // TODO : test non répétable (il faut mocker la date du jour
         // Given
         MedicalRecord adultRecord = new MedicalRecord(
                 "Adult",
@@ -28,7 +28,7 @@ public class AgeCalculationTest {
         MedicalRecord childRecord = new MedicalRecord(
                 "Child",
                 "Child",
-                LocalDate.of(2005, 9, 16),
+                LocalDate.of(2005, 9, 20),
                 List.of(),
                 List.of()
         );
