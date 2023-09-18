@@ -2,10 +2,7 @@ package com.safetynet.safetynetalerts.services;
 
 import com.safetynet.safetynetalerts.dto.FireAlertDTO;
 import com.safetynet.safetynetalerts.dto.FireAlertPersonDTO;
-import com.safetynet.safetynetalerts.mockressources.utils.FireStationMockedData;
-import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
-import com.safetynet.safetynetalerts.mockressources.utils.MedicalRecordsMockedData;
-import com.safetynet.safetynetalerts.mockressources.utils.PersonsMockedData;
+import com.safetynet.safetynetalerts.mockressources.utils.*;
 import com.safetynet.safetynetalerts.repositories.FirestationRepository;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
@@ -45,46 +42,7 @@ public class FireAlertServiceTest {
     void itShouldReturnAFireAlert() {
         // Given
         String address = "1990 Rue de la Tour";
-
-        FireAlertPersonDTO maxime = new FireAlertPersonDTO(
-                "Maxime",
-                "Vachier-Lagrave",
-                "987-654-3210",
-                32,
-                List.of("aznol:350mg", "hydrapermazol:100mg"),
-                List.of()
-        );
-
-        FireAlertPersonDTO alireza = new FireAlertPersonDTO(
-                "Alireza",
-                "Firouzja",
-                "000-111-2222",
-                20,
-                List.of(),
-                List.of()
-        );
-
-        FireAlertPersonDTO miniMaxime = new FireAlertPersonDTO(
-                "mini-Maxime",
-                "mini-Vachier-Lagrave",
-                "987-654-3210",
-                3,
-                List.of(),
-                List.of("Shellfish")
-        );
-
-        FireAlertPersonDTO miniAlireza= new FireAlertPersonDTO(
-                "mini-Alireza",
-                "mini-Firouzja",
-                "000-111-2222",
-                0,
-                List.of("hydrapermazol:100mg"),
-                List.of("Aspirin")
-        );
-
-        List<FireAlertPersonDTO> fireAlertPersonDTOList = List.of(maxime, alireza, miniMaxime, miniAlireza);
-
-        FireAlertDTO expected = new FireAlertDTO("2", fireAlertPersonDTOList);
+        FireAlertDTO expected = FireAlertMockedData.getMockedData();
 
         when(personRepository.getPersons()).thenReturn(PersonsMockedData.createPersonMockedDataList());
         when(firestationRepository.getFirestations()).thenReturn(FireStationMockedData.createFirestationsMockedDataList());
@@ -94,6 +52,7 @@ public class FireAlertServiceTest {
         FireAlertDTO actualResult = fireAlertService.getFireAlert(address);
 
         // Then
-        assertThat(actualResult).isEqualTo(expected);
+        assertThat(actualResult.FireStationNumber()).isEqualTo("2");
+        assertThat(actualResult.personsAtAddress()).containsExactlyInAnyOrderElementsOf(expected.personsAtAddress());
     }
 }
