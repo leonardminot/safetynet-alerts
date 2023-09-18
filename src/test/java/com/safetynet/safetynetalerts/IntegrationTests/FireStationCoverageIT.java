@@ -1,17 +1,11 @@
 package com.safetynet.safetynetalerts.IntegrationTests;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.safetynet.safetynetalerts.configuration.MyAppConfig;
 import com.safetynet.safetynetalerts.dto.FirestationStationNumberDTO;
 import com.safetynet.safetynetalerts.dto.PersonsCoveredByFirestationDTO;
-import com.safetynet.safetynetalerts.mockressources.utils.FireStationMockedData;
-import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
-import com.safetynet.safetynetalerts.mockressources.utils.MedicalRecordsMockedData;
-import com.safetynet.safetynetalerts.mockressources.utils.PersonsMockedData;
-import com.safetynet.safetynetalerts.models.Firestation;
+import com.safetynet.safetynetalerts.mockressources.utils.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.io.FileNotFoundException;
@@ -28,8 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.jayway.jsonpath.internal.path.PathCompiler.fail;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -68,56 +61,28 @@ public class FireStationCoverageIT {
     @Test
     void itShouldGet3PersonsAndReturn2AdultsAnd1Child() throws Exception {
         // Given
-        PersonsCoveredByFirestationDTO magnus = new PersonsCoveredByFirestationDTO(
-                "Magnus",
-                "Carlsen",
-                "007 Rue de la Dame",
-                "123-456-7890"
-        );
-
-        PersonsCoveredByFirestationDTO miniMagnus = new PersonsCoveredByFirestationDTO(
-                "miniMagnus",
-                "miniCarlsen",
-                "007 Rue de la Dame",
-                null
-        );
-
-        PersonsCoveredByFirestationDTO gari = new PersonsCoveredByFirestationDTO(
-                "Gari",
-                "Kasparov",
-                "105 Rue du Fou",
-                "741-852-9630"
-        );
-
         List<PersonsCoveredByFirestationDTO> personsCoveredByFirestationDTOS = new ArrayList<>();
-        personsCoveredByFirestationDTOS.add(magnus);
-        personsCoveredByFirestationDTOS.add(gari);
-        personsCoveredByFirestationDTOS.add(miniMagnus);
+        personsCoveredByFirestationDTOS.add(FireStationCoverageMockedData.getMagnus());
+        personsCoveredByFirestationDTOS.add(FireStationCoverageMockedData.getGari());
+        personsCoveredByFirestationDTOS.add(FireStationCoverageMockedData.getMiniMagnus());
 
-        FirestationStationNumberDTO responseBody = new FirestationStationNumberDTO(
+        FirestationStationNumberDTO expectedResponseBody = new FirestationStationNumberDTO(
                 2,
                 1,
                 personsCoveredByFirestationDTOS
         );
 
-        String expectedResult = personsCoveredToJson(responseBody);
-
         // When
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/firestation?stationNumber=1")
-                        .contentType(MediaType.APPLICATION_JSON));
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/firestation?stationNumber=1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
 
         // Then
-        resultActions.andExpect(status().isOk())
-                .andExpect(content().string(expectedResult));
+        String jsonResponse = mvcResult.getResponse().getContentAsString();
+        FirestationStationNumberDTO actual = MyAppConfig.objectMapper().readValue(jsonResponse, FirestationStationNumberDTO.class);
 
-    }
-
-    private String personsCoveredToJson(FirestationStationNumberDTO personsCoveredByFirestationDTO) {
-        try {
-            return new ObjectMapper().writeValueAsString(personsCoveredByFirestationDTO);
-        } catch (JsonProcessingException e) {
-            fail("");
-            return null;
-        }
+        assertThat(actual.totalAdults()).isEqualTo(expectedResponseBody.totalAdults());
+        assertThat(actual.totalChildren()).isEqualTo(expectedResponseBody.totalChildren());
+        assertThat(actual.personsCovered()).containsExactlyInAnyOrderElementsOf(expectedResponseBody.personsCovered());
     }
 }
