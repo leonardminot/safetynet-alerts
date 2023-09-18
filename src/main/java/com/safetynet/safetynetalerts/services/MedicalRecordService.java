@@ -16,9 +16,9 @@ import java.util.Optional;
 public class MedicalRecordService {
 
     private final MedicalRecordMessageService messService;
-    private MedicalRecordRepository medicalRecordRepository;
+    private final MedicalRecordRepository medicalRecordRepository;
 
-    private PersonRepository personRepository;
+    private final PersonRepository personRepository;
 
     @Autowired
     public MedicalRecordService(MedicalRecordMessageService messService, MedicalRecordRepository medicalRecordRepository, PersonRepository personRepository) {

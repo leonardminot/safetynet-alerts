@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Stream;
 
 @Repository
 public class MedicalRecordRepository {
