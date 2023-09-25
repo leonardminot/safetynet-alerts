@@ -26,15 +26,15 @@ public class FloodAlertService {
     private final FirestationRepository firestationRepository;
     private final MedicalRecordRepository medicalRecordRepository;
     private final FloodAlertMessageService floodAlertMessageService;
-    private final AgeCalculation ageCalculation;
+    private final AgeCalculationService ageCalculationService;
 
     @Autowired
-    public FloodAlertService(PersonRepository personRepository, FirestationRepository firestationRepository, MedicalRecordRepository medicalRecordRepository, FloodAlertMessageService floodAlertMessageService, AgeCalculation ageCalculation) {
+    public FloodAlertService(PersonRepository personRepository, FirestationRepository firestationRepository, MedicalRecordRepository medicalRecordRepository, FloodAlertMessageService floodAlertMessageService, AgeCalculationService ageCalculationService) {
         this.personRepository = personRepository;
         this.firestationRepository = firestationRepository;
         this.medicalRecordRepository = medicalRecordRepository;
         this.floodAlertMessageService = floodAlertMessageService;
-        this.ageCalculation = ageCalculation;
+        this.ageCalculationService = ageCalculationService;
     }
 
     public List<FloodAlertDTO> getFloodAlert(List<String> stationsAlert) {
@@ -82,7 +82,7 @@ public class FloodAlertService {
                 person.firstName(),
                 person.lastName(),
                 person.phone(),
-                ageCalculation.getAge(person),
+                ageCalculationService.getAge(person),
                 getMedications(person, medicalRecords),
                 getAllergies(person, medicalRecords)
         );

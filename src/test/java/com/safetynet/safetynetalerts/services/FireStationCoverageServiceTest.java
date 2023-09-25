@@ -34,11 +34,11 @@ public class FireStationCoverageServiceTest {
     @BeforeEach
     void setUp() {
         TodayDateService todayDateService = new TodayDateService();
-        AgeCalculation ageCalculation = new AgeCalculation(medicalRecordRepository, todayDateService);
+        AgeCalculationService ageCalculationService = new AgeCalculationService(medicalRecordRepository, todayDateService);
         fireStationCoverageService = new FireStationCoverageService(
                 personRepository,
                 firestationRepository,
-                ageCalculation);
+                ageCalculationService);
     }
 
     @Test

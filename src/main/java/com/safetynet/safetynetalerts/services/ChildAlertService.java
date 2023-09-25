@@ -23,7 +23,7 @@ public class ChildAlertService {
     private final MedicalRecordRepository medicalRecordRepository;
     private final ChildAlertMessageService childAlertMessageService = new ChildAlertMessageService();
 
-    private final AgeCalculation ageCalculation;
+    private final AgeCalculationService ageCalculationService;
 
     List<Person> persons;
     List<MedicalRecord> medicalRecords;
@@ -31,10 +31,10 @@ public class ChildAlertService {
 
 
     @Autowired
-    public ChildAlertService(PersonRepository personRepository, MedicalRecordRepository medicalRecordRepository, AgeCalculation ageCalculation) {
+    public ChildAlertService(PersonRepository personRepository, MedicalRecordRepository medicalRecordRepository, AgeCalculationService ageCalculationService) {
         this.personRepository = personRepository;
         this.medicalRecordRepository = medicalRecordRepository;
-        this.ageCalculation = ageCalculation;
+        this.ageCalculationService = ageCalculationService;
         this.persons = new ArrayList<>();
         this.medicalRecords = new ArrayList<>();
     }
@@ -60,21 +60,21 @@ public class ChildAlertService {
     }
 
     private Predicate<Person> isMinor() {
-        return person -> ageCalculation.getAge(person) < MAJORITY_AGE;
+        return person -> ageCalculationService.getAge(person) < MAJORITY_AGE;
     }
 
     private ChildAlertDTO transformPersonToChildAlertDTO(Person person, String alertAddress) {
         return new ChildAlertDTO(
                 person.firstName(),
                 person.lastName(),
-                ageCalculation.getAge(person),
+                ageCalculationService.getAge(person),
                 getAdultsAtAddress(alertAddress));
     }
 
     private List<Person> getAdultsAtAddress(String address) {
         return persons.stream()
                 .filter(person -> person.address().equals(address))
-                .filter(person -> ageCalculation.getAge(person) >= MAJORITY_AGE)
+                .filter(person -> ageCalculationService.getAge(person) >= MAJORITY_AGE)
                 .toList();
     }
 

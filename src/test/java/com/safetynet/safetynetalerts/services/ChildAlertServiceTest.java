@@ -33,8 +33,8 @@ public class ChildAlertServiceTest {
     @BeforeEach
     void setUp() {
         TodayDateService todayDateService = new TodayDateService();
-        AgeCalculation ageCalculation = new AgeCalculation(medicalRecordRepository, todayDateService);
-        childAlertService = new ChildAlertService(personRepository, medicalRecordRepository, ageCalculation);
+        AgeCalculationService ageCalculationService = new AgeCalculationService(medicalRecordRepository, todayDateService);
+        childAlertService = new ChildAlertService(personRepository, medicalRecordRepository, ageCalculationService);
     }
 
 

@@ -40,8 +40,8 @@ public class FloodAlertServiceTest {
     @BeforeEach
     void setUp() {
         TodayDateService todayDateService = new TodayDateService();
-        AgeCalculation ageCalculation = new AgeCalculation(medicalRecordRepository, todayDateService);
-        floodAlertService = new FloodAlertService(personRepository, firestationRepository, medicalRecordRepository, new FloodAlertMessageService(), ageCalculation);
+        AgeCalculationService ageCalculationService = new AgeCalculationService(medicalRecordRepository, todayDateService);
+        floodAlertService = new FloodAlertService(personRepository, firestationRepository, medicalRecordRepository, new FloodAlertMessageService(), ageCalculationService);
 
     }
 

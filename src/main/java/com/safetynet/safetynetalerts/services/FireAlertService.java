@@ -23,7 +23,7 @@ public class FireAlertService {
     private final PersonRepository personRepository;
     private final FirestationRepository firestationRepository;
     private final MedicalRecordRepository medicalRecordRepository;
-    private final AgeCalculation ageCalculation;
+    private final AgeCalculationService ageCalculationService;
     private final FireAlertMessageService fireAlertMessageService = new FireAlertMessageService();
 
     private List<Person> persons;
@@ -32,11 +32,11 @@ public class FireAlertService {
 
 
     @Autowired
-    public FireAlertService(PersonRepository personRepository, FirestationRepository firestationRepository, MedicalRecordRepository medicalRecordRepository, AgeCalculation ageCalculation) {
+    public FireAlertService(PersonRepository personRepository, FirestationRepository firestationRepository, MedicalRecordRepository medicalRecordRepository, AgeCalculationService ageCalculationService) {
         this.personRepository = personRepository;
         this.firestationRepository = firestationRepository;
         this.medicalRecordRepository = medicalRecordRepository;
-        this.ageCalculation = ageCalculation;
+        this.ageCalculationService = ageCalculationService;
         persons = List.of();
         firestations = List.of();
         medicalRecords = List.of();
@@ -68,7 +68,7 @@ public class FireAlertService {
                 person.firstName(),
                 person.lastName(),
                 person.phone(),
-                ageCalculation.getAge(person),
+                ageCalculationService.getAge(person),
                 getMedications(person, medicalRecords),
                 getAllergies(person, medicalRecords)
         );

@@ -17,7 +17,7 @@ public class FireStationCoverageService {
 
     private final PersonRepository personRepository;
     private final FirestationRepository firestationRepository;
-    private final AgeCalculation ageCalculation;
+    private final AgeCalculationService ageCalculationService;
 
     private final int MAJORITY_AGE = 18;
     private List<Person> persons;
@@ -26,10 +26,10 @@ public class FireStationCoverageService {
 
     @Autowired
     public FireStationCoverageService(PersonRepository personRepository,
-                                      FirestationRepository firestationRepository, AgeCalculation ageCalculation) {
+                                      FirestationRepository firestationRepository, AgeCalculationService ageCalculationService) {
         this.personRepository = personRepository;
         this.firestationRepository = firestationRepository;
-        this.ageCalculation = ageCalculation;
+        this.ageCalculationService = ageCalculationService;
         persons = List.of();
     }
 
@@ -69,7 +69,7 @@ public class FireStationCoverageService {
 
     private long countAdultsCoveredByFirestation(List<PersonsCoveredByFirestationDTO> firestationCoverage) {
         return firestationCoverage.stream()
-                .map(ageCalculation::getAge)
+                .map(ageCalculationService::getAge)
                 .filter(age -> age >= MAJORITY_AGE)
                 .count();
     }

@@ -36,8 +36,8 @@ public class FireAlertServiceTest {
     @BeforeEach
     void setUp() {
         TodayDateService todayDateService = new TodayDateService();
-        AgeCalculation ageCalculation = new AgeCalculation(medicalRecordRepository, todayDateService);
-        this.fireAlertService = new FireAlertService(personRepository, firestationRepository, medicalRecordRepository, ageCalculation);
+        AgeCalculationService ageCalculationService = new AgeCalculationService(medicalRecordRepository, todayDateService);
+        this.fireAlertService = new FireAlertService(personRepository, firestationRepository, medicalRecordRepository, ageCalculationService);
     }
 
     @Test

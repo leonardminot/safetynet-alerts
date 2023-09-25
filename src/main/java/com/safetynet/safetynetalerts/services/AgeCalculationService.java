@@ -10,21 +10,19 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-//TODO : en faire un service à injecter dans les classes qui en ont besoin puis créer une méthode getNow() pour pouvoir ensuite mocker
 @Service
-public class AgeCalculation {
+public class AgeCalculationService {
     private final MedicalRecordRepository medicalRecordRepository;
     private final TodayDateService todayDateService;
 
 
 
     @Autowired
-    public AgeCalculation(MedicalRecordRepository medicalRecordRepository, TodayDateService todayDateService) {
+    public AgeCalculationService(MedicalRecordRepository medicalRecordRepository, TodayDateService todayDateService) {
         this.medicalRecordRepository = medicalRecordRepository;
         this.todayDateService = todayDateService;
     }
 
-    // TODO : utiliser les repositories pour les medicalRecords
     public long calculateAgeFromMedicalRecord(MedicalRecord medicalRecord) {
         LocalDate birthdate = medicalRecord.birthdate();
         return ChronoUnit.YEARS.between(birthdate, todayDateService.getNow());

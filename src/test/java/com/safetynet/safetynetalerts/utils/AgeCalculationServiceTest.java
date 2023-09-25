@@ -4,7 +4,7 @@ import com.safetynet.safetynetalerts.mockressources.utils.MedicalRecordsMockedDa
 import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
-import com.safetynet.safetynetalerts.services.AgeCalculation;
+import com.safetynet.safetynetalerts.services.AgeCalculationService;
 import com.safetynet.safetynetalerts.services.TodayDateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,9 +19,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class AgeCalculationTest {
+public class AgeCalculationServiceTest {
 
-    private AgeCalculation ageCalculation;
+    private AgeCalculationService ageCalculationService;
 
     @Mock
     private MedicalRecordRepository medicalRecordRepository;
@@ -31,7 +31,7 @@ public class AgeCalculationTest {
 
     @BeforeEach
     void setUp() {
-        ageCalculation = new AgeCalculation(medicalRecordRepository, todayDateService);
+        ageCalculationService = new AgeCalculationService(medicalRecordRepository, todayDateService);
     }
 
     @Test
@@ -57,8 +57,8 @@ public class AgeCalculationTest {
         when(todayDateService.getNow()).thenReturn(LocalDate.of(2023, 9, 25));
 
         // When
-        long expectedAdultAge = ageCalculation.calculateAgeFromMedicalRecord(adultRecord);
-        long expectedChildAge = ageCalculation.calculateAgeFromMedicalRecord(childRecord);
+        long expectedAdultAge = ageCalculationService.calculateAgeFromMedicalRecord(adultRecord);
+        long expectedChildAge = ageCalculationService.calculateAgeFromMedicalRecord(childRecord);
 
         // Then
         assertThat(expectedAdultAge).isEqualTo(18);
@@ -83,7 +83,7 @@ public class AgeCalculationTest {
         when(todayDateService.getNow()).thenReturn(LocalDate.of(2023, 9, 25));
 
         // When
-        long actualAge = ageCalculation.getAge(gari);
+        long actualAge = ageCalculationService.getAge(gari);
 
         // Then
         assertThat(actualAge).isEqualTo(60);
