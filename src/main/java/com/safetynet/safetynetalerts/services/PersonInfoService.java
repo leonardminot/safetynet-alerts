@@ -5,12 +5,16 @@ import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getAllergies;
 import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getMedications;
 
+@Service
+@Slf4j
 public class PersonInfoService {
 
     private final PersonRepository personRepository;
@@ -26,10 +30,21 @@ public class PersonInfoService {
     }
 
     public List<PersonInfoDTO> getPersonInfo(String firstName, String lastName) {
-        return personRepository.getPersons().stream()
+        List<PersonInfoDTO> responseBody = personRepository.getPersons().stream()
                 .filter(person -> person.firstName().equals(firstName) && person.lastName().equals(lastName))
                 .map(this::getPersonInfoDTO)
                 .toList();
+        log.info(getSuccessPersonInfoLogMess(firstName, lastName, responseBody));
+        return responseBody;
+    }
+
+    private String getSuccessPersonInfoLogMess(String firstName, String lastName, List<PersonInfoDTO> responseBody) {
+        return String.format(
+                "GET /personInfo?firstName=%s&lastName=%s - Success: request return with body [%s]",
+                firstName,
+                lastName,
+                responseBody
+        );
     }
 
     private PersonInfoDTO getPersonInfoDTO(Person person) {
