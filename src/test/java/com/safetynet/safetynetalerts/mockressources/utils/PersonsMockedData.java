@@ -39,6 +39,35 @@ public class PersonsMockedData {
         return mockedList;
     }
 
+    public static List<Person> createPersonMockedDataListForPhoneNumberValidation() {
+        List<Person> mockedList = new ArrayList<>();
+
+        Person magnus = getMagnus();
+
+        Person maxime = getMaxime();
+
+        Person alireza = getAlireza();
+
+        Person gari = getGari();
+
+        Person miniMagnusWithPhone = getMiniMagnusWithPhoneAndMail();
+
+        Person miniMaxime = getMiniMaxime();
+
+        Person miniAlireza = getMiniAlireza();
+
+
+        mockedList.add(magnus);
+        mockedList.add(maxime);
+        mockedList.add(alireza);
+        mockedList.add(gari);
+        mockedList.add(miniMagnusWithPhone);
+        mockedList.add(miniMaxime);
+        mockedList.add(miniAlireza);
+
+        return mockedList;
+    }
+
     public static Person getGari() {
         return new Person(
                 "Gari",
@@ -84,6 +113,18 @@ public class PersonsMockedData {
                 "63429",
                 null,
                 null
+        );
+    }
+
+    public static Person getMiniMagnusWithPhoneAndMail() {
+        return new Person(
+                "miniMagnus",
+                "miniCarlsen",
+                "007 Rue de la Dame",
+                "Oslo",
+                "63429",
+                "123-456-7890",
+                "magnusd@email.com"
         );
     }
 

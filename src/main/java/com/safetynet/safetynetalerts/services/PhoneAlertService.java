@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.safetynet.safetynetalerts.utils.AddressesResearch.getCoveredAddressesByFireStationNumber;
 
@@ -25,7 +26,6 @@ public class PhoneAlertService {
         this.personRepository = personRepository;
         this.firestationRepository = firestationRepository;
     }
-    //TODO : distinct pour les numéros de téléphone
     public List<String> getPhoneNumbersForFireStation(String stationNumber) {
         List<Firestation> firestations = firestationRepository.getFirestations();
         List<Person> persons = personRepository.getPersons();
@@ -35,7 +35,10 @@ public class PhoneAlertService {
         List<String> phoneNumbersForFireStation = persons.stream()
                 .filter(person -> addresses.contains(person.address()))
                 .map(Person::phone)
+                .filter(Objects::nonNull)
+                .distinct()
                 .toList();
+
 
         log.info(phoneAlertMessageService.getSuccessPhoneAlertLogMess(stationNumber, phoneNumbersForFireStation));
         return phoneNumbersForFireStation;
