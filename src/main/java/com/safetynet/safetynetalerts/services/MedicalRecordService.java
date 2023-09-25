@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -28,8 +29,8 @@ public class MedicalRecordService {
     }
 
     public void createRecord(MedicalRecord medicalRecord) {
-        // TODO : it should throw when birthdate is in the future
         throwIfMedicalRecordIsPresent(medicalRecord);
+        throwIfBirthdateInTheFuture(medicalRecord);
         throwIfPersonIsUnknown(medicalRecord);
         medicalRecordRepository.saveRecord(medicalRecord);
         log.info(messService.postSuccessLogMess(medicalRecord));
@@ -42,6 +43,14 @@ public class MedicalRecordService {
                     return new ApiResourceException(messService.postErrorPersonNotFoundLogMess(medicalRecord));
                 }
         );
+    }
+
+    private void throwIfBirthdateInTheFuture(MedicalRecord medicalRecord) {
+        if (medicalRecord.birthdate().isAfter(LocalDate.now())) {
+            log.error(messService.postErrorBirthdateInFutureLogMess(medicalRecord));
+            throw new ApiResourceException(messService.postErrorBirthdateInFutureLogMess(medicalRecord));
+        }
+
     }
 
     private void throwIfMedicalRecordIsPresent(MedicalRecord medicalRecord) {

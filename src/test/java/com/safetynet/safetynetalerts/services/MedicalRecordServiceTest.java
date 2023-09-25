@@ -33,8 +33,6 @@ class MedicalRecordServiceTest {
 
     private MedicalRecordService medicalRecordService;
 
-    private final String filePathMockPersons = "src/test/java/com/safetynet/safetynetalerts/mockressources/mockmedicalrecords.json";
-
     @Mock
     private MedicalRecordRepository medicalRecordRepository;
 
@@ -124,6 +122,32 @@ class MedicalRecordServiceTest {
                                 currentRecord,
                                 currentRecord.firstName(),
                                 currentRecord.lastName())
+                );
+        then(medicalRecordRepository).should(never()).saveRecord(any(MedicalRecord.class));
+
+    }
+
+    @Test
+    void itShouldThrowWhenBirthdateInFuture() {
+        // Given
+        MedicalRecord medicalRecordWithBirthdateInFuture = new MedicalRecord(
+                "Wesley",
+                "So",
+                LocalDate.parse("2293-10-09"),
+                null,
+                null
+        );
+
+        // When
+        // Then
+        assertThatThrownBy(() -> medicalRecordService.createRecord(medicalRecordWithBirthdateInFuture))
+                .isInstanceOf(ApiResourceException.class)
+                .hasMessageContaining(
+                        String.format("POST /medicalRecord - Payload [%s] - Error: Birthdate for [%s %s] is in the future: [%s]",
+                                medicalRecordWithBirthdateInFuture,
+                                medicalRecordWithBirthdateInFuture.firstName(),
+                                medicalRecordWithBirthdateInFuture.lastName(),
+                                medicalRecordWithBirthdateInFuture.birthdate())
                 );
         then(medicalRecordRepository).should(never()).saveRecord(any(MedicalRecord.class));
 
@@ -227,4 +251,6 @@ class MedicalRecordServiceTest {
                 );
         then(medicalRecordRepository).should(never()).delete(any(MedicalRecord.class));
     }
+
+
 }

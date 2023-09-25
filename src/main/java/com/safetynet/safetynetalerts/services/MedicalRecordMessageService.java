@@ -22,6 +22,14 @@ public class MedicalRecordMessageService {
                 medicalRecord.lastName());
     }
 
+    String postErrorBirthdateInFutureLogMess(MedicalRecord medicalRecord) {
+        return String.format("POST /medicalRecord - Payload [%s] - Error: Birthdate for [%s %s] is in the future: [%s]",
+                medicalRecord,
+                medicalRecord.firstName(),
+                medicalRecord.lastName(),
+                medicalRecord.birthdate());
+    }
+
     String postErrorMedicalRecordExistsLog(MedicalRecord medicalRecord) {
         return String.format("POST /medicalRecord - Payload: [%s] - Error: Medical record for [%s %s] already exists",
                 medicalRecord,
