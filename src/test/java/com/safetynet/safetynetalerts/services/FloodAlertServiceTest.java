@@ -36,9 +36,12 @@ public class FloodAlertServiceTest {
     @Mock
     private MedicalRecordRepository medicalRecordRepository;
 
+
     @BeforeEach
     void setUp() {
-        floodAlertService = new FloodAlertService(personRepository, firestationRepository, medicalRecordRepository, new FloodAlertMessageService());
+        TodayDateService todayDateService = new TodayDateService();
+        AgeCalculation ageCalculation = new AgeCalculation(medicalRecordRepository, todayDateService);
+        floodAlertService = new FloodAlertService(personRepository, firestationRepository, medicalRecordRepository, new FloodAlertMessageService(), ageCalculation);
 
     }
 

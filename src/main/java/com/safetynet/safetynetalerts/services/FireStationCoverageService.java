@@ -2,10 +2,8 @@ package com.safetynet.safetynetalerts.services;
 
 import com.safetynet.safetynetalerts.dto.PersonsCoveredByFirestationDTO;
 import com.safetynet.safetynetalerts.models.Firestation;
-import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.FirestationRepository;
-import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,28 +11,25 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.safetynet.safetynetalerts.utils.AddressesResearch.getCoveredAddressesByFireStationNumber;
-import static com.safetynet.safetynetalerts.utils.AgeCalculation.getAge;
 
 @Service
 public class FireStationCoverageService {
 
     private final PersonRepository personRepository;
-    private final MedicalRecordRepository medicalRecordRepository;
     private final FirestationRepository firestationRepository;
+    private final AgeCalculation ageCalculation;
 
     private final int MAJORITY_AGE = 18;
     private List<Person> persons;
     private List<Firestation> firestations;
-    private List<MedicalRecord> medicalRecords;
 
 
     @Autowired
     public FireStationCoverageService(PersonRepository personRepository,
-                                      MedicalRecordRepository medicalRecordRepository,
-                                      FirestationRepository firestationRepository) {
+                                      FirestationRepository firestationRepository, AgeCalculation ageCalculation) {
         this.personRepository = personRepository;
-        this.medicalRecordRepository = medicalRecordRepository;
         this.firestationRepository = firestationRepository;
+        this.ageCalculation = ageCalculation;
         persons = List.of();
     }
 
@@ -48,7 +43,6 @@ public class FireStationCoverageService {
     private void getResourcesFromRepositories() {
         firestations = firestationRepository.getFirestations();
         persons = personRepository.getPersons();
-        medicalRecords = medicalRecordRepository.getMedicalRecords();
     }
 
     private List<PersonsCoveredByFirestationDTO> personsCoveredByFireStation(List<String> addresses) {
@@ -75,7 +69,7 @@ public class FireStationCoverageService {
 
     private long countAdultsCoveredByFirestation(List<PersonsCoveredByFirestationDTO> firestationCoverage) {
         return firestationCoverage.stream()
-                .map(coverage -> getAge(coverage, medicalRecords))
+                .map(ageCalculation::getAge)
                 .filter(age -> age >= MAJORITY_AGE)
                 .count();
     }

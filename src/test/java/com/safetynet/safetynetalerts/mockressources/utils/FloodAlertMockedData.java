@@ -1,17 +1,17 @@
 package com.safetynet.safetynetalerts.mockressources.utils;
 
+import com.safetynet.safetynetalerts.dto.EmergencyInfoForAddressDTO;
 import com.safetynet.safetynetalerts.dto.FloodAlertDTO;
 import com.safetynet.safetynetalerts.dto.PersonEmergencyInformationDTO;
-import com.safetynet.safetynetalerts.dto.EmergencyInfoForAddressDTO;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
 
 import java.util.List;
 
-import static com.safetynet.safetynetalerts.utils.AgeCalculation.getAge;
 import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getAllergies;
 import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getMedications;
 
 public class FloodAlertMockedData {
+
     public static FloodAlertDTO getFloodAlertMockedDataForStation1() {
         // Simulation of station 1
         // - station 1: 2 addresses:
@@ -21,6 +21,8 @@ public class FloodAlertMockedData {
         //          - miniMagnus
         //          - Magnus
 
+
+
         List<MedicalRecord> mockedMedicalRecords = MedicalRecordsMockedData.createMedicalRecordsMockedDataList();
 
         PersonEmergencyInformationDTO gari = getEmergencyGari(mockedMedicalRecords);
@@ -28,6 +30,8 @@ public class FloodAlertMockedData {
         PersonEmergencyInformationDTO miniMagnus = getEmergencyMiniMagnus(mockedMedicalRecords);
 
         PersonEmergencyInformationDTO magnus = getEmergencyMagnus(mockedMedicalRecords);
+
+
 
         EmergencyInfoForAddressDTO rueDuFou = new EmergencyInfoForAddressDTO(
                 "105 Rue du Fou",
@@ -79,12 +83,14 @@ public class FloodAlertMockedData {
 
     }
 
+    // For tests only - reference date for birthdate: today is 2023-09-25
+
     public static PersonEmergencyInformationDTO getEmergencyMagnus(List<MedicalRecord> mockedMedicalRecords) {
         return new PersonEmergencyInformationDTO(
                 PersonsMockedData.getMagnus().firstName(),
                 PersonsMockedData.getMagnus().lastName(),
                 PersonsMockedData.getMagnus().phone(),
-                getAge(PersonsMockedData.getMagnus(), mockedMedicalRecords),
+                32,
                 getMedications(PersonsMockedData.getMagnus(), mockedMedicalRecords),
                 getAllergies(PersonsMockedData.getMagnus(), mockedMedicalRecords)
         );
@@ -95,7 +101,7 @@ public class FloodAlertMockedData {
                 PersonsMockedData.getMiniMagnus().firstName(),
                 PersonsMockedData.getMiniMagnus().lastName(),
                 PersonsMockedData.getMiniMagnus().phone(),
-                getAge(PersonsMockedData.getMiniMagnus(), mockedMedicalRecords),
+                2,
                 getMedications(PersonsMockedData.getMiniMagnus(), mockedMedicalRecords),
                 getAllergies(PersonsMockedData.getMiniMagnus(), mockedMedicalRecords)
         );
@@ -106,7 +112,7 @@ public class FloodAlertMockedData {
                 PersonsMockedData.getGari().firstName(),
                 PersonsMockedData.getGari().lastName(),
                 PersonsMockedData.getGari().phone(),
-                getAge(PersonsMockedData.getGari(), mockedMedicalRecords),
+                60,
                 getMedications(PersonsMockedData.getGari(), mockedMedicalRecords),
                 getAllergies(PersonsMockedData.getGari(), mockedMedicalRecords)
         );
@@ -117,7 +123,7 @@ public class FloodAlertMockedData {
                 PersonsMockedData.getMiniAlireza().firstName(),
                 PersonsMockedData.getMiniAlireza().lastName(),
                 PersonsMockedData.getMiniAlireza().phone(),
-                getAge(PersonsMockedData.getMiniAlireza(), mockedMedicalRecords),
+                0,
                 getMedications(PersonsMockedData.getMiniAlireza(), mockedMedicalRecords),
                 getAllergies(PersonsMockedData.getMiniAlireza(), mockedMedicalRecords)
         );
@@ -128,7 +134,7 @@ public class FloodAlertMockedData {
                 PersonsMockedData.getMiniMaxime().firstName(),
                 PersonsMockedData.getMiniMaxime().lastName(),
                 PersonsMockedData.getMiniMaxime().phone(),
-                getAge(PersonsMockedData.getMiniMaxime(), mockedMedicalRecords),
+                3,
                 getMedications(PersonsMockedData.getMiniMaxime(), mockedMedicalRecords),
                 getAllergies(PersonsMockedData.getMiniMaxime(), mockedMedicalRecords)
         );
@@ -139,7 +145,7 @@ public class FloodAlertMockedData {
                 PersonsMockedData.getAlireza().firstName(),
                 PersonsMockedData.getAlireza().lastName(),
                 PersonsMockedData.getAlireza().phone(),
-                getAge(PersonsMockedData.getAlireza(), mockedMedicalRecords),
+                20,
                 getMedications(PersonsMockedData.getAlireza(), mockedMedicalRecords),
                 getAllergies(PersonsMockedData.getAlireza(), mockedMedicalRecords)
         );
@@ -150,7 +156,7 @@ public class FloodAlertMockedData {
                 PersonsMockedData.getMaxime().firstName(),
                 PersonsMockedData.getMaxime().lastName(),
                 PersonsMockedData.getMaxime().phone(),
-                getAge(PersonsMockedData.getMaxime(), mockedMedicalRecords),
+                32,
                 getMedications(PersonsMockedData.getMaxime(), mockedMedicalRecords),
                 getAllergies(PersonsMockedData.getMaxime(), mockedMedicalRecords)
         );

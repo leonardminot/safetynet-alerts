@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.safetynet.safetynetalerts.utils.AgeCalculation.getAge;
 import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getAllergies;
 import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getMedications;
 
@@ -24,6 +23,7 @@ public class FireAlertService {
     private final PersonRepository personRepository;
     private final FirestationRepository firestationRepository;
     private final MedicalRecordRepository medicalRecordRepository;
+    private final AgeCalculation ageCalculation;
     private final FireAlertMessageService fireAlertMessageService = new FireAlertMessageService();
 
     private List<Person> persons;
@@ -32,10 +32,11 @@ public class FireAlertService {
 
 
     @Autowired
-    public FireAlertService(PersonRepository personRepository, FirestationRepository firestationRepository, MedicalRecordRepository medicalRecordRepository) {
+    public FireAlertService(PersonRepository personRepository, FirestationRepository firestationRepository, MedicalRecordRepository medicalRecordRepository, AgeCalculation ageCalculation) {
         this.personRepository = personRepository;
         this.firestationRepository = firestationRepository;
         this.medicalRecordRepository = medicalRecordRepository;
+        this.ageCalculation = ageCalculation;
         persons = List.of();
         firestations = List.of();
         medicalRecords = List.of();
@@ -67,7 +68,7 @@ public class FireAlertService {
                 person.firstName(),
                 person.lastName(),
                 person.phone(),
-                getAge(person, medicalRecords),
+                ageCalculation.getAge(person),
                 getMedications(person, medicalRecords),
                 getAllergies(person, medicalRecords)
         );

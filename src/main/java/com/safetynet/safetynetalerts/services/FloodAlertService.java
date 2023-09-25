@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.safetynet.safetynetalerts.utils.AgeCalculation.getAge;
 import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getAllergies;
 import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getMedications;
 
@@ -27,13 +26,15 @@ public class FloodAlertService {
     private final FirestationRepository firestationRepository;
     private final MedicalRecordRepository medicalRecordRepository;
     private final FloodAlertMessageService floodAlertMessageService;
+    private final AgeCalculation ageCalculation;
 
     @Autowired
-    public FloodAlertService(PersonRepository personRepository, FirestationRepository firestationRepository, MedicalRecordRepository medicalRecordRepository, FloodAlertMessageService floodAlertMessageService) {
+    public FloodAlertService(PersonRepository personRepository, FirestationRepository firestationRepository, MedicalRecordRepository medicalRecordRepository, FloodAlertMessageService floodAlertMessageService, AgeCalculation ageCalculation) {
         this.personRepository = personRepository;
         this.firestationRepository = firestationRepository;
         this.medicalRecordRepository = medicalRecordRepository;
         this.floodAlertMessageService = floodAlertMessageService;
+        this.ageCalculation = ageCalculation;
     }
 
     public List<FloodAlertDTO> getFloodAlert(List<String> stationsAlert) {
@@ -81,7 +82,7 @@ public class FloodAlertService {
                 person.firstName(),
                 person.lastName(),
                 person.phone(),
-                getAge(person, medicalRecords),
+                ageCalculation.getAge(person),
                 getMedications(person, medicalRecords),
                 getAllergies(person, medicalRecords)
         );

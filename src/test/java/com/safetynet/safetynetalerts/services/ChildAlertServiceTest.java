@@ -2,10 +2,8 @@ package com.safetynet.safetynetalerts.services;
 
 import com.safetynet.safetynetalerts.dto.ChildAlertDTO;
 import com.safetynet.safetynetalerts.mockressources.utils.ChildAlertMockedData;
-import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.mockressources.utils.MedicalRecordsMockedData;
 import com.safetynet.safetynetalerts.mockressources.utils.PersonsMockedData;
-import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,7 +32,9 @@ public class ChildAlertServiceTest {
 
     @BeforeEach
     void setUp() {
-        childAlertService = new ChildAlertService(personRepository, medicalRecordRepository);
+        TodayDateService todayDateService = new TodayDateService();
+        AgeCalculation ageCalculation = new AgeCalculation(medicalRecordRepository, todayDateService);
+        childAlertService = new ChildAlertService(personRepository, medicalRecordRepository, ageCalculation);
     }
 
 
@@ -62,7 +61,6 @@ public class ChildAlertServiceTest {
     @Test
     void itShouldReturnAnEmptyListWhenNoChildATheAddress() {
         // Given
-        List<ChildAlertDTO> expectedResult = new ArrayList<>();
 
         when(personRepository.getPersons()).thenReturn(PersonsMockedData.createPersonMockedDataList());
         when(medicalRecordRepository.getMedicalRecords()).thenReturn(MedicalRecordsMockedData.createMedicalRecordsMockedDataListWithAllEntries());

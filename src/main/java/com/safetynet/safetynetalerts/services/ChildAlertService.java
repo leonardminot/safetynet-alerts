@@ -5,9 +5,7 @@ import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
-import static com.safetynet.safetynetalerts.utils.AgeCalculation.getAge;
 
-import com.safetynet.safetynetalerts.utils.AgeCalculation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,15 +23,18 @@ public class ChildAlertService {
     private final MedicalRecordRepository medicalRecordRepository;
     private final ChildAlertMessageService childAlertMessageService = new ChildAlertMessageService();
 
+    private final AgeCalculation ageCalculation;
+
     List<Person> persons;
     List<MedicalRecord> medicalRecords;
     private final int MAJORITY_AGE = 18;
 
 
     @Autowired
-    public ChildAlertService(PersonRepository personRepository, MedicalRecordRepository medicalRecordRepository) {
+    public ChildAlertService(PersonRepository personRepository, MedicalRecordRepository medicalRecordRepository, AgeCalculation ageCalculation) {
         this.personRepository = personRepository;
         this.medicalRecordRepository = medicalRecordRepository;
+        this.ageCalculation = ageCalculation;
         this.persons = new ArrayList<>();
         this.medicalRecords = new ArrayList<>();
     }
@@ -59,21 +60,21 @@ public class ChildAlertService {
     }
 
     private Predicate<Person> isMinor() {
-        return person -> getAge(person, medicalRecords) < MAJORITY_AGE;
+        return person -> ageCalculation.getAge(person) < MAJORITY_AGE;
     }
 
     private ChildAlertDTO transformPersonToChildAlertDTO(Person person, String alertAddress) {
         return new ChildAlertDTO(
                 person.firstName(),
                 person.lastName(),
-                getAge(person, medicalRecords),
+                ageCalculation.getAge(person),
                 getAdultsAtAddress(alertAddress));
     }
 
     private List<Person> getAdultsAtAddress(String address) {
         return persons.stream()
                 .filter(person -> person.address().equals(address))
-                .filter(person -> AgeCalculation.getAge(person, medicalRecords) >= MAJORITY_AGE)
+                .filter(person -> ageCalculation.getAge(person) >= MAJORITY_AGE)
                 .toList();
     }
 
