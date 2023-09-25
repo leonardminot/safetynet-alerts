@@ -7,8 +7,9 @@ import com.safetynet.safetynetalerts.models.Person;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-
+//TODO : en faire un service à injecter dans les classes qui en ont besoin puis créer une méthode getNow() pour pouvoir ensuite mocker
 public class AgeCalculation {
+    // TODO : utiliser les repositories pour les medicalRecords
     public static long calculateAgeFromMedicalRecord(MedicalRecord medicalRecord) {
         LocalDate birthdate = medicalRecord.birthdate();
         return ChronoUnit.YEARS.between(birthdate, LocalDate.now());

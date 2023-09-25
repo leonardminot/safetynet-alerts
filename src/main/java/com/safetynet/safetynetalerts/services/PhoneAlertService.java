@@ -25,7 +25,7 @@ public class PhoneAlertService {
         this.personRepository = personRepository;
         this.firestationRepository = firestationRepository;
     }
-
+    //TODO : distinct pour les numéros de téléphone
     public List<String> getPhoneNumbersForFireStation(String stationNumber) {
         List<Firestation> firestations = firestationRepository.getFirestations();
         List<Person> persons = personRepository.getPersons();
