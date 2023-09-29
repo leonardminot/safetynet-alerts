@@ -47,12 +47,40 @@ public class PersonController {
         personService.createPerson(person);
     }
 
+    @Operation(
+            description = "This endpoint accepts a 'Person' entity data as a request body. It attempts to update an existing 'Person' entity in the application. The 'firstName' and 'lastName' in the request should match an existing 'Person' registered in the application.",
+            summary = "Attempts to update an existing 'Person' entity in the application database.",
+            responses = {
+                    @ApiResponse(
+                            description = "Successful Operation - The existing 'Person' entity has been updated successfully.",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Conflict - No existing 'Person' entity matches the provided 'firstName' and 'lastName'. The update operation has been aborted.",
+                            responseCode = "409"
+                    )
+            }
+    )
     @PutMapping
     void updatePerson(@RequestBody @Valid Person person) {
         log.info("New request : PUT /person - Body : " + person);
         personService.updatePerson(person);
     }
 
+    @Operation(
+            description = "This endpoint accepts a 'Person' entity data as a request body. It attempts to delete an existing 'Person' entity in the application. The 'firstName' and 'lastName' in the request should match an existing 'Person' registered in the application. **Warning**: If a 'MedicalRecord' entity is associated with the 'Person' that is being deleted, the 'MedicalRecord' will also be deleted.",
+            summary = "Attempts to delete an existing 'Person' entity in the application database.",
+            responses = {
+                    @ApiResponse(
+                            description = "Successful Operation - The existing 'Person' entity has been deleted successfully.",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Conflict - No existing 'Person' entity matches the provided 'firstName' and 'lastName'. The delete operation has been aborted.",
+                            responseCode = "409"
+                    )
+            }
+    )
     @DeleteMapping
     void deletePerson(@RequestBody @Valid Person person) {
         log.info("New request : DELETE /person - Body : " + person);
