@@ -2,6 +2,7 @@ package com.safetynet.safetynetalerts.controllers;
 
 import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.services.MedicalRecordService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("medicalRecord")
 @Slf4j
+@Tag(name = "2. Medical Records Controller")
 public class MedicalRecordController {
 
     private MedicalRecordService medicalRecordService;

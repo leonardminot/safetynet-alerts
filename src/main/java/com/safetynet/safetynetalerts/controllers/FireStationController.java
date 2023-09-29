@@ -2,6 +2,7 @@ package com.safetynet.safetynetalerts.controllers;
 
 import com.safetynet.safetynetalerts.models.Firestation;
 import com.safetynet.safetynetalerts.services.FireStationService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("firestation")
 @Slf4j
+@Tag(name = "3. Fire Station Controller")
 public class FireStationController {
 
     private final FireStationService fireStationService;
