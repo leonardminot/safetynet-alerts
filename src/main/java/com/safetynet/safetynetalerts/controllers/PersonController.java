@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("person")
 @Slf4j
-@Tag(name = "1. Person Controller",
+@Tag(name = "1. Person",
         description = "This controller provides endpoints for managing 'Person' entities in the application. Persons are uniquely identified by the combination of 'firstName' and 'lastName'.")
 public class PersonController {
 
@@ -68,7 +68,12 @@ public class PersonController {
     }
 
     @Operation(
-            description = "This endpoint accepts a 'Person' entity data as a request body. It attempts to delete an existing 'Person' entity in the application. The 'firstName' and 'lastName' in the request should match an existing 'Person' registered in the application. **Warning**: If a 'MedicalRecord' entity is associated with the 'Person' that is being deleted, the 'MedicalRecord' will also be deleted.",
+            description = """
+                    This endpoint accepts a 'Person' entity data as a request body. It attempts to delete an existing 'Person' entity in the application. The 'firstName' and 'lastName' in the request should match an existing 'Person' registered in the application.
+                    
+                    **Warning**: If a 'MedicalRecord' entity is associated with the 'Person' that is being deleted, the 'MedicalRecord' will also be deleted.
+                    
+                    *Note*: A request body with just the 'firstName' and 'lastName' is sufficient for this operation, any additional fields in the request body are not utilized.""",
             summary = "Attempts to delete an existing 'Person' entity in the application database.",
             responses = {
                     @ApiResponse(
