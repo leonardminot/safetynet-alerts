@@ -2,7 +2,9 @@ package com.safetynet.safetynetalerts.repositories;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.safetynet.safetynetalerts.exception.ApiRepositoryException;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -10,10 +12,13 @@ import org.springframework.stereotype.Repository;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
 @Repository
+@Slf4j
 public class MedicalRecordRepository {
 
     private final String filePath;
@@ -27,15 +32,15 @@ public class MedicalRecordRepository {
     }
 
     public List<MedicalRecord> getMedicalRecords() {
-        List<MedicalRecord> medicalRecords;
+        List<MedicalRecord> medicalRecords = new ArrayList<>();
         try {
-            medicalRecords = objectMapper.readValue(Paths.get(filePath).toFile(), new TypeReference<>() {});
+            Path path = Paths.get(filePath);
+            if (Files.size(path) != 0)
+                medicalRecords = objectMapper.readValue(path.toFile(), new TypeReference<>() {});
+
         } catch (IOException e) {
-            //TODO : moche à travailler
-            // deux cas à considérer :
-            // - La liste est vide
-            // - Le fichier n'est pas trouvé
-            medicalRecords = new ArrayList<>();
+            log.error("Server ERROR - impossible to find Medical Record repository");
+            throw new ApiRepositoryException("Server ERROR - impossible to find Medical Record repository");
         }
         return medicalRecords;
     }
@@ -46,13 +51,13 @@ public class MedicalRecordRepository {
         saveListToJson(medicalRecords);
     }
 
-    private void saveListToJson(List<MedicalRecord> medicalRecords) {
+    public void saveListToJson(List<MedicalRecord> medicalRecords) {
         try {
             clearJsonFile();
             fillJsonFile(medicalRecords);
         } catch (IOException e) {
-            //TODO : moche, a refactoriser en intégrant la gestion des exceptions
-            // return;
+            log.error("Server ERROR - impossible to find Medical Record repository");
+            throw new ApiRepositoryException("Server ERROR - impossible to find Medical Record repository");
         }
     }
 

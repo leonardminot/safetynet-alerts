@@ -106,8 +106,6 @@ class FireStationServiceTest {
     @Test
     void itShouldUpdateTheStationNumber() {
         // Given
-        // ... existing mapping
-        Firestation currentMapping = FireStationMockedData.getRueDeLaDame();
 
         // ... to update to a new mapping
         Firestation futureMapping = new Firestation(

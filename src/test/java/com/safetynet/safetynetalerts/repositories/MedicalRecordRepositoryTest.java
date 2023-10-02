@@ -1,10 +1,10 @@
 package com.safetynet.safetynetalerts.repositories;
 
 import com.safetynet.safetynetalerts.configuration.MyAppConfig;
+import com.safetynet.safetynetalerts.exception.ApiRepositoryException;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.mockressources.utils.MedicalRecordsMockedData;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
-import com.safetynet.safetynetalerts.models.Person;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Tag("UnitTest")
 class MedicalRecordRepositoryTest {
@@ -160,5 +161,44 @@ class MedicalRecordRepositoryTest {
                 .findAny();
         assertThat(medicalRecords).hasSize(5);
         assertThat(optionalMedicalRecord).isNotPresent();
+    }
+
+    @Test
+    void itShouldThrowWhenFileNotFound() {
+        // Given
+        MedicalRecordRepository unknownMedicalRecordRepository = new MedicalRecordRepository(
+                "unknown/file/path",
+                MyAppConfig.objectMapper());
+
+        // When
+        // Then
+        assertThatThrownBy(unknownMedicalRecordRepository::getMedicalRecords)
+                .isInstanceOf(ApiRepositoryException.class)
+                .hasMessageContaining("Server ERROR - impossible to find Medical Record repository");
+    }
+
+    @Test
+    void itShouldThrowWhenFileNotFoundDuringSave() {
+        // Given
+        // ... a list of persons to save
+        MedicalRecord medicalRecord = new MedicalRecord(
+                "Maxime",
+                "Vachier-Lagrave",
+                LocalDate.of(1990, 1, 1),
+                List.of(),
+                List.of()
+        );
+
+        List<MedicalRecord> medicalRecords = List.of(medicalRecord);
+
+        // ... unknown repository
+        MedicalRecordRepository unknownMedicalRecordRepository = new MedicalRecordRepository(
+                "unknown/file/path",
+                MyAppConfig.objectMapper());
+
+        // When
+        assertThatThrownBy(() -> unknownMedicalRecordRepository.saveListToJson(medicalRecords))
+                .isInstanceOf(ApiRepositoryException.class)
+                .hasMessageContaining("Server ERROR - impossible to find Medical Record repository");
     }
 }
