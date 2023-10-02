@@ -1,5 +1,6 @@
 package com.safetynet.safetynetalerts.services;
 
+import com.safetynet.safetynetalerts.exception.ApiNotFoundException;
 import com.safetynet.safetynetalerts.exception.ApiResourceException;
 import com.safetynet.safetynetalerts.models.Firestation;
 import com.safetynet.safetynetalerts.repositories.FirestationRepository;
@@ -53,7 +54,7 @@ public class FireStationService {
         boolean isAddressExists = firestationRepository.isAddressExist(firestation);
         if (!isAddressExists) {
             log.error(logMessage);
-            throw new ApiResourceException(logMessage);
+            throw new ApiNotFoundException(logMessage);
         }
     }
 
@@ -81,7 +82,7 @@ public class FireStationService {
         boolean isStationExists = firestationRepository.isStationExists(stationNumber);
         if (!isStationExists) {
             log.error(fsMessageService.deleteErrorStationNumberNotFoundLogMess(stationNumber));
-            throw new ApiResourceException(fsMessageService.deleteErrorStationNumberNotFoundLogMess(stationNumber));
+            throw new ApiNotFoundException(fsMessageService.deleteErrorStationNumberNotFoundLogMess(stationNumber));
         }
     }
 }

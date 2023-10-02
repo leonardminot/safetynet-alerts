@@ -1,5 +1,6 @@
 package com.safetynet.safetynetalerts.services;
 
+import com.safetynet.safetynetalerts.exception.ApiNotFoundException;
 import com.safetynet.safetynetalerts.exception.ApiResourceException;
 import com.safetynet.safetynetalerts.mockressources.utils.FireStationMockedData;
 import com.safetynet.safetynetalerts.models.Firestation;
@@ -137,7 +138,7 @@ class FireStationServiceTest {
         // When
         // Then
         assertThatThrownBy(() -> fireStationService.updateMapping(unknownAddress))
-                .isInstanceOf(ApiResourceException.class)
+                .isInstanceOf(ApiNotFoundException.class)
                 .hasMessageContaining(String.format("PUT /firestation - Payload: [%s] - Error: No firestation found at address [%s]",
                         unknownAddress,
                         unknownAddress.address()));
@@ -191,7 +192,7 @@ class FireStationServiceTest {
         // When
         // Then
         assertThatThrownBy(() -> fireStationService.deleteMapping(unknownAddress))
-                .isInstanceOf(ApiResourceException.class)
+                .isInstanceOf(ApiNotFoundException.class)
                 .hasMessageContaining(
                         String.format("DELETE /firestation - Payload: [%s] - Error: No firestation found at address [%s]",
                                 unknownAddress,
@@ -222,7 +223,7 @@ class FireStationServiceTest {
         // When
         // Then
         assertThatThrownBy(() -> fireStationService.deleteStation(unknownStationNumber))
-                .isInstanceOf(ApiResourceException.class)
+                .isInstanceOf(ApiNotFoundException.class)
                 .hasMessageContaining(
                         String.format("DELETE /firestation - Payload: {\"station\":\"%s\"} - Error: No firestations found associated with station number %s",
                                 unknownStationNumber,
