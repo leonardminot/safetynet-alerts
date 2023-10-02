@@ -11,7 +11,7 @@ import java.time.ZonedDateTime;
 public class ApiExceptionHandler {
 
     @ExceptionHandler(value = ApiResourceException.class)
-    public ResponseEntity<Object> handleCreateResourcesException(ApiResourceException e) {
+    public ResponseEntity<Object> handleCreateResourceException(ApiResourceException e) {
         ApiException apiException = new ApiException(
                 e.getMessage(),
                 e,
@@ -32,5 +32,17 @@ public class ApiExceptionHandler {
         );
 
         return new ResponseEntity<>(apiException, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(value = ApiRepositoryException.class)
+    public ResponseEntity<Object> handleRepositoryFileNotFound(ApiRepositoryException e) {
+        ApiException apiException = new ApiException(
+                e.getMessage(),
+                e,
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                ZonedDateTime.now()
+        );
+
+        return new ResponseEntity<>(apiException, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

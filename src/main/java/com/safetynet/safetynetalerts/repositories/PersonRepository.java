@@ -2,14 +2,18 @@ package com.safetynet.safetynetalerts.repositories;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.safetynet.safetynetalerts.exception.ApiRepositoryException;
 import com.safetynet.safetynetalerts.models.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -27,17 +31,14 @@ public class PersonRepository {
     }
 
     public List<Person> getPersons() {
-        List<Person> persons;
+        List<Person> persons = new ArrayList<>();
         try {
-            persons = objectMapper.readValue(Paths.get(filePath).toFile(), new TypeReference<>() {
-            });
+            Path path = Paths.get(filePath);
+            if (Files.size(path) != 0)
+                persons = objectMapper.readValue(path.toFile(), new TypeReference<>() {});
 
         } catch (IOException e) {
-            //TODO : moche à travailler
-            // deux cas à considérer :
-            // - La liste est vide
-            // - Le fichier n'est pas trouvé
-            persons = new ArrayList<>();
+            throw new ApiRepositoryException("Server ERROR - impossible to find Person repositories");
         }
         return persons;
     }

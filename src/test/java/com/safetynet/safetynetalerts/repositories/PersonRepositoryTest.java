@@ -1,6 +1,7 @@
 package com.safetynet.safetynetalerts.repositories;
 
 import com.safetynet.safetynetalerts.configuration.MyAppConfig;
+import com.safetynet.safetynetalerts.exception.ApiRepositoryException;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.mockressources.utils.PersonsMockedData;
 import com.safetynet.safetynetalerts.models.Person;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Tag("UnitTest")
 class PersonRepositoryTest {
@@ -203,5 +205,20 @@ class PersonRepositoryTest {
                 .findFirst();
         assertThat(allPerson).hasSize(6);
         assertThat(maximeInDB).isNotPresent();
+    }
+
+    @Test
+    void itShouldThrowWhenFileNotFound() {
+        // Given
+        PersonRepository unknownPersonRepository = new PersonRepository(
+                "unknown/file/path",
+                MyAppConfig.objectMapper());
+
+        // When
+        // Then
+        assertThatThrownBy(unknownPersonRepository::getPersons)
+                .isInstanceOf(ApiRepositoryException.class)
+                .hasMessageContaining("Server ERROR - impossible to find Person repositories");
+
     }
 }

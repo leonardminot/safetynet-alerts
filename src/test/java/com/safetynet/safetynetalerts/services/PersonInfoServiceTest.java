@@ -61,4 +61,16 @@ public class PersonInfoServiceTest {
         assertThat(actualResult).isEqualTo(List.of(magnusInformation));
 
     }
+
+    @Test
+    void itShouldReturnAnEmptyListForUnknownPerson() {
+        // Given
+        when(personRepository.getPersons()).thenReturn(PersonsMockedData.createPersonMockedDataList());
+
+        // When
+        List<PersonInfoDTO> actualResult = personInfoService.getPersonInfo("Donald", "Duck");
+
+        // Then
+        assertThat(actualResult).hasSize(0);
+    }
 }
