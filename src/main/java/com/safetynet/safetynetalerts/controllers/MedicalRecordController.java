@@ -12,8 +12,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("medicalRecord")
 @Slf4j
-@Tag(name = "2. Medical Records",
-        description = "This controller provides endpoints for managing 'MedicalRecords' entities in the application. Each 'MedicalRecord' entity is uniquely identified by the combination of 'firstName' and 'lastName' and must correspond to an associated 'Person' entity in the system.")public class MedicalRecordController {
+@Tag(name = "Medical Records",
+        description = """
+    This controller provides endpoints for managing 'MedicalRecords' entities in the application.\s
+    Each 'MedicalRecord' entity is uniquely identified by the combination of 'firstName' and 'lastName' and must correspond to an associated 'Person' entity in the system.
+    """)
+public class MedicalRecordController {
 
     private final MedicalRecordService medicalRecordService;
 

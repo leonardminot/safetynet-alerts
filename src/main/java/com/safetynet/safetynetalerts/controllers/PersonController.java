@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("person")
 @Slf4j
-@Tag(name = "1. Person",
+@Tag(name = "Person",
         description = "This controller provides endpoints for managing 'Person' entities in the application. Persons are uniquely identified by the combination of 'firstName' and 'lastName'.")
 public class PersonController {
 

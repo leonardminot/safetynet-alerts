@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("firestation")
 @Slf4j
-@Tag(name = "3. FireStation",
+@Tag(name = "FireStation",
         description = """
         This controller provides endpoints for managing 'FireStation' entities in the application. A 'Firestation' entity is a mapping between an address, which should be unique, and a station number.
         
