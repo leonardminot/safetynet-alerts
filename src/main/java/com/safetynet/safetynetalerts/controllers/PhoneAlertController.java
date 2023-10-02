@@ -1,6 +1,9 @@
 package com.safetynet.safetynetalerts.controllers;
 
 import com.safetynet.safetynetalerts.services.PhoneAlertService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +16,10 @@ import java.util.List;
 @RestController
 @RequestMapping("phoneAlert")
 @Slf4j
+@Tag(name = "Phone Alert",
+        description = """
+           This controller provides an endpoint to get a list of phone numbers of the residents serviced by the fire station.
+           """)
 public class PhoneAlertController {
     private final PhoneAlertService phoneAlertService;
 
@@ -21,6 +28,16 @@ public class PhoneAlertController {
         this.phoneAlertService = phoneAlertService;
     }
 
+    @Operation(
+            description = """
+            This endpoint returns a list of phone numbers of the residents serviced by the fire station, which is given in the parameter.""",
+            responses = {
+                    @ApiResponse(
+                            description = "Successfully retrieved phone numbers or returned an empty list if the fire station services no residents.",
+                            responseCode = "200"
+                    )
+            }
+    )
     @GetMapping
     public List<String> getPhoneAlert(@RequestParam("firestation") String firestation) {
         log.info("New request : GET /phoneAlert?firestation=" + firestation);

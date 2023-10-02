@@ -19,7 +19,7 @@ import java.util.List;
 @Slf4j
 @Tag(name = "Child Alert",
         description = """
-        This controller provides an endpoint to get a list of children living at a given address. All household members are also returned.
+    This controller provides an endpoint to get a list of children living at a given address. All household members are also returned.
     """
 )
 public class ChildAlertController {

@@ -20,7 +20,10 @@ import java.util.List;
 @RequestMapping("firestation")
 @Slf4j
 @Tag(name = "Fire Station Coverage",
-description = "This controller provides an endpoint to get a list of phone numbers of the residents serviced by the fire station.")
+        description = """
+     This controller provides an endpoint to retrieve a list of individuals covered by a fire station, as specified by a stationNumber parameter. The coverage list includes the first name, last name, address, and phone number of each individual, and counts of adults and children in the serviced area.
+     """
+)
 public class FireStationCoverageController {
 
     private final FireStationCoverageService fireStationCoverageService;
@@ -32,10 +35,10 @@ public class FireStationCoverageController {
 
     @Operation(
             description = """
-        This endpoint returns a list of phone numbers of the residents serviced by the fire station, which is given in the parameter.""",
+        This endpoint provides, based on a given stationNumber parameter, a list of individuals covered by the corresponding fire station. The list includes specific information such as first name, last name, address, and phone number. It also provides a count of the number of adults and the number of children (any individual 18 years old or less) in the serviced area.""",
             responses = {
                     @ApiResponse(
-                            description = "Successfully retrieved phone numbers or returned an empty list if the fire station services no residents.",
+                            description = "Successfully retrieved individuals' information covered by the fire station along with a count of adults and children.",
                             responseCode = "200"
                     )
             }
