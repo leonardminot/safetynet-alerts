@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalerts.exception.ApiRepositoryException;
 import com.safetynet.safetynetalerts.models.Firestation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+@Slf4j
 public class FirestationRepository {
 
     private final String filePath;
@@ -39,6 +41,7 @@ public class FirestationRepository {
                 firestations = objectMapper.readValue(path.toFile(), new TypeReference<>() {});
 
         } catch (IOException e) {
+            log.error("Server ERROR - impossible to find Fire Station repository");
             throw new ApiRepositoryException("Server ERROR - impossible to find Fire Station repository");
         }
         return firestations;
@@ -62,6 +65,7 @@ public class FirestationRepository {
             clearJsonFile();
             fillJsonFile(firestations);
         } catch (IOException e) {
+            log.error("Server ERROR - impossible to find Fire Station repository");
             throw new ApiRepositoryException("Server ERROR - impossible to find Fire Station repository");
         }
     }

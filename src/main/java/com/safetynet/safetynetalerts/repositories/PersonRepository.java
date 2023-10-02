@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalerts.exception.ApiRepositoryException;
 import com.safetynet.safetynetalerts.models.Person;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -20,6 +21,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Repository
+@Slf4j
 public class PersonRepository {
 
     private final String filePath;
@@ -40,6 +42,7 @@ public class PersonRepository {
                 persons = objectMapper.readValue(path.toFile(), new TypeReference<>() {});
 
         } catch (IOException e) {
+            log.error("Server ERROR - impossible to find Person repository");
             throw new ApiRepositoryException("Server ERROR - impossible to find Person repository");
         }
         return persons;
@@ -56,6 +59,7 @@ public class PersonRepository {
             clearJsonFile();
             fillJsonFile(persons);
         } catch (IOException e) {
+            log.error("Server ERROR - impossible to find Person repository");
             throw new ApiRepositoryException("Server ERROR - impossible to find Person repository");
         }
     }
