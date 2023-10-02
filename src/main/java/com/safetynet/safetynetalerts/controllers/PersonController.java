@@ -71,7 +71,7 @@ public class PersonController {
             description = """
                     This endpoint accepts a 'Person' entity data as a request body. It attempts to delete an existing 'Person' entity in the application. The 'firstName' and 'lastName' in the request should match an existing 'Person' registered in the application.
                     
-                    **Warning**: If a 'MedicalRecord' entity is associated with the 'Person' that is being deleted, the 'MedicalRecord' will also be deleted.
+                        If a 'MedicalRecord' entity is associated with the 'Person' that is being deleted, the 'MedicalRecord' will also be deleted.
                     
                     *Note*: A request body with just the 'firstName' and 'lastName' is sufficient for this operation, any additional fields in the request body are not utilized.""",
             summary = "Attempts to delete an existing 'Person' entity in the application database.",
