@@ -1,5 +1,6 @@
 package com.safetynet.safetynetalerts.services;
 
+import com.safetynet.safetynetalerts.exception.ApiNotFoundException;
 import com.safetynet.safetynetalerts.exception.ApiResourceException;
 import com.safetynet.safetynetalerts.mockressources.utils.MedicalRecordsMockedData;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
@@ -95,7 +96,7 @@ class MedicalRecordServiceTest {
         // Then
         medicalRecordRepository.getMedicalRecords();
         assertThatThrownBy(() -> medicalRecordService.createRecord(unknownPersonMedicalRecord))
-                .isInstanceOf(ApiResourceException.class)
+                .isInstanceOf(ApiNotFoundException.class)
                 .hasMessageContaining(
                         String.format("POST /medicalRecord - Payload: [%s] - Error: Person with name [%s %s] does not exist",
                                 unknownPersonMedicalRecord,
@@ -195,7 +196,7 @@ class MedicalRecordServiceTest {
         // When
         // Then
         assertThatThrownBy(() -> medicalRecordService.update(unknownPersonMedicalRecord))
-                .isInstanceOf(ApiResourceException.class)
+                .isInstanceOf(ApiNotFoundException.class)
                 .hasMessageContaining(
                         String.format("PUT /medicalRecord - Payload: [%s] - Error: Medical Record for [%s %s] does not exist",
                                 unknownPersonMedicalRecord,
@@ -242,7 +243,7 @@ class MedicalRecordServiceTest {
         // When
         // Then
         assertThatThrownBy(() -> medicalRecordService.delete(unknownPersonMedicalRecord))
-                .isInstanceOf(ApiResourceException.class)
+                .isInstanceOf(ApiNotFoundException.class)
                 .hasMessageContaining(
                         String.format("DELETE /medicalRecord - Payload: [%s] - Error: Medical Record for [%s %s] does not exist",
                                 unknownPersonMedicalRecord,
