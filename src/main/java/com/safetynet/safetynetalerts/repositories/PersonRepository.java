@@ -49,13 +49,12 @@ public class PersonRepository {
         saveListToJson(persons);
     }
 
-    private void saveListToJson(List<Person> persons) {
+    public void saveListToJson(List<Person> persons) {
         try {
             clearJsonFile();
             fillJsonFile(persons);
         } catch (IOException e) {
-            //TODO : moche, a refactoriser en intégrant la gestion des exceptions
-            // return;
+            throw new ApiRepositoryException("Server ERROR - impossible to find Person repositories");
         }
     }
 

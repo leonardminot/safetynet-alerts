@@ -219,6 +219,32 @@ class PersonRepositoryTest {
         assertThatThrownBy(unknownPersonRepository::getPersons)
                 .isInstanceOf(ApiRepositoryException.class)
                 .hasMessageContaining("Server ERROR - impossible to find Person repositories");
+    }
 
+    @Test
+    void itShouldThrowWhenFileNotFoundDuringSave() {
+        // Given
+        // ... a list of persons to save
+        Person person1 = new Person(
+                "Maxime",
+                "Vachier-Lagrave",
+                "1990 Rue de la Tour",
+                "Paris",
+                "75014",
+                "111-222-3333",
+                "maxime@email.com"
+        );
+
+        List<Person> persons = List.of(person1);
+
+        // ... unknown repository
+        PersonRepository unknownPersonRepository = new PersonRepository(
+                "unknown/file/path",
+                MyAppConfig.objectMapper());
+
+        // When
+        assertThatThrownBy(() -> unknownPersonRepository.saveListToJson(persons))
+                .isInstanceOf(ApiRepositoryException.class)
+                .hasMessageContaining("Server ERROR - impossible to find Person repositories");
     }
 }
