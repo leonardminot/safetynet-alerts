@@ -1,5 +1,6 @@
 package com.safetynet.safetynetalerts.services;
 
+import com.safetynet.safetynetalerts.exception.ApiNotFoundException;
 import com.safetynet.safetynetalerts.exception.ApiResourceException;
 import com.safetynet.safetynetalerts.mockressources.utils.MedicalRecordsMockedData;
 import com.safetynet.safetynetalerts.mockressources.utils.PersonsMockedData;
@@ -153,7 +154,7 @@ class PersonServiceTest {
         // When
         // Then
         assertThatThrownBy(() -> personService.updatePerson(personThatDoesntExist))
-                .isInstanceOf(ApiResourceException.class)
+                .isInstanceOf(ApiNotFoundException.class)
                 .hasMessageContaining(String.format("PUT /person - Payload: [%s] - Error: Person with name [%s %s] does not exist",
                         personThatDoesntExist,
                         personThatDoesntExist.firstName(),
@@ -258,7 +259,7 @@ class PersonServiceTest {
         // When
         // Then
         assertThatThrownBy(() -> personService.delete(personThatDoesntExist))
-                .isInstanceOf(ApiResourceException.class)
+                .isInstanceOf(ApiNotFoundException.class)
                 .hasMessageContaining(String.format("DELETE /person - Payload: [%s] - Error: Person with name [%s %s] does not exist",
                         personThatDoesntExist,
                         personThatDoesntExist.firstName(),

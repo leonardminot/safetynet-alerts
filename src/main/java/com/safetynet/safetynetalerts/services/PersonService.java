@@ -1,5 +1,6 @@
 package com.safetynet.safetynetalerts.services;
 
+import com.safetynet.safetynetalerts.exception.ApiNotFoundException;
 import com.safetynet.safetynetalerts.exception.ApiResourceException;
 import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
@@ -51,7 +52,7 @@ public class PersonService {
         Optional<Person> personInDB = personRepository.selectPersonByName(person.firstName(), person.lastName());
         personInDB.orElseThrow(() -> {
             log.error(logMessage);
-            return new ApiResourceException(logMessage);
+            return new ApiNotFoundException(logMessage);
         });
     }
 

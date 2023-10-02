@@ -56,8 +56,8 @@ public class PersonController {
                             responseCode = "200"
                     ),
                     @ApiResponse(
-                            description = "Conflict - No existing 'Person' entity matches the provided 'firstName' and 'lastName'. The update operation has been aborted.",
-                            responseCode = "409"
+                            description = "Not Found - No existing 'Person' entity matches the provided 'firstName' and 'lastName'. The update operation has been aborted.",
+                            responseCode = "404"
                     )
             }
     )
@@ -81,8 +81,8 @@ public class PersonController {
                             responseCode = "200"
                     ),
                     @ApiResponse(
-                            description = "Conflict - No existing 'Person' entity matches the provided 'firstName' and 'lastName'. The delete operation has been aborted.",
-                            responseCode = "409"
+                            description = "Not Found - No existing 'Person' entity matches the provided 'firstName' and 'lastName'. The delete operation has been aborted.",
+                            responseCode = "404"
                     )
             }
     )
