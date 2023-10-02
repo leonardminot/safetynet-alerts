@@ -2,6 +2,7 @@ package com.safetynet.safetynetalerts.repositories;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.safetynet.safetynetalerts.exception.ApiRepositoryException;
 import com.safetynet.safetynetalerts.models.Firestation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Repository;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,15 +32,14 @@ public class FirestationRepository {
     }
 
     public List<Firestation> getFirestations() {
-        List<Firestation> firestations;
+        List<Firestation> firestations = new ArrayList<>();
         try {
-            firestations = objectMapper.readValue(Paths.get(filePath).toFile(), new TypeReference<>() {});
+            Path path = Paths.get(filePath);
+            if (Files.size(path) != 0)
+                firestations = objectMapper.readValue(path.toFile(), new TypeReference<>() {});
+
         } catch (IOException e) {
-            //TODO : moche à travailler
-            // deux cas à considérer :
-            // - La liste est vide
-            // - Le fichier n'est pas trouvé
-            firestations = new ArrayList<>();
+            throw new ApiRepositoryException("Server ERROR - impossible to find Fire Station repository");
         }
         return firestations;
     }
@@ -55,13 +57,12 @@ public class FirestationRepository {
                 .findAny();
     }
 
-    private void saveListToJson(List<Firestation> firestations) {
+    public void saveListToJson(List<Firestation> firestations) {
         try {
             clearJsonFile();
             fillJsonFile(firestations);
         } catch (IOException e) {
-            //TODO : moche, a refactoriser en intégrant la gestion des exceptions
-            // return;
+            throw new ApiRepositoryException("Server ERROR - impossible to find Fire Station repository");
         }
     }
 

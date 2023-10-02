@@ -218,7 +218,7 @@ class PersonRepositoryTest {
         // Then
         assertThatThrownBy(unknownPersonRepository::getPersons)
                 .isInstanceOf(ApiRepositoryException.class)
-                .hasMessageContaining("Server ERROR - impossible to find Person repositories");
+                .hasMessageContaining("Server ERROR - impossible to find Person repository");
     }
 
     @Test
@@ -245,6 +245,6 @@ class PersonRepositoryTest {
         // When
         assertThatThrownBy(() -> unknownPersonRepository.saveListToJson(persons))
                 .isInstanceOf(ApiRepositoryException.class)
-                .hasMessageContaining("Server ERROR - impossible to find Person repositories");
+                .hasMessageContaining("Server ERROR - impossible to find Person repository");
     }
 }

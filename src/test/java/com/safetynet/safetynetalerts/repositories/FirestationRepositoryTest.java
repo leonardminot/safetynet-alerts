@@ -1,9 +1,11 @@
 package com.safetynet.safetynetalerts.repositories;
 
 import com.safetynet.safetynetalerts.configuration.MyAppConfig;
+import com.safetynet.safetynetalerts.exception.ApiRepositoryException;
 import com.safetynet.safetynetalerts.mockressources.utils.FireStationMockedData;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.models.Firestation;
+import com.safetynet.safetynetalerts.models.Person;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Tag("UnitTest")
 class FirestationRepositoryTest {
@@ -210,5 +213,41 @@ class FirestationRepositoryTest {
                 .findAny();
 
         assertThat(optionalFirestation).isNotPresent();
+    }
+
+    @Test
+    void itShouldThrowWhenFileNotFound() {
+        // Given
+        FirestationRepository unknownFireStationRepository = new FirestationRepository(
+                "unknown/file/path",
+                MyAppConfig.objectMapper());
+
+        // When
+        // Then
+        assertThatThrownBy(unknownFireStationRepository::getFirestations)
+                .isInstanceOf(ApiRepositoryException.class)
+                .hasMessageContaining("Server ERROR - impossible to find Fire Station repository");
+    }
+
+    @Test
+    void itShouldThrowWhenFileNotFoundDuringSave() {
+        // Given
+        // ... a list of fire station to save
+        Firestation firestation = new Firestation(
+                "Rue de la rue",
+                "50"
+        );
+
+        List<Firestation> persons = List.of(firestation);
+
+        // ... unknown repository
+        FirestationRepository unknownFireStationRepository = new FirestationRepository(
+                "unknown/file/path",
+                MyAppConfig.objectMapper());
+
+        // When
+        assertThatThrownBy(() -> unknownFireStationRepository.saveListToJson(persons))
+                .isInstanceOf(ApiRepositoryException.class)
+                .hasMessageContaining("Server ERROR - impossible to find Fire Station repository");
     }
 }

@@ -38,7 +38,7 @@ public class PersonRepository {
                 persons = objectMapper.readValue(path.toFile(), new TypeReference<>() {});
 
         } catch (IOException e) {
-            throw new ApiRepositoryException("Server ERROR - impossible to find Person repositories");
+            throw new ApiRepositoryException("Server ERROR - impossible to find Person repository");
         }
         return persons;
     }
@@ -54,7 +54,7 @@ public class PersonRepository {
             clearJsonFile();
             fillJsonFile(persons);
         } catch (IOException e) {
-            throw new ApiRepositoryException("Server ERROR - impossible to find Person repositories");
+            throw new ApiRepositoryException("Server ERROR - impossible to find Person repository");
         }
     }
 
