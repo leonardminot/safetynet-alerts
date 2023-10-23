@@ -18,7 +18,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("firestation")
-@Slf4j
 @Tag(name = "Fire Station Coverage",
         description = """
      This controller provides an endpoint to retrieve a list of individuals covered by a fire station, as specified by a stationNumber parameter. The coverage list includes the first name, last name, address, and phone number of each individual, and counts of adults and children in the serviced area.
@@ -45,7 +44,6 @@ public class FireStationCoverageController {
     )
     @GetMapping
     public FirestationStationNumberDTO getPersonCoverage(@RequestParam String stationNumber) {
-        log.info("New Request : GET /firestation?stationNumber=" + stationNumber);
         List<PersonsCoveredByFirestationDTO> personsCoveredByFirestationDTOS = fireStationCoverageService.findPersonsCoveredByFirestation(stationNumber);
         long totalOfAdults = fireStationCoverageService.getTotalAdults(stationNumber);
         long totalOfChildren = fireStationCoverageService.getTotalChildren(stationNumber);
@@ -55,10 +53,6 @@ public class FireStationCoverageController {
                 totalOfChildren,
                 personsCoveredByFirestationDTOS
         );
-
-        log.info(String.format("GET /firestation?stationNumber=%s - Success: request return with body %s",
-                stationNumber,
-                responseBody));
         return responseBody;
     }
 }

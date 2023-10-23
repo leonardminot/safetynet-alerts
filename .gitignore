@@ -7,6 +7,7 @@ src/test/java/com/safetynet/safetynetalerts/mockressources/*.json
 TestRequest.http
 .idea/httpRequests
 IT_HTTP_REQUEST.http
+log
 
 ### STS ###
 .apt_generated
