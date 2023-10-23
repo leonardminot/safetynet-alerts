@@ -6,7 +6,6 @@ import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,9 +36,7 @@ public class MedicalRecordService {
 
     private void throwIfPersonIsUnknown(MedicalRecord medicalRecord) {
         Optional<Person> optionalPerson = personRepository.selectPersonByName(medicalRecord.firstName(), medicalRecord.lastName());
-        optionalPerson.orElseThrow(() -> {
-                    return new ApiNotFoundException(messService.postErrorPersonNotFoundLogMess(medicalRecord));
-                }
+        optionalPerson.orElseThrow(() -> new ApiNotFoundException(messService.postErrorPersonNotFoundLogMess(medicalRecord))
         );
     }
 
@@ -64,9 +61,7 @@ public class MedicalRecordService {
 
     private void throwIfMedicalRecordIsNotFound(MedicalRecord medicalRecord, String logMessage) {
         Optional<MedicalRecord> optionalMedicalRecord = medicalRecordRepository.selectMedicalRecordByName(medicalRecord.firstName(), medicalRecord.lastName());
-        optionalMedicalRecord.orElseThrow(() -> {
-            return new ApiNotFoundException(logMessage);
-        });
+        optionalMedicalRecord.orElseThrow(() -> new ApiNotFoundException(logMessage));
     }
 
     public void delete(MedicalRecord medicalRecord) {

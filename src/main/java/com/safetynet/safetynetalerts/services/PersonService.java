@@ -5,7 +5,6 @@ import com.safetynet.safetynetalerts.exception.ApiResourceException;
 import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,9 +45,7 @@ public class PersonService {
 
     private void throwIfPersonNotFound(Person person, String logMessage) {
         Optional<Person> personInDB = personRepository.selectPersonByName(person.firstName(), person.lastName());
-        personInDB.orElseThrow(() -> {
-            return new ApiNotFoundException(logMessage);
-        });
+        personInDB.orElseThrow(() -> new ApiNotFoundException(logMessage));
     }
 
     public List<Person> persons() {
