@@ -47,7 +47,6 @@ public class FireStationController {
     )
     @PostMapping
     void createNewMapping(@RequestBody @Valid Firestation firestation) {
-        log.info("New request : POST /firestation - Body : " + firestation);
         fireStationService.createMapping(firestation);
     }
 
@@ -69,7 +68,6 @@ public class FireStationController {
     )
     @PutMapping
     void updateMapping(@RequestBody @Valid Firestation firestation) {
-        log.info("New request : PUT /firestation - Body : " + firestation);
         fireStationService.updateMapping(firestation);
     }
 
@@ -93,7 +91,6 @@ public class FireStationController {
     )
     @DeleteMapping
     void deleteMapping(@RequestBody @Valid Firestation firestation) {
-        log.info("New request : DELETE /firestation - Body : " + firestation);
         fireStationService.deleteMapping(firestation);
     }
 
@@ -115,7 +112,6 @@ public class FireStationController {
     )
     @DeleteMapping("/{stationNumber}")
     void deleteStationNumber(@PathVariable String stationNumber) {
-        log.info("New request : DELETE /firestation - All station number (request param): " + stationNumber);
         fireStationService.deleteStation(stationNumber);
     }
 }

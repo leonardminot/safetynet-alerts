@@ -5,7 +5,6 @@ import com.safetynet.safetynetalerts.services.PersonInfoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +15,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("personInfo")
-@Slf4j
 @Tag(name = "Person Information",
         description = """
         This controller provides an endpoint for retrieving the name, address, age, email, and medical history (medication, dosage, allergies) of a resident. The resident is identified by their firstName and lastName, which are mandatory request parameters.
@@ -43,7 +41,6 @@ This endpoint, based on the mandatory firstName and lastName parameters, provide
     )
     @GetMapping
     private List<PersonInfoDTO> getPersonInfo(@RequestParam String firstName, @RequestParam String lastName) {
-        log.info("New request: GET /personInfo?firstName=" + firstName + "&lastName=" + lastName);
         return personInfoService.getPersonInfo(firstName, lastName);
     }
 }

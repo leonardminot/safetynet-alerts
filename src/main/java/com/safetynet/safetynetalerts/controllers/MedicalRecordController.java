@@ -6,12 +6,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("medicalRecord")
-@Slf4j
 @Tag(name = "Medical Records",
         description = """
     This controller provides endpoints for managing 'MedicalRecords' entities in the application.
@@ -45,7 +43,6 @@ public class MedicalRecordController {
     )
     @PostMapping
     public void createMedicalRecord(@RequestBody @Valid MedicalRecord medicalRecord) {
-        log.info("New request : POST /medicalRecord - Body : " + medicalRecord);
         medicalRecordService.createRecord(medicalRecord);
     }
 
@@ -65,7 +62,6 @@ public class MedicalRecordController {
     )
     @PutMapping
     public void updateMedicalRecord(@RequestBody @Valid MedicalRecord medicalRecord) {
-        log.info("New request : PUT /medicalRecord - Body : " + medicalRecord);
         medicalRecordService.update(medicalRecord);
     }
 
@@ -89,7 +85,6 @@ public class MedicalRecordController {
     )
     @DeleteMapping
     public void deleteMedicalRecord(@RequestBody @Valid MedicalRecord medicalRecord) {
-        log.info("New request : DELETE /medicalRecord - Body : " + medicalRecord);
         medicalRecordService.delete(medicalRecord);
     }
 }

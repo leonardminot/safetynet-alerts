@@ -5,7 +5,6 @@ import com.safetynet.safetynetalerts.services.ChildAlertService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +15,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("childAlert")
-@Slf4j
 @Tag(name = "Child Alert",
         description = """
     This controller provides an endpoint to get a list of children living at a given address. All household members are also returned.
@@ -44,7 +42,6 @@ public class ChildAlertController {
     )
     @GetMapping
     List<ChildAlertDTO> getChildAlert(@RequestParam String address) {
-        log.info("New request : GET /childAlert?address=" + address);
         return childAlertService.getChildAlertAtAddress(address);
     }
 }

@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +14,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("person")
-@Slf4j
 @Tag(name = "Person",
         description = "This controller provides endpoints for managing 'Person' entities in the application. Persons are uniquely identified by the combination of 'firstName' and 'lastName'.")
 public class PersonController {
@@ -47,7 +45,6 @@ public class PersonController {
     )
     @PostMapping
     void createNewPerson(@RequestBody @Valid Person person) {
-        log.info("New request : POST /person - Body : " + person);
         personService.createPerson(person);
     }
 
@@ -67,7 +64,6 @@ public class PersonController {
     )
     @PutMapping
     void updatePerson(@RequestBody @Valid Person person) {
-        log.info("New request : PUT /person - Body : " + person);
         personService.updatePerson(person);
     }
 
@@ -92,7 +88,6 @@ public class PersonController {
     )
     @DeleteMapping
     void deletePerson(@RequestBody @Valid Person person) {
-        log.info("New request : DELETE /person - Body : " + person);
         personService.delete(person);
     }
 
