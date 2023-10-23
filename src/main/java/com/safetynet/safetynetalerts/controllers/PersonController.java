@@ -28,7 +28,11 @@ public class PersonController {
     }
 
     @Operation(
-            description = "This endpoint accepts a 'Person' entity data as a request body. It attempts to create and save a new 'Person' entity in the application. The 'Person' is uniquely identified by the combination of 'firstName' and 'lastName'. The creation operation **would fail** if a 'Person' with the same 'firstName' and 'lastName' already exists.",
+            description = """
+                    This endpoint accepts a 'Person' entity data as a request body.\s
+                    It attempts to create and save a new 'Person' entity in the application.\s
+                    The 'Person' is uniquely identified by the combination of 'firstName' and 'lastName'.
+                    The creation operation **would fail** if a 'Person' with the same 'firstName' and 'lastName' already exists.""",
             summary = "Attempts to create and stores a new 'Person' entity in the application database.",
             responses = {
                     @ApiResponse(

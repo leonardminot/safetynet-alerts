@@ -182,4 +182,12 @@
   "zip" : "97451",
   "phone" : "841-874-7458",
   "email" : "gramps@email.com"
-}]
+}, {
+  "firstName" : "Léonard",
+  "lastName" : "Minot",
+  "address" : "10 route du fief de Migné",
+  "city" : "Saint-Varent",
+  "zip" : "79330",
+  "phone" : "0648177989",
+  "email" : "leonard.minot@gadz.org"
+} ]

@@ -10,7 +10,8 @@ import java.util.List;
 public record MedicalRecord(
         @NotBlank String firstName,
         @NotBlank String lastName,
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy") @Schema(description = "Birthdate (in American format: mm/dd/yyyy)",
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
+        @Schema(description = "Birthdate (in American format: mm/dd/yyyy)",
                 example = "01/31/1990") LocalDate birthdate,
         List<String> medications,
         List<String> allergies
