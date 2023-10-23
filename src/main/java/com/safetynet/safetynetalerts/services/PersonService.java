@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Slf4j
 public class PersonService {
 
     private final PersonRepository personRepository;
@@ -31,13 +30,11 @@ public class PersonService {
     public void createPerson(Person person) {
         throwIfPersonExists(person);
         personRepository.savePerson(person);
-        log.info(messageService.postSuccessLogMess(person));
     }
 
     private void throwIfPersonExists(Person person) {
         Optional<Person> personInDB = personRepository.selectPersonByName(person.firstName(), person.lastName());
         personInDB.ifPresent(p -> {
-            log.error(messageService.postErrorPersonExistsLogMess(person));
             throw new ApiResourceException(messageService.postErrorPersonExistsLogMess(person));
         });
     }
@@ -45,13 +42,11 @@ public class PersonService {
     public void updatePerson(Person person) {
         throwIfPersonNotFound(person, messageService.putErrorPersonExistsLogMess(person));
         personRepository.update(person);
-        log.info(messageService.putSuccessLogMess(person));
     }
 
     private void throwIfPersonNotFound(Person person, String logMessage) {
         Optional<Person> personInDB = personRepository.selectPersonByName(person.firstName(), person.lastName());
         personInDB.orElseThrow(() -> {
-            log.error(logMessage);
             return new ApiNotFoundException(logMessage);
         });
     }
@@ -63,16 +58,11 @@ public class PersonService {
     public void delete(Person personToDelete) {
         throwIfPersonNotFound(personToDelete, messageService.deleteErrorNoPersonFoundLogMess(personToDelete));
         personRepository.delete(personToDelete);
-        log.info(messageService.deleteSuccessLogMess(personToDelete));
         deleteAssociatedMedicalRecordIfPresent(personToDelete);
     }
 
     private void deleteAssociatedMedicalRecordIfPresent(Person personToDelete) {
         medicalRecordRepository.selectMedicalRecordByName(personToDelete.firstName(), personToDelete.lastName())
-                .ifPresentOrElse((mr) -> {
-                            medicalRecordRepository.delete(mr);
-                            log.info(messageService.deleteMedicalRecordIsPresent(personToDelete));
-                        },
-                        () -> log.info(messageService.deleteMedicalRecordIsNotPresent(personToDelete)));
+                .ifPresent(medicalRecordRepository::delete);
     }
 }

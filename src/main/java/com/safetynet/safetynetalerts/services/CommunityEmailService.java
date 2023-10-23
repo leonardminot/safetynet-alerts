@@ -21,16 +21,10 @@ public class CommunityEmailService {
 
     public List<String> getEmail(String city) {
         List<Person> persons = personRepository.getPersons();
-        List<String> responseBody = persons.stream()
+        return persons.stream()
                 .filter(person -> person.city().equals(city))
                 .map(Person::email)
                 .distinct()
                 .toList();
-        log.info(String.format(
-                "GET /communityEmail?city=%s - Success: request return with body [%s]",
-                city,
-                responseBody
-        ));
-        return responseBody;
     }
 }

@@ -21,7 +21,6 @@ public class ChildAlertService {
 
     private final PersonRepository personRepository;
     private final MedicalRecordRepository medicalRecordRepository;
-    private final ChildAlertMessageService childAlertMessageService = new ChildAlertMessageService();
 
     private final AgeCalculationService ageCalculationService;
 
@@ -41,9 +40,7 @@ public class ChildAlertService {
 
     public List<ChildAlertDTO> getChildAlertAtAddress(String alertAddress) {
         getResourcesFromRepositories();
-        List<ChildAlertDTO> listOfChildrenAtAddress = getChildrenInAlertAddress(alertAddress);
-        log.info(childAlertMessageService.getSuccessChildAlertLogMess(alertAddress, listOfChildrenAtAddress));
-        return listOfChildrenAtAddress;
+        return getChildrenInAlertAddress(alertAddress);
     }
 
     private void getResourcesFromRepositories() {

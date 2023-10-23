@@ -19,30 +19,25 @@ import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getAllergies
 import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getMedications;
 
 @Service
-@Slf4j
 public class FloodAlertService {
 
     private final PersonRepository personRepository;
     private final FirestationRepository firestationRepository;
     private final MedicalRecordRepository medicalRecordRepository;
-    private final FloodAlertMessageService floodAlertMessageService;
     private final AgeCalculationService ageCalculationService;
 
     @Autowired
-    public FloodAlertService(PersonRepository personRepository, FirestationRepository firestationRepository, MedicalRecordRepository medicalRecordRepository, FloodAlertMessageService floodAlertMessageService, AgeCalculationService ageCalculationService) {
+    public FloodAlertService(PersonRepository personRepository, FirestationRepository firestationRepository, MedicalRecordRepository medicalRecordRepository, AgeCalculationService ageCalculationService) {
         this.personRepository = personRepository;
         this.firestationRepository = firestationRepository;
         this.medicalRecordRepository = medicalRecordRepository;
-        this.floodAlertMessageService = floodAlertMessageService;
         this.ageCalculationService = ageCalculationService;
     }
 
     public List<FloodAlertDTO> getFloodAlert(List<String> stationsAlert) {
-        List<FloodAlertDTO> responseBody = stationsAlert.stream()
+        return stationsAlert.stream()
                 .map(this::generateFloodAlertForGivenFireStation)
                 .toList();
-        log.info(floodAlertMessageService.getSuccessFloodAlertLogMess(stationsAlert, responseBody));
-        return responseBody;
     }
 
     public FloodAlertDTO generateFloodAlertForGivenFireStation(String stationNumber) {

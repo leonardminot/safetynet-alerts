@@ -14,7 +14,6 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
-@Slf4j
 public class MedicalRecordService {
 
     private final MedicalRecordMessageService messService;
@@ -34,13 +33,11 @@ public class MedicalRecordService {
         throwIfBirthdateInTheFuture(medicalRecord);
         throwIfPersonIsUnknown(medicalRecord);
         medicalRecordRepository.saveRecord(medicalRecord);
-        log.info(messService.postSuccessLogMess(medicalRecord));
     }
 
     private void throwIfPersonIsUnknown(MedicalRecord medicalRecord) {
         Optional<Person> optionalPerson = personRepository.selectPersonByName(medicalRecord.firstName(), medicalRecord.lastName());
         optionalPerson.orElseThrow(() -> {
-                    log.error(messService.postErrorPersonNotFoundLogMess(medicalRecord));
                     return new ApiNotFoundException(messService.postErrorPersonNotFoundLogMess(medicalRecord));
                 }
         );
@@ -48,7 +45,6 @@ public class MedicalRecordService {
 
     private void throwIfBirthdateInTheFuture(MedicalRecord medicalRecord) {
         if (medicalRecord.birthdate().isAfter(LocalDate.now())) {
-            log.error(messService.postErrorBirthdateInFutureLogMess(medicalRecord));
             throw new ApiResourceException(messService.postErrorBirthdateInFutureLogMess(medicalRecord));
         }
 
@@ -57,7 +53,6 @@ public class MedicalRecordService {
     private void throwIfMedicalRecordIsPresent(MedicalRecord medicalRecord) {
         Optional<MedicalRecord> optionalMedicalRecord = medicalRecordRepository.selectMedicalRecordByName(medicalRecord.firstName(), medicalRecord.lastName());
         optionalMedicalRecord.ifPresent((mr) -> {
-            log.error(messService.postErrorMedicalRecordExistsLog(medicalRecord));
             throw new ApiResourceException(messService.postErrorMedicalRecordExistsLog(medicalRecord));
         });
     }
@@ -65,13 +60,11 @@ public class MedicalRecordService {
     public void update(MedicalRecord medicalRecord) {
         throwIfMedicalRecordIsNotFound(medicalRecord, messService.putErrorNoMedRecordLog(medicalRecord));
         medicalRecordRepository.update(medicalRecord);
-        log.info(messService.putSuccessLog(medicalRecord));
     }
 
     private void throwIfMedicalRecordIsNotFound(MedicalRecord medicalRecord, String logMessage) {
         Optional<MedicalRecord> optionalMedicalRecord = medicalRecordRepository.selectMedicalRecordByName(medicalRecord.firstName(), medicalRecord.lastName());
         optionalMedicalRecord.orElseThrow(() -> {
-            log.error(logMessage);
             return new ApiNotFoundException(logMessage);
         });
     }
@@ -79,6 +72,5 @@ public class MedicalRecordService {
     public void delete(MedicalRecord medicalRecord) {
         throwIfMedicalRecordIsNotFound(medicalRecord, messService.deleteErrorNoMedRecordLogMess(medicalRecord));
         medicalRecordRepository.delete(medicalRecord);
-        log.info(messService.deleteSuccessLogMess(medicalRecord));
     }
 }

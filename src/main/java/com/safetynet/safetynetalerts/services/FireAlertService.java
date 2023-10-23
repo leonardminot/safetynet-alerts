@@ -18,13 +18,11 @@ import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getAllergies
 import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getMedications;
 
 @Service
-@Slf4j
 public class FireAlertService {
     private final PersonRepository personRepository;
     private final FirestationRepository firestationRepository;
     private final MedicalRecordRepository medicalRecordRepository;
     private final AgeCalculationService ageCalculationService;
-    private final FireAlertMessageService fireAlertMessageService = new FireAlertMessageService();
 
     private List<Person> persons;
     private List<Firestation> firestations;
@@ -45,9 +43,7 @@ public class FireAlertService {
     public FireAlertDTO getFireAlert(String address) {
         getResourcesFromRepositories();
         List<PersonEmergencyInformationDTO> listOfResidentsAtFireLocation = getPersonsAtAddress(address);
-        FireAlertDTO fireAlert = new FireAlertDTO(getStationNumberAtAddress(address), listOfResidentsAtFireLocation);
-        log.info(fireAlertMessageService.getSuccessFireAlertLogMess(address, fireAlert));
-        return fireAlert;
+        return new FireAlertDTO(getStationNumberAtAddress(address), listOfResidentsAtFireLocation);
     }
 
     private void getResourcesFromRepositories() {

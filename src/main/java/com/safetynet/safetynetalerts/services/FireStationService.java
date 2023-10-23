@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-@Slf4j
 public class FireStationService {
 
     private final FirestationRepository firestationRepository;
@@ -25,20 +24,17 @@ public class FireStationService {
         throwIfFirestationExists(firestation);
         throwIfAddressHasAStation(firestation);
         firestationRepository.createMapping(firestation);
-        log.info(fsMessageService.postSuccessLogMessage(firestation));
     }
 
     private void throwIfAddressHasAStation(Firestation firestation) {
         Boolean isAddressExist = firestationRepository.isAddressExist(firestation);
         if (isAddressExist) {
-            log.error(fsMessageService.postErrorAddressHasStationLogMess(firestation));
             throw new ApiResourceException(fsMessageService.postErrorAddressHasStationLogMess(firestation));
         }
     }
 
     private void throwIfFirestationExists(Firestation firestation) {
         firestationRepository.isMappingExist(firestation).ifPresent((fs) -> {
-                    log.error(fsMessageService.postErrorFirestationFoundLogMess(firestation));
                     throw new ApiResourceException(fsMessageService.postErrorFirestationFoundLogMess(firestation));
                 }
         );
@@ -47,20 +43,17 @@ public class FireStationService {
     public void updateMapping(Firestation firestation) {
         throwIfUnknownAddress(firestation, fsMessageService.putErrorFirestationNotFoundLogMess(firestation));
         firestationRepository.updateMapping(firestation);
-        log.info(fsMessageService.putSuccessLogMess(firestation));
     }
 
     private void throwIfUnknownAddress(Firestation firestation, String logMessage) {
         boolean isAddressExists = firestationRepository.isAddressExist(firestation);
         if (!isAddressExists) {
-            log.error(logMessage);
             throw new ApiNotFoundException(logMessage);
         }
     }
 
     public void deleteMapping(Firestation firestation) {
         throwIfUnknownAddress(firestation, fsMessageService.deleteErrorFirestationNotFoundLogMess(firestation));
-        log.info(fsMessageService.deleteSuccessLogMess(firestation));
         firestationRepository.deleteMapping(firestation);
     }
 
@@ -74,14 +67,12 @@ public class FireStationService {
 
     public void deleteStation(String stationNumber) {
         throwIfUnknownStationNumber(stationNumber);
-        log.info(fsMessageService.deleteAllStationsSuccessLogMess(stationNumber));
         firestationRepository.deleteStation(stationNumber);
     }
 
     private void throwIfUnknownStationNumber(String stationNumber) {
         boolean isStationExists = firestationRepository.isStationExists(stationNumber);
         if (!isStationExists) {
-            log.error(fsMessageService.deleteErrorStationNumberNotFoundLogMess(stationNumber));
             throw new ApiNotFoundException(fsMessageService.deleteErrorStationNumberNotFoundLogMess(stationNumber));
         }
     }

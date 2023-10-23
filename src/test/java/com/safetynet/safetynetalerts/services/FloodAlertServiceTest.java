@@ -41,7 +41,7 @@ public class FloodAlertServiceTest {
     void setUp() {
         TodayDateService todayDateService = new TodayDateService();
         AgeCalculationService ageCalculationService = new AgeCalculationService(medicalRecordRepository, todayDateService);
-        floodAlertService = new FloodAlertService(personRepository, firestationRepository, medicalRecordRepository, new FloodAlertMessageService(), ageCalculationService);
+        floodAlertService = new FloodAlertService(personRepository, firestationRepository, medicalRecordRepository, ageCalculationService);
 
     }
 

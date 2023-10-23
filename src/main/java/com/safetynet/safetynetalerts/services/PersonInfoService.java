@@ -14,7 +14,6 @@ import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getAllergies
 import static com.safetynet.safetynetalerts.utils.GetMedicalHistory.getMedications;
 
 @Service
-@Slf4j
 public class PersonInfoService {
 
     private final PersonRepository personRepository;
@@ -34,7 +33,6 @@ public class PersonInfoService {
                 .filter(person -> person.firstName().equals(firstName) && person.lastName().equals(lastName))
                 .map(this::getPersonInfoDTO)
                 .toList();
-        log.info(getSuccessPersonInfoLogMess(firstName, lastName, responseBody));
         return responseBody;
     }
 

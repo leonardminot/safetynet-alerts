@@ -8,22 +8,15 @@ public class MedicalRecordMessageService {
     public MedicalRecordMessageService() {
     }
 
-    String postSuccessLogMess(MedicalRecord medicalRecord) {
-        return String.format("POST /medicalRecord - Payload: [%s] - Success: Medical record for [%s %s] successfully registered",
-                medicalRecord,
-                medicalRecord.firstName(),
-                medicalRecord.lastName());
-    }
-
     String postErrorPersonNotFoundLogMess(MedicalRecord medicalRecord) {
-        return String.format("POST /medicalRecord - Payload: [%s] - Error: Person with name [%s %s] does not exist",
+        return String.format("Impossible to create: [%s] - Error: Person with name [%s %s] does not exist",
                 medicalRecord,
                 medicalRecord.firstName(),
                 medicalRecord.lastName());
     }
 
     String postErrorBirthdateInFutureLogMess(MedicalRecord medicalRecord) {
-        return String.format("POST /medicalRecord - Payload [%s] - Error: Birthdate for [%s %s] is in the future: [%s]",
+        return String.format("Impossible to create: [%s] - Error: Birthdate for [%s %s] is in the future: [%s]",
                 medicalRecord,
                 medicalRecord.firstName(),
                 medicalRecord.lastName(),
@@ -31,35 +24,21 @@ public class MedicalRecordMessageService {
     }
 
     String postErrorMedicalRecordExistsLog(MedicalRecord medicalRecord) {
-        return String.format("POST /medicalRecord - Payload: [%s] - Error: Medical record for [%s %s] already exists",
-                medicalRecord,
-                medicalRecord.firstName(),
-                medicalRecord.lastName());
-    }
-
-    String putSuccessLog(MedicalRecord medicalRecord) {
-        return String.format("PUT /medicalRecord - Payload: [%s] - Success: Medical Record for [%s %s] successfully updated",
+        return String.format("Impossible to create: [%s] - Error: Medical record for [%s %s] already exists",
                 medicalRecord,
                 medicalRecord.firstName(),
                 medicalRecord.lastName());
     }
 
     String putErrorNoMedRecordLog(MedicalRecord medicalRecord) {
-        return String.format("PUT /medicalRecord - Payload: [%s] - Error: Medical Record for [%s %s] does not exist",
-                medicalRecord,
-                medicalRecord.firstName(),
-                medicalRecord.lastName());
-    }
-
-    String deleteSuccessLogMess(MedicalRecord medicalRecord) {
-        return String.format("DELETE /medicalRecord - Payload: [%s] - Success: Medical Record for [%s %s] successfully deleted",
+        return String.format("Impossible to update: [%s] - Error: Medical Record for [%s %s] does not exist",
                 medicalRecord,
                 medicalRecord.firstName(),
                 medicalRecord.lastName());
     }
 
     String deleteErrorNoMedRecordLogMess(MedicalRecord medicalRecord) {
-        return String.format("DELETE /medicalRecord - Payload: [%s] - Error: Medical Record for [%s %s] does not exist",
+        return String.format("Impossible to delete: [%s] - Error: Medical Record for [%s %s] does not exist",
                 medicalRecord,
                 medicalRecord.firstName(),
                 medicalRecord.lastName());

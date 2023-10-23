@@ -14,12 +14,10 @@ import java.util.Objects;
 import static com.safetynet.safetynetalerts.utils.AddressesResearch.getCoveredAddressesByFireStationNumber;
 
 @Service
-@Slf4j
 public class PhoneAlertService {
 
     private final PersonRepository personRepository;
     private final FirestationRepository firestationRepository;
-    private final PhoneAlertMessageService phoneAlertMessageService = new PhoneAlertMessageService();
 
     @Autowired
     public PhoneAlertService(PersonRepository personRepository, FirestationRepository firestationRepository) {
@@ -32,15 +30,11 @@ public class PhoneAlertService {
 
         List<String> addresses = getCoveredAddressesByFireStationNumber(firestations, stationNumber);
 
-        List<String> phoneNumbersForFireStation = persons.stream()
+        return persons.stream()
                 .filter(person -> addresses.contains(person.address()))
                 .map(Person::phone)
                 .filter(Objects::nonNull)
                 .distinct()
                 .toList();
-
-
-        log.info(phoneAlertMessageService.getSuccessPhoneAlertLogMess(stationNumber, phoneNumbersForFireStation));
-        return phoneNumbersForFireStation;
     }
 }
