@@ -50,7 +50,7 @@ public class MedicalRecordsMockedData {
         return new MedicalRecord(
                 "mini-Maxime",
                 "mini-Vachier-Lagrave",
-                LocalDate.parse("2019-10-21"),
+                LocalDate.parse("2020-10-21"),
                 List.of(),
                 List.of("Shellfish")
         );
@@ -70,7 +70,7 @@ public class MedicalRecordsMockedData {
         return new MedicalRecord(
                 "Maxime",
                 "Vachier-Lagrave",
-                LocalDate.parse("1990-10-21"),
+                LocalDate.parse("1991-10-21"),
                 List.of("aznol:350mg", "hydrapermazol:100mg"),
                 List.of()
         );
