@@ -98,7 +98,7 @@ class PersonServiceTest {
         assertThatThrownBy(() -> personService.createPerson(person))
                 .isInstanceOf(ApiResourceException.class)
                 .hasMessageContaining(
-                        String.format("POST /person - Payload: [%s] - Error: Person with name [%s %s] already exists",
+                        String.format("Impossible to create: [%s] - Error: Person with name [%s %s] already exists",
                                 person,
                                 person.firstName(),
                                 person.lastName()));
@@ -153,7 +153,7 @@ class PersonServiceTest {
         // Then
         assertThatThrownBy(() -> personService.updatePerson(personThatDoesntExist))
                 .isInstanceOf(ApiNotFoundException.class)
-                .hasMessageContaining(String.format("PUT /person - Payload: [%s] - Error: Person with name [%s %s] does not exist",
+                .hasMessageContaining(String.format("Impossible to update: [%s] - Error: Person with name [%s %s] does not exist",
                         personThatDoesntExist,
                         personThatDoesntExist.firstName(),
                         personThatDoesntExist.lastName()));
@@ -258,7 +258,7 @@ class PersonServiceTest {
         // Then
         assertThatThrownBy(() -> personService.delete(personThatDoesntExist))
                 .isInstanceOf(ApiNotFoundException.class)
-                .hasMessageContaining(String.format("DELETE /person - Payload: [%s] - Error: Person with name [%s %s] does not exist",
+                .hasMessageContaining(String.format("Impossible to delete: [%s] - Error: Person with name [%s %s] does not exist",
                         personThatDoesntExist,
                         personThatDoesntExist.firstName(),
                         personThatDoesntExist.lastName()));

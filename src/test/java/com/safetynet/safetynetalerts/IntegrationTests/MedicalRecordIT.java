@@ -117,7 +117,7 @@ public class MedicalRecordIT {
 
         resultActions.andExpect(status().is4xxClientError());
         assertThat(contentAsString).contains(
-                String.format("POST /medicalRecord - Payload: [%s] - Error: Person with name [%s %s] does not exist",
+                String.format("Impossible to create: [%s] - Error: Person with name [%s %s] does not exist",
                         unknownPersonMedicalRecord,
                         unknownPersonMedicalRecord.firstName(),
                         unknownPersonMedicalRecord.lastName()));
@@ -193,7 +193,7 @@ public class MedicalRecordIT {
 
         resultActions.andExpect(status().is4xxClientError());
         assertThat(contentAsString).contains(
-                String.format("PUT /medicalRecord - Payload: [%s] - Error: Medical Record for [%s %s] does not exist",
+                String.format("Impossible to update: [%s] - Error: Medical Record for [%s %s] does not exist",
                         unknownPersonMedicalRecord,
                         unknownPersonMedicalRecord.firstName(),
                         unknownPersonMedicalRecord.lastName()));
@@ -248,7 +248,7 @@ public class MedicalRecordIT {
 
         resultActions.andExpect(status().is4xxClientError());
         assertThat(contentAsString).contains(
-                String.format("DELETE /medicalRecord - Payload: [%s] - Error: Medical Record for [%s %s] does not exist",
+                String.format("Impossible to delete: [%s] - Error: Medical Record for [%s %s] does not exist",
                         unknownPersonMedicalRecord,
                         unknownPersonMedicalRecord.firstName(),
                         unknownPersonMedicalRecord.lastName()));

@@ -71,7 +71,7 @@ class FireStationServiceTest {
         assertThatThrownBy(() -> fireStationService.createMapping(rueDeLaDame))
                 .isInstanceOf(ApiResourceException.class)
                 .hasMessageContaining(
-                        String.format("POST /firestation - Payload: [%s] - Error: Firestation number [%s] for address [%s] already exists",
+                        String.format("Impossible to create: [%s] - Error: Firestation number [%s] for address [%s] already exists",
                                 rueDeLaDame,
                                 rueDeLaDame.station(),
                                 rueDeLaDame.address()));
@@ -96,7 +96,7 @@ class FireStationServiceTest {
         assertThatThrownBy(() -> fireStationService.createMapping(rueDeLaDame))
                 .isInstanceOf(ApiResourceException.class)
                 .hasMessageContaining(
-                        String.format("POST /firestation - Payload: [%s] - Error: A Firestation for address [%s] already exists",
+                        String.format("Impossible to create: [%s] - Error: A Firestation for address [%s] already exists",
                                 rueDeLaDame,
                                 rueDeLaDame.address())
                 );
@@ -137,7 +137,7 @@ class FireStationServiceTest {
         // Then
         assertThatThrownBy(() -> fireStationService.updateMapping(unknownAddress))
                 .isInstanceOf(ApiNotFoundException.class)
-                .hasMessageContaining(String.format("PUT /firestation - Payload: [%s] - Error: No firestation found at address [%s]",
+                .hasMessageContaining(String.format("Impossible to update: [%s] - Error: No firestation found at address [%s]",
                         unknownAddress,
                         unknownAddress.address()));
         then(firestationRepository).should(never()).updateMapping(any(Firestation.class));
@@ -192,7 +192,7 @@ class FireStationServiceTest {
         assertThatThrownBy(() -> fireStationService.deleteMapping(unknownAddress))
                 .isInstanceOf(ApiNotFoundException.class)
                 .hasMessageContaining(
-                        String.format("DELETE /firestation - Payload: [%s] - Error: No firestation found at address [%s]",
+                        String.format("Impossible to delete: [%s] - Error: No firestation found at address [%s]",
                                 unknownAddress,
                                 unknownAddress.address()));
         then(firestationRepository).should(never()).deleteMapping(any(Firestation.class));
@@ -223,7 +223,7 @@ class FireStationServiceTest {
         assertThatThrownBy(() -> fireStationService.deleteStation(unknownStationNumber))
                 .isInstanceOf(ApiNotFoundException.class)
                 .hasMessageContaining(
-                        String.format("DELETE /firestation - Payload: {\"station\":\"%s\"} - Error: No firestations found associated with station number %s",
+                        String.format("Impossible to delete: {\"station\":\"%s\"} - Error: No firestations found associated with station number %s",
                                 unknownStationNumber,
                                 unknownStationNumber)
                 );

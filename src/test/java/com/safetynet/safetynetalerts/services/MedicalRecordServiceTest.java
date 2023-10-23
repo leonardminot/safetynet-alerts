@@ -98,7 +98,7 @@ class MedicalRecordServiceTest {
         assertThatThrownBy(() -> medicalRecordService.createRecord(unknownPersonMedicalRecord))
                 .isInstanceOf(ApiNotFoundException.class)
                 .hasMessageContaining(
-                        String.format("POST /medicalRecord - Payload: [%s] - Error: Person with name [%s %s] does not exist",
+                        String.format("Impossible to create: [%s] - Error: Person with name [%s %s] does not exist",
                                 unknownPersonMedicalRecord,
                                 unknownPersonMedicalRecord.firstName(),
                                 unknownPersonMedicalRecord.lastName())
@@ -119,7 +119,7 @@ class MedicalRecordServiceTest {
         assertThatThrownBy(() -> medicalRecordService.createRecord(currentRecord))
                 .isInstanceOf(ApiResourceException.class)
                 .hasMessageContaining(
-                        String.format("POST /medicalRecord - Payload: [%s] - Error: Medical record for [%s %s] already exists",
+                        String.format("Impossible to create: [%s] - Error: Medical record for [%s %s] already exists",
                                 currentRecord,
                                 currentRecord.firstName(),
                                 currentRecord.lastName())
@@ -144,7 +144,7 @@ class MedicalRecordServiceTest {
         assertThatThrownBy(() -> medicalRecordService.createRecord(medicalRecordWithBirthdateInFuture))
                 .isInstanceOf(ApiResourceException.class)
                 .hasMessageContaining(
-                        String.format("POST /medicalRecord - Payload [%s] - Error: Birthdate for [%s %s] is in the future: [%s]",
+                        String.format("Impossible to create: [%s] - Error: Birthdate for [%s %s] is in the future: [%s]",
                                 medicalRecordWithBirthdateInFuture,
                                 medicalRecordWithBirthdateInFuture.firstName(),
                                 medicalRecordWithBirthdateInFuture.lastName(),
@@ -198,7 +198,7 @@ class MedicalRecordServiceTest {
         assertThatThrownBy(() -> medicalRecordService.update(unknownPersonMedicalRecord))
                 .isInstanceOf(ApiNotFoundException.class)
                 .hasMessageContaining(
-                        String.format("PUT /medicalRecord - Payload: [%s] - Error: Medical Record for [%s %s] does not exist",
+                        String.format("Impossible to update: [%s] - Error: Medical Record for [%s %s] does not exist",
                                 unknownPersonMedicalRecord,
                                 unknownPersonMedicalRecord.firstName(),
                                 unknownPersonMedicalRecord.lastName())
@@ -245,7 +245,7 @@ class MedicalRecordServiceTest {
         assertThatThrownBy(() -> medicalRecordService.delete(unknownPersonMedicalRecord))
                 .isInstanceOf(ApiNotFoundException.class)
                 .hasMessageContaining(
-                        String.format("DELETE /medicalRecord - Payload: [%s] - Error: Medical Record for [%s %s] does not exist",
+                        String.format("Impossible to delete: [%s] - Error: Medical Record for [%s %s] does not exist",
                                 unknownPersonMedicalRecord,
                                 unknownPersonMedicalRecord.firstName(),
                                 unknownPersonMedicalRecord.lastName())
