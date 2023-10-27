@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalerts.exception.ApiRepositoryException;
 import com.safetynet.safetynetalerts.models.Firestation;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,25 +27,14 @@ public class FirestationRepository {
     private final String filePath;
 
     private final ObjectMapper objectMapper;
+    @Getter
+    private List<Firestation> firestations;
 
     @Autowired
     public FirestationRepository(@Value("${safetynetalerts.jsonpath.firestations}") String filePath, ObjectMapper objectMapper) {
         this.filePath = filePath;
         this.objectMapper = objectMapper;
-    }
-
-    public List<Firestation> getFirestations() {
-        List<Firestation> firestations = new ArrayList<>();
-        try {
-            Path path = Paths.get(filePath);
-            if (Files.size(path) != 0)
-                firestations = objectMapper.readValue(path.toFile(), new TypeReference<>() {});
-
-        } catch (IOException e) {
-            log.error("Server ERROR - impossible to find Fire Station repository");
-            throw new ApiRepositoryException("Server ERROR - impossible to find Fire Station repository");
-        }
-        return firestations;
+        this.firestations = new ArrayList<>();
     }
 
     public void createMapping(Firestation firestation) {
@@ -87,7 +77,7 @@ public class FirestationRepository {
                         )
                         : fs)
                 .toList();
-        saveListToJson(updatedList);
+        saveInitialData(updatedList);
     }
 
     public Boolean isAddressExist(Firestation firestation) {
@@ -99,14 +89,14 @@ public class FirestationRepository {
         List<Firestation> updatedList = getFirestations().stream()
                 .filter(fs -> !fs.address().equals(firestation.address()))
                 .toList();
-        saveListToJson(updatedList);
+        saveInitialData(updatedList);
     }
 
     public void deleteStation(String stationNumber) {
         List<Firestation> updatedList = getFirestations().stream()
                 .filter(fs -> !fs.station().equals(stationNumber))
                 .toList();
-        saveListToJson(updatedList);
+        saveInitialData(updatedList);
     }
 
     public boolean isStationExists(String stationNumber) {
@@ -115,6 +105,6 @@ public class FirestationRepository {
     }
 
     public void saveInitialData(List<Firestation> firestationsToSave) {
-
+        this.firestations = firestationsToSave;
     }
 }

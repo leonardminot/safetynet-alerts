@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,11 +28,10 @@ class FirestationRepositoryTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        FireStationMockedData.createFirestationsMockedData(filePathMockFirestations);
-
         firestationRepository = new FirestationRepository(
                 filePathMockFirestations,
                 MyAppConfig.objectMapper());
+        firestationRepository.saveInitialData(FireStationMockedData.createFirestationsMockedDataList());
     }
 
     @AfterEach
@@ -56,7 +56,7 @@ class FirestationRepositoryTest {
         // Given
         List<Firestation> firestationList;
         // ... an empty json file
-        ManageMockedData.clearJsonFile(filePathMockFirestations);
+        firestationRepository.saveInitialData(new ArrayList<>());
 
         // When
         firestationList = firestationRepository.getFirestations();
@@ -215,20 +215,6 @@ class FirestationRepositoryTest {
     }
 
     @Test
-    void itShouldThrowWhenFileNotFound() {
-        // Given
-        FirestationRepository unknownFireStationRepository = new FirestationRepository(
-                "unknown/file/path",
-                MyAppConfig.objectMapper());
-
-        // When
-        // Then
-        assertThatThrownBy(unknownFireStationRepository::getFirestations)
-                .isInstanceOf(ApiRepositoryException.class)
-                .hasMessageContaining("Server ERROR - impossible to find Fire Station repository");
-    }
-
-    @Test
     void itShouldThrowWhenFileNotFoundDuringSave() {
         // Given
         // ... a list of fire station to save
@@ -248,5 +234,25 @@ class FirestationRepositoryTest {
         assertThatThrownBy(() -> unknownFireStationRepository.saveListToJson(persons))
                 .isInstanceOf(ApiRepositoryException.class)
                 .hasMessageContaining("Server ERROR - impossible to find Fire Station repository");
+    }
+
+    @Test
+    void itShouldSaveFirestationsInClassStorage() {
+        // Given
+        //... Clear datas for tests purpose
+        firestationRepository.saveInitialData(new ArrayList<>());
+
+        List<Firestation> givenFireStations = List.of(
+                new Firestation("1509 Culver St", "3"),
+                new Firestation("29 15th St", "2"),
+                new Firestation("834 Binoc Ave", "3")
+        );
+
+        // When
+        firestationRepository.saveInitialData(givenFireStations);
+
+        // Then
+        assertThat(firestationRepository.getFirestations()).isEqualTo(givenFireStations);
+
     }
 }

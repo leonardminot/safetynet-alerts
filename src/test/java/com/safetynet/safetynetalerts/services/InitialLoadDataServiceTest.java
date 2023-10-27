@@ -42,7 +42,7 @@ public class InitialLoadDataServiceTest {
     @BeforeEach
     void setUp() {
         initialLoadDataService = new InitialLoadDataService(
-                "src/test/java/com/safetynet/safetynetalerts/mockressources/mockdataset.json",
+                "src/test/java/com/safetynet/safetynetalerts/mockressources/initialmockdataset.json",
                 MyAppConfig.objectMapper(),
                 firestationRepository,
                 medicalRecordRepository,
