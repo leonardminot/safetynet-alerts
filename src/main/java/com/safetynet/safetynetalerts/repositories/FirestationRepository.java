@@ -1,39 +1,22 @@
 package com.safetynet.safetynetalerts.repositories;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.safetynetalerts.exception.ApiRepositoryException;
 import com.safetynet.safetynetalerts.models.Firestation;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Getter
 @Repository
 @Slf4j
 public class FirestationRepository {
 
-    private final String filePath;
-
-    private final ObjectMapper objectMapper;
-    @Getter
     private List<Firestation> firestations;
 
-    @Autowired
-    public FirestationRepository(@Value("${safetynetalerts.jsonpath.firestations}") String filePath, ObjectMapper objectMapper) {
-        this.filePath = filePath;
-        this.objectMapper = objectMapper;
+    public FirestationRepository() {
         this.firestations = new ArrayList<>();
     }
 
@@ -41,31 +24,13 @@ public class FirestationRepository {
         List<Firestation> firestations = getFirestations();
         firestations.add(firestation);
 
-        saveListToJson(firestations);
+        saveInitialData(firestations);
     }
 
     public Optional<Firestation> isMappingExist(Firestation firestation) {
         return getFirestations().stream()
                 .filter(fs -> fs.address().equals(firestation.address()) && fs.station().equals(firestation.station()))
                 .findAny();
-    }
-
-    public void saveListToJson(List<Firestation> firestations) {
-        try {
-            clearJsonFile();
-            fillJsonFile(firestations);
-        } catch (IOException e) {
-            log.error("Server ERROR - impossible to find Fire Station repository");
-            throw new ApiRepositoryException("Server ERROR - impossible to find Fire Station repository");
-        }
-    }
-
-    private void clearJsonFile() throws FileNotFoundException {
-        new PrintWriter(filePath).close();
-    }
-
-    private void fillJsonFile(List<Firestation> firestations) throws IOException {
-        objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(filePath).toFile(), firestations);
     }
 
     public void updateMapping(Firestation firestation) {

@@ -1,45 +1,28 @@
 package com.safetynet.safetynetalerts.repositories;
 
-import com.safetynet.safetynetalerts.configuration.MyAppConfig;
-import com.safetynet.safetynetalerts.exception.ApiRepositoryException;
-import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.mockressources.utils.PersonsMockedData;
-import com.safetynet.safetynetalerts.models.Firestation;
 import com.safetynet.safetynetalerts.models.Person;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Tag("UnitTest")
 class PersonRepositoryTest {
 
     private PersonRepository personRepository;
 
-    private final String filePathMockPersons = "src/test/java/com/safetynet/safetynetalerts/mockressources/mockpersons.json";
-
-
     @BeforeEach
-    void setUp() throws IOException {
-        personRepository = new PersonRepository(
-                filePathMockPersons,
-                MyAppConfig.objectMapper());
+    void setUp() {
+        personRepository = new PersonRepository();
         personRepository.saveInitialData(PersonsMockedData.createPersonMockedDataList());
     }
 
-    @AfterEach
-    void tearDown() throws FileNotFoundException {
-        ManageMockedData.clearJsonFile(filePathMockPersons);
-    }
 
     @Test
     void itShouldReturnSevenPersons() {
@@ -191,33 +174,6 @@ class PersonRepositoryTest {
                 .findFirst();
         assertThat(allPerson).hasSize(6);
         assertThat(maximeInDB).isNotPresent();
-    }
-
-    @Test
-    void itShouldThrowWhenFileNotFoundDuringSave() {
-        // Given
-        // ... a list of persons to save
-        Person person1 = new Person(
-                "Maxime",
-                "Vachier-Lagrave",
-                "1990 Rue de la Tour",
-                "Paris",
-                "75014",
-                "111-222-3333",
-                "maxime@email.com"
-        );
-
-        List<Person> persons = List.of(person1);
-
-        // ... unknown repository
-        PersonRepository unknownPersonRepository = new PersonRepository(
-                "unknown/file/path",
-                MyAppConfig.objectMapper());
-
-        // When
-        assertThatThrownBy(() -> unknownPersonRepository.saveListToJson(persons))
-                .isInstanceOf(ApiRepositoryException.class)
-                .hasMessageContaining("Server ERROR - impossible to find Person repository");
     }
 
     @Test

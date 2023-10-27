@@ -1,38 +1,23 @@
 package com.safetynet.safetynetalerts.repositories;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.safetynetalerts.exception.ApiRepositoryException;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
+@Getter
 @Repository
 @Slf4j
 public class MedicalRecordRepository {
 
-    private final String filePath;
-
-    private final ObjectMapper objectMapper;
-
-    @Getter
     private List<MedicalRecord> medicalRecords;
 
-    @Autowired
-    public MedicalRecordRepository(@Value("${safetynetalerts.jsonpath.medicalRecords}") String filePath, ObjectMapper objectMapper) {
-        this.filePath = filePath;
-        this.objectMapper = objectMapper;
+    public MedicalRecordRepository() {
         this.medicalRecords = new ArrayList<>();
     }
 
@@ -40,24 +25,6 @@ public class MedicalRecordRepository {
         List<MedicalRecord> medicalRecords = getMedicalRecords();
         medicalRecords.add(medicalRecord);
         saveInitialData(medicalRecords);
-    }
-
-    public void saveListToJson(List<MedicalRecord> medicalRecords) {
-        try {
-            clearJsonFile();
-            fillJsonFile(medicalRecords);
-        } catch (IOException e) {
-            log.error("Server ERROR - impossible to find Medical Record repository");
-            throw new ApiRepositoryException("Server ERROR - impossible to find Medical Record repository");
-        }
-    }
-
-    private void clearJsonFile() throws FileNotFoundException {
-        new PrintWriter(filePath).close();
-    }
-
-    private void fillJsonFile(List<MedicalRecord> medicalRecords) throws IOException {
-        objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(filePath).toFile(), medicalRecords);
     }
 
     public Optional<MedicalRecord> selectMedicalRecordByName(String firstName, String lastName) {

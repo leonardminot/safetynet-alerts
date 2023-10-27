@@ -1,38 +1,24 @@
 package com.safetynet.safetynetalerts.repositories;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.safetynetalerts.exception.ApiRepositoryException;
 import com.safetynet.safetynetalerts.models.Person;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+@Getter
 @Repository
 @Slf4j
 public class PersonRepository {
 
-    private final String filePath;
 
-    private final ObjectMapper objectMapper;
-
-    @Getter
     private List<Person> persons;
 
-    @Autowired
-    public PersonRepository(@Value("${safetynetalerts.jsonpath.persons}") String filePath, ObjectMapper objectMapper) {
-        this.filePath = filePath;
-        this.objectMapper = objectMapper;
+    public PersonRepository() {
         this.persons = new ArrayList<>();
     }
 
@@ -41,24 +27,6 @@ public class PersonRepository {
         List<Person> currentPersons = new ArrayList<>(getPersons());
         currentPersons.add(newPerson);
         saveInitialData(currentPersons);
-    }
-
-    public void saveListToJson(List<Person> persons) {
-        try {
-            clearJsonFile();
-            fillJsonFile(persons);
-        } catch (IOException e) {
-            log.error("Server ERROR - impossible to find Person repository");
-            throw new ApiRepositoryException("Server ERROR - impossible to find Person repository");
-        }
-    }
-
-    private void clearJsonFile() throws FileNotFoundException {
-        new PrintWriter(filePath).close();
-    }
-
-    private void fillJsonFile(List<Person> persons) throws IOException {
-        objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(filePath).toFile(), persons);
     }
 
     public Optional<Person> selectPersonByName(String firstName, String lastName) {
