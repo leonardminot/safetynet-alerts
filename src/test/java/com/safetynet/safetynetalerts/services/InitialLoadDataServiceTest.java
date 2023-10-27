@@ -1,6 +1,7 @@
 package com.safetynet.safetynetalerts.services;
 
 import com.safetynet.safetynetalerts.configuration.MyAppConfig;
+import com.safetynet.safetynetalerts.exception.ApiRepositoryException;
 import com.safetynet.safetynetalerts.models.Firestation;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.models.Person;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.then;
 
 @Tag("UnitTest")
@@ -148,5 +150,22 @@ public class InitialLoadDataServiceTest {
         // Then
         then(firestationRepository).should().saveInitialData(firestationArgumentCaptor.capture());
         assertThat(firestationArgumentCaptor.getValue()).isEqualTo(expectedFireStations);
+    }
+
+    @Test
+    void itShouldThrowWhenDataSetNotFound() {
+        // Given
+        initialLoadDataService = new InitialLoadDataService(
+                "wrong/path",
+                MyAppConfig.objectMapper(),
+                firestationRepository,
+                medicalRecordRepository,
+                personRepository);
+        // When
+        // Then
+        assertThatThrownBy(() -> initialLoadDataService.loadData())
+                .isInstanceOf(ApiRepositoryException.class)
+                .hasMessageContaining("Server ERROR - impossible to find initial dataset");
+
     }
 }

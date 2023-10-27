@@ -18,6 +18,7 @@ public class LoadInitialDataRunnerTestFull implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        System.out.println("Création Data set complet");
         ManageMockedData.createMockedDataWithAllEntries(this.filePathMockData);
     }
 }

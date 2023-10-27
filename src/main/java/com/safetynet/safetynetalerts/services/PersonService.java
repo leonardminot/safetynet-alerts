@@ -48,9 +48,6 @@ public class PersonService {
         personInDB.orElseThrow(() -> new ApiNotFoundException(logMessage));
     }
 
-    public List<Person> persons() {
-        return personRepository.getPersons();
-    }
 
     public void delete(Person personToDelete) {
         throwIfPersonNotFound(personToDelete, messageService.deleteErrorNoPersonFoundLogMess(personToDelete));

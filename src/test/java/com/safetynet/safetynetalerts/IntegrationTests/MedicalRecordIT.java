@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalerts.configuration.MyAppConfig;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
+import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
-import com.safetynet.safetynetalerts.repositories.PersonRepository;
 import com.safetynet.safetynetalerts.services.InitialLoadDataService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,20 +32,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("devpartial")
+@ActiveProfiles("dev")
 public class MedicalRecordIT {
 
     @Autowired
     private MockMvc mockMvc;
     private final MedicalRecordRepository medicalRecordRepository;
-    private final PersonRepository personRepository;
     private final InitialLoadDataService initialLoadDataService;
 
 
     @Autowired
-    public MedicalRecordIT(MedicalRecordRepository medicalRecordRepository, PersonRepository personRepository, InitialLoadDataService initialLoadDataService) {
+    public MedicalRecordIT(MedicalRecordRepository medicalRecordRepository, InitialLoadDataService initialLoadDataService) {
         this.medicalRecordRepository = medicalRecordRepository;
-        this.personRepository = personRepository;
         this.initialLoadDataService = initialLoadDataService;
     }
 
@@ -62,27 +60,38 @@ public class MedicalRecordIT {
     @Test
     void itShouldPostAMedicalRecord() throws Exception {
         // Given
-        MedicalRecord alirezaRecord = new MedicalRecord(
-                "Alireza",
-                "Firouzja",
-                LocalDate.parse("2003-06-18"),
+        MedicalRecord hikaruRecord = new MedicalRecord(
+                "Hikaru",
+                "Nakamura",
+                LocalDate.parse("1987-12-07"),
                 List.of("aznol:350mg", "hydrapermazol:100mg"),
                 List.of("nillacilan")
         );
 
-        System.out.println("Valeur de Persons.json : " + personRepository.getPersons());
+        Person hikaruPerson = new Person(
+                "Hikaru",
+                "Nakamura",
+                null,
+                null,
+                null,
+                null,
+                null
+        );
 
+        mockMvc.perform(MockMvcRequestBuilders.post("/person")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Objects.requireNonNull(personToJson(hikaruPerson))));
 
         // When
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/medicalRecord")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Objects.requireNonNull(medicalRecordToJson(alirezaRecord))));
+                .content(Objects.requireNonNull(medicalRecordToJson(hikaruRecord))));
 
         // Then
         List<MedicalRecord> medicalRecords = medicalRecordRepository.getMedicalRecords();
         resultActions.andExpect(status().isOk());
-        assertThat(medicalRecords).hasSize(7);
-        assertThat(medicalRecords.get(medicalRecords.size() - 1)).isEqualTo(alirezaRecord);
+        assertThat(medicalRecords).hasSize(8);
+        assertThat(medicalRecords.get(medicalRecords.size() - 1)).isEqualTo(hikaruRecord);
     }
 
     @Test
@@ -111,7 +120,7 @@ public class MedicalRecordIT {
                         unknownPersonMedicalRecord.firstName(),
                         unknownPersonMedicalRecord.lastName()));
         List<MedicalRecord> medicalRecords = medicalRecordRepository.getMedicalRecords();
-        assertThat(medicalRecords).hasSize(6);
+        assertThat(medicalRecords).hasSize(7);
     }
 
     @Test
@@ -179,7 +188,7 @@ public class MedicalRecordIT {
                         unknownPersonMedicalRecord.firstName(),
                         unknownPersonMedicalRecord.lastName()));
         List<MedicalRecord> medicalRecords = medicalRecordRepository.getMedicalRecords();
-        assertThat(medicalRecords).hasSize(6);
+        assertThat(medicalRecords).hasSize(7);
     }
 
     @Test
@@ -234,13 +243,23 @@ public class MedicalRecordIT {
                         unknownPersonMedicalRecord.firstName(),
                         unknownPersonMedicalRecord.lastName()));
         List<MedicalRecord> medicalRecords = medicalRecordRepository.getMedicalRecords();
-        assertThat(medicalRecords).hasSize(6);
+        assertThat(medicalRecords).hasSize(7);
     }
 
     private String medicalRecordToJson(MedicalRecord medicalRecord) {
         ObjectMapper objectMapper = MyAppConfig.objectMapper();
         try {
             return objectMapper.writeValueAsString(medicalRecord);
+        } catch (JsonProcessingException e) {
+            fail("");
+            return null;
+        }
+    }
+
+    private String personToJson(Person person) {
+        ObjectMapper objectMapper = MyAppConfig.objectMapper();
+        try {
+            return objectMapper.writeValueAsString(person);
         } catch (JsonProcessingException e) {
             fail("");
             return null;

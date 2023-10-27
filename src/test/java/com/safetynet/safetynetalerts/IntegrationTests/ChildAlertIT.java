@@ -64,8 +64,11 @@ public class ChildAlertIT {
 
         // Then
         String jsonResponse = mvcResult.getResponse().getContentAsString();
+        System.out.println("JSON Response: " + jsonResponse);
         JavaType type = MyAppConfig.objectMapper().getTypeFactory().constructCollectionType(List.class, ChildAlertDTO.class);
         List<ChildAlertDTO> actualResult = MyAppConfig.objectMapper().readValue(jsonResponse, type);
+        System.out.println("Actual Results: "+  actualResult);
+        System.out.println("Expected Results: "+  expectedResult);
         assertThat(actualResult).containsExactlyInAnyOrderElementsOf(expectedResult);
     }
 }

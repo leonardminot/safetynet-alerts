@@ -17,7 +17,6 @@ public class LoadInitialDataRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        System.out.println("Execution Command Line Runner");
         initialLoadDataService.initializeData();
     }
 }

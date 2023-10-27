@@ -91,9 +91,4 @@ public class PersonController {
         personService.delete(person);
     }
 
-    @GetMapping
-    @Hidden
-    List<Person> getPersons() {
-        return personService.persons();
-    }
 }
