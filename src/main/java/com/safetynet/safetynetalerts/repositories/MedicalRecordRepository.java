@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalerts.exception.ApiRepositoryException;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,30 +26,20 @@ public class MedicalRecordRepository {
 
     private final ObjectMapper objectMapper;
 
+    @Getter
+    private List<MedicalRecord> medicalRecords;
+
     @Autowired
     public MedicalRecordRepository(@Value("${safetynetalerts.jsonpath.medicalRecords}") String filePath, ObjectMapper objectMapper) {
         this.filePath = filePath;
         this.objectMapper = objectMapper;
-    }
-
-    public List<MedicalRecord> getMedicalRecords() {
-        List<MedicalRecord> medicalRecords = new ArrayList<>();
-        try {
-            Path path = Paths.get(filePath);
-            if (Files.size(path) != 0)
-                medicalRecords = objectMapper.readValue(path.toFile(), new TypeReference<>() {});
-
-        } catch (IOException e) {
-            log.error("Server ERROR - impossible to find Medical Record repository");
-            throw new ApiRepositoryException("Server ERROR - impossible to find Medical Record repository");
-        }
-        return medicalRecords;
+        this.medicalRecords = new ArrayList<>();
     }
 
     public void saveRecord(MedicalRecord medicalRecord) {
         List<MedicalRecord> medicalRecords = getMedicalRecords();
         medicalRecords.add(medicalRecord);
-        saveListToJson(medicalRecords);
+        saveInitialData(medicalRecords);
     }
 
     public void saveListToJson(List<MedicalRecord> medicalRecords) {
@@ -88,7 +79,7 @@ public class MedicalRecordRepository {
                         : mr)
                 .toList();
 
-        saveListToJson(updatedList);
+        saveInitialData(updatedList);
     }
 
     public void delete(MedicalRecord medicalRecord) {
@@ -96,10 +87,10 @@ public class MedicalRecordRepository {
                 .filter(mr -> !mr.firstName().equals(medicalRecord.firstName()) || !mr.lastName().equals(medicalRecord.lastName()))
                 .toList();
 
-        saveListToJson(updatedList);
+        saveInitialData(updatedList);
     }
 
     public void saveInitialData(List<MedicalRecord> medicalRecordsToSave) {
-
+        this.medicalRecords = medicalRecordsToSave;
     }
 }

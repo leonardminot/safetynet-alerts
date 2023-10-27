@@ -4,6 +4,7 @@ import com.safetynet.safetynetalerts.configuration.MyAppConfig;
 import com.safetynet.safetynetalerts.exception.ApiRepositoryException;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.mockressources.utils.MedicalRecordsMockedData;
+import com.safetynet.safetynetalerts.models.Firestation;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,9 +29,9 @@ class MedicalRecordRepositoryTest {
     private final String pathToFile = "src/test/java/com/safetynet/safetynetalerts/mockressources/mockmedicalrecords.json";
 
     @BeforeEach
-    void setUp() throws IOException {
-        MedicalRecordsMockedData.createMedicalRecordsMockedData(pathToFile);
+    void setUp() {
         medicalRecordRepository = new MedicalRecordRepository(pathToFile, MyAppConfig.objectMapper());
+        medicalRecordRepository.saveInitialData(MedicalRecordsMockedData.createMedicalRecordsMockedDataList());
     }
 
     @AfterEach
@@ -164,20 +166,6 @@ class MedicalRecordRepositoryTest {
     }
 
     @Test
-    void itShouldThrowWhenFileNotFound() {
-        // Given
-        MedicalRecordRepository unknownMedicalRecordRepository = new MedicalRecordRepository(
-                "unknown/file/path",
-                MyAppConfig.objectMapper());
-
-        // When
-        // Then
-        assertThatThrownBy(unknownMedicalRecordRepository::getMedicalRecords)
-                .isInstanceOf(ApiRepositoryException.class)
-                .hasMessageContaining("Server ERROR - impossible to find Medical Record repository");
-    }
-
-    @Test
     void itShouldThrowWhenFileNotFoundDuringSave() {
         // Given
         // ... a list of persons to save
@@ -200,5 +188,36 @@ class MedicalRecordRepositoryTest {
         assertThatThrownBy(() -> unknownMedicalRecordRepository.saveListToJson(medicalRecords))
                 .isInstanceOf(ApiRepositoryException.class)
                 .hasMessageContaining("Server ERROR - impossible to find Medical Record repository");
+    }
+
+    @Test
+    void itShouldSaveMedicalRecordsInClassStorage() {
+        // Given
+        //... Clear datas for tests purpose
+        medicalRecordRepository.saveInitialData(new ArrayList<>());
+
+        List<MedicalRecord> givenMedicalRecord = List.of(
+                new MedicalRecord(
+                        "John",
+                        "Boyd",
+                        LocalDate.of(1984, 3, 6),
+                        List.of("aznol:350mg", "hydrapermazol:100mg"),
+                        List.of("nillacilan")
+                ),
+                new MedicalRecord(
+                        "Jacob",
+                        "Boyd",
+                        LocalDate.of(1989, 3, 6),
+                        List.of("pharmacol:5000mg", "terazine:10mg", "noznazol:250mg"),
+                        List.of()
+                )
+        );
+
+        // When
+        medicalRecordRepository.saveInitialData(givenMedicalRecord);
+
+        // Then
+        assertThat(medicalRecordRepository.getMedicalRecords()).isEqualTo(givenMedicalRecord);
+
     }
 }
