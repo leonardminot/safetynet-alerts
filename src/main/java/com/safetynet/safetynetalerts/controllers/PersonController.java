@@ -2,15 +2,12 @@ package com.safetynet.safetynetalerts.controllers;
 
 import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.services.PersonService;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("person")
