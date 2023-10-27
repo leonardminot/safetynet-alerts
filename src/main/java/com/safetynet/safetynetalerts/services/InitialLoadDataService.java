@@ -27,9 +27,9 @@ public class InitialLoadDataService {
     private LoadInitialDataDTO dataSet;
 
     private final ObjectMapper objectMapper;
-    private FirestationRepository firestationRepository;
-    private MedicalRecordRepository medicalRecordRepository;
-    private PersonRepository personRepository;
+    private final FirestationRepository firestationRepository;
+    private final MedicalRecordRepository medicalRecordRepository;
+    private final PersonRepository personRepository;
     private final String filePath;
 
     public InitialLoadDataService(
@@ -68,5 +68,17 @@ public class InitialLoadDataService {
 
     public List<Firestation> getFirestations() {
         return dataSet.firestations();
+    }
+
+    public void savePersonsToRepository(List<Person> personsToSave) {
+        personRepository.saveInitialData(personsToSave);
+    }
+
+    public void saveMedicalRecordsToRepository(List<MedicalRecord> medicalRecordsToSave) {
+        medicalRecordRepository.saveInitialData(medicalRecordsToSave);
+    }
+
+    public void saveFireStationsToRepository(List<Firestation> fireStationsToSave) {
+        firestationRepository.saveInitialData(fireStationsToSave);
     }
 }

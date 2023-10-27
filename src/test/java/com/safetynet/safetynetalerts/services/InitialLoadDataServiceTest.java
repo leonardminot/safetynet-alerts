@@ -10,14 +10,20 @@ import com.safetynet.safetynetalerts.repositories.PersonRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.then;
 
 @Tag("UnitTest")
+@ExtendWith(MockitoExtension.class)
 public class InitialLoadDataServiceTest {
     private InitialLoadDataService initialLoadDataService;
     @Mock
@@ -26,6 +32,12 @@ public class InitialLoadDataServiceTest {
     private MedicalRecordRepository medicalRecordRepository;
     @Mock
     private PersonRepository personRepository;
+    @Captor
+    private ArgumentCaptor<List<Person>> personArgumentCaptor;
+    @Captor
+    private ArgumentCaptor<List<MedicalRecord>> medicalRecordArgumentCaptor;
+    @Captor
+    private ArgumentCaptor<List<Firestation>> firestationArgumentCaptor;
 
     @BeforeEach
     void setUp() {
@@ -75,5 +87,66 @@ public class InitialLoadDataServiceTest {
         assertThat(initialLoadDataService.getPersons()).isEqualTo(expectedPersons);
         assertThat(initialLoadDataService.getMedicalRecords()).isEqualTo(expectedMedicalRecords);
         assertThat(initialLoadDataService.getFirestations()).isEqualTo(expectedFireStations);
+    }
+
+    @Test
+    void itShouldSavePersonsToRepository() {
+        // Given
+        List<Person> personsToSave = List.of(
+                new Person("John", "Boyd", "1509 Culver St", "Culver", "97451", "841-874-6512", "jaboyd@email.com"),
+                new Person("Jacob", "Boyd", "1509 Culver St", "Culver", "97451", "841-874-6513", "drk@email.com")
+        );
+
+        // When
+        initialLoadDataService.savePersonsToRepository(personsToSave);
+
+        // Then
+        then(personRepository).should().saveInitialData(personArgumentCaptor.capture());
+        assertThat(personArgumentCaptor.getValue()).isEqualTo(personsToSave);
+    }
+
+    @Test
+    void itShouldSaveMedicalRecordsToRepository() {
+        // Given
+        List<MedicalRecord> medicalRecordsToSave = List.of(
+                new MedicalRecord(
+                        "John",
+                        "Boyd",
+                        LocalDate.of(1984, 3, 6),
+                        List.of("aznol:350mg", "hydrapermazol:100mg"),
+                        List.of("nillacilan")
+                ),
+                new MedicalRecord(
+                        "Jacob",
+                        "Boyd",
+                        LocalDate.of(1989, 3, 6),
+                        List.of("pharmacol:5000mg", "terazine:10mg", "noznazol:250mg"),
+                        List.of()
+                )
+        );
+
+        // When
+        initialLoadDataService.saveMedicalRecordsToRepository(medicalRecordsToSave);
+
+        // Then
+        then(medicalRecordRepository).should().saveInitialData(medicalRecordArgumentCaptor.capture());
+        assertThat(medicalRecordArgumentCaptor.getValue()).isEqualTo(medicalRecordsToSave);
+    }
+
+    @Test
+    void itShouldSaveFireStationsToRepository() {
+        // Given
+        List<Firestation> expectedFireStations = List.of(
+                new Firestation("1509 Culver St", "3"),
+                new Firestation("29 15th St", "2"),
+                new Firestation("834 Binoc Ave", "3")
+        );
+
+        // When
+        initialLoadDataService.saveFireStationsToRepository(expectedFireStations);
+
+        // Then
+        then(firestationRepository).should().saveInitialData(firestationArgumentCaptor.capture());
+        assertThat(firestationArgumentCaptor.getValue()).isEqualTo(expectedFireStations);
     }
 }

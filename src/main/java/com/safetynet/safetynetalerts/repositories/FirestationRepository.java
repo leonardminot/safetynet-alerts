@@ -113,4 +113,8 @@ public class FirestationRepository {
         return getFirestations().stream()
                 .anyMatch(fs -> fs.station().equals(stationNumber));
     }
+
+    public void saveInitialData(List<Firestation> firestationsToSave) {
+
+    }
 }

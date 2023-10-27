@@ -101,4 +101,8 @@ public class PersonRepository {
                 .toList();
         saveListToJson(updatedPersons);
     }
+
+    public void saveInitialData(List<Person> personsToSave) {
+
+    }
 }

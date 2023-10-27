@@ -98,4 +98,8 @@ public class MedicalRecordRepository {
 
         saveListToJson(updatedList);
     }
+
+    public void saveInitialData(List<MedicalRecord> medicalRecordsToSave) {
+
+    }
 }
