@@ -3,11 +3,11 @@ package com.safetynet.safetynetalerts.IntegrationTests;
 import com.safetynet.safetynetalerts.configuration.MyAppConfig;
 import com.safetynet.safetynetalerts.dto.FireAlertDTO;
 import com.safetynet.safetynetalerts.mockressources.utils.*;
+import com.safetynet.safetynetalerts.services.InitialLoadDataService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -15,9 +15,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,31 +25,21 @@ public class FireAlertIT {
 
     @Autowired
     private MockMvc mockMvc;
+    private final InitialLoadDataService initialLoadDataService;
 
-    private final String filePathMockPersons;
-    private final String filePathMockFirestations;
-    private final String filePathMockMedicalRecords;
-
-    public FireAlertIT(@Value("${safetynetalerts.jsonpath.persons}") String filePathMockPersons,
-                       @Value("${safetynetalerts.jsonpath.firestations}") String filePathMockFirestations,
-                       @Value("${safetynetalerts.jsonpath.medicalRecords}") String filePathMockMedicalRecords) {
-        this.filePathMockPersons = filePathMockPersons;
-        this.filePathMockFirestations = filePathMockFirestations;
-        this.filePathMockMedicalRecords = filePathMockMedicalRecords;
+    @Autowired
+    public FireAlertIT(InitialLoadDataService initialLoadDataService) {
+        this.initialLoadDataService = initialLoadDataService;
     }
 
     @BeforeEach
-    void setUp() throws IOException {
-        PersonsMockedData.createPersonMockedData(filePathMockPersons);
-        FireStationMockedData.createFirestationsMockedData(filePathMockFirestations);
-        MedicalRecordsMockedData.createMedicalRecordsMockedDataWithAllEntries(filePathMockMedicalRecords);
+    void setUp() {
+        initialLoadDataService.initializeData();
     }
 
     @AfterEach
-    void tearDown() throws FileNotFoundException {
-        ManageMockedData.clearJsonFile(filePathMockPersons);
-        ManageMockedData.clearJsonFile(filePathMockFirestations);
-        ManageMockedData.clearJsonFile(filePathMockMedicalRecords);
+    void tearDown() {
+        initialLoadDataService.clearData();
     }
 
     @Test

@@ -33,4 +33,18 @@ public class ManageMockedData {
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(filePath).toFile(), mockedData);
     }
 
+    public static void createMockedDataWithPartialEntries(String filePath) throws IOException {
+        System.out.println("Création des data mockées");
+        LoadInitialDataDTO mockedData;
+        ObjectMapper objectMapper = MyAppConfig.objectMapper();
+
+        List<Person> mockedPersons = PersonsMockedData.createPersonMockedDataList();
+        List<Firestation> mockedFireStations = FireStationMockedData.createFirestationsMockedDataList();
+        List<MedicalRecord> mockedMedicalRecords = MedicalRecordsMockedData.createMedicalRecordsMockedDataList();
+
+        mockedData = new LoadInitialDataDTO(mockedPersons, mockedFireStations, mockedMedicalRecords);
+
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(Paths.get(filePath).toFile(), mockedData);
+    }
+
 }

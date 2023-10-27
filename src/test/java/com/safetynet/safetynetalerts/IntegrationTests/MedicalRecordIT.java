@@ -3,17 +3,14 @@ package com.safetynet.safetynetalerts.IntegrationTests;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalerts.configuration.MyAppConfig;
-import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
-import com.safetynet.safetynetalerts.mockressources.utils.MedicalRecordsMockedData;
-import com.safetynet.safetynetalerts.mockressources.utils.PersonsMockedData;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
+import com.safetynet.safetynetalerts.services.InitialLoadDataService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -35,39 +32,31 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("dev")
+@ActiveProfiles("devpartial")
 public class MedicalRecordIT {
 
     @Autowired
     private MockMvc mockMvc;
-
-    private final String filePathMockMedicalRecords;
-
-    private final String filePathMockPersons;
-
     private final MedicalRecordRepository medicalRecordRepository;
-
     private final PersonRepository personRepository;
+    private final InitialLoadDataService initialLoadDataService;
 
 
     @Autowired
-    public MedicalRecordIT(@Value("${safetynetalerts.jsonpath.medicalRecords}") String filePathMockMedicalRecords, @Value("${safetynetalerts.jsonpath.persons}") String filePathMockPersons, MedicalRecordRepository medicalRecordRepository, PersonRepository personRepository) {
-        this.filePathMockMedicalRecords = filePathMockMedicalRecords;
-        this.filePathMockPersons = filePathMockPersons;
+    public MedicalRecordIT(MedicalRecordRepository medicalRecordRepository, PersonRepository personRepository, InitialLoadDataService initialLoadDataService) {
         this.medicalRecordRepository = medicalRecordRepository;
         this.personRepository = personRepository;
+        this.initialLoadDataService = initialLoadDataService;
     }
 
     @BeforeEach
     void setUp() throws IOException {
-        MedicalRecordsMockedData.createMedicalRecordsMockedData(filePathMockMedicalRecords);
-        PersonsMockedData.createPersonMockedData(filePathMockPersons);
+        initialLoadDataService.initializeData();
     }
 
     @AfterEach
     void tearDown() throws FileNotFoundException {
-        ManageMockedData.clearJsonFile(filePathMockMedicalRecords);
-        ManageMockedData.clearJsonFile(filePathMockPersons);
+        initialLoadDataService.clearData();
     }
 
     @Test
@@ -166,6 +155,7 @@ public class MedicalRecordIT {
     @Test
     void itShouldNotUpdateAMedicalRecord() throws Exception {
         // Given
+        System.out.println("Current MedicalRecords :" + medicalRecordRepository.getMedicalRecords());
         MedicalRecord unknownPersonMedicalRecord = new MedicalRecord(
                 "Wesley",
                 "So",

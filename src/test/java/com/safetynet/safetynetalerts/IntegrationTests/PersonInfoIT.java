@@ -3,14 +3,11 @@ package com.safetynet.safetynetalerts.IntegrationTests;
 import com.fasterxml.jackson.databind.JavaType;
 import com.safetynet.safetynetalerts.configuration.MyAppConfig;
 import com.safetynet.safetynetalerts.dto.PersonInfoDTO;
-import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
-import com.safetynet.safetynetalerts.mockressources.utils.MedicalRecordsMockedData;
-import com.safetynet.safetynetalerts.mockressources.utils.PersonsMockedData;
+import com.safetynet.safetynetalerts.services.InitialLoadDataService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -32,26 +29,21 @@ public class PersonInfoIT {
     @Autowired
     private MockMvc mockMvc;
 
-    private final String filePathMockPersons;
-    private final String filePathMockMedicalRecords;
+    private final InitialLoadDataService initialLoadDataService;
 
-    public PersonInfoIT(
-            @Value("${safetynetalerts.jsonpath.persons}") String filePathMockPersons,
-            @Value("${safetynetalerts.jsonpath.medicalRecords}") String filePathMockMedicalRecords) {
-        this.filePathMockPersons = filePathMockPersons;
-        this.filePathMockMedicalRecords = filePathMockMedicalRecords;
+    @Autowired
+    public PersonInfoIT(InitialLoadDataService initialLoadDataService) {
+        this.initialLoadDataService = initialLoadDataService;
     }
 
     @BeforeEach
     void setUp() throws IOException {
-        PersonsMockedData.createPersonMockedData(filePathMockPersons);
-        MedicalRecordsMockedData.createMedicalRecordsMockedDataWithAllEntries(filePathMockMedicalRecords);
+        initialLoadDataService.initializeData();
     }
 
     @AfterEach
     void tearDown() throws FileNotFoundException {
-        ManageMockedData.clearJsonFile(filePathMockMedicalRecords);
-        ManageMockedData.clearJsonFile(filePathMockPersons);
+        initialLoadDataService.clearData();
     }
 
     @Test
@@ -68,7 +60,7 @@ public class PersonInfoIT {
 
         // When
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/personInfo?firstName=Magnus&lastName=Carlsen")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
         // Then

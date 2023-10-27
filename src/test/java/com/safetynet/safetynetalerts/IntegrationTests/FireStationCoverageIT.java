@@ -3,11 +3,11 @@ package com.safetynet.safetynetalerts.IntegrationTests;
 import com.safetynet.safetynetalerts.configuration.MyAppConfig;
 import com.safetynet.safetynetalerts.dto.FirestationStationNumberDTO;
 import com.safetynet.safetynetalerts.mockressources.utils.*;
+import com.safetynet.safetynetalerts.services.InitialLoadDataService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -29,30 +29,22 @@ public class FireStationCoverageIT {
     @Autowired
     private MockMvc mockMvc;
 
-    private final String filePathMockFireStations;
-    private final String filePathMockPersons;
-    private final String filePathMockMedicalRecords;
+    private final InitialLoadDataService initialLoadDataService;
 
-    public FireStationCoverageIT(@Value("${safetynetalerts.jsonpath.firestations}") String filePathMockFireStations,
-                                 @Value("${safetynetalerts.jsonpath.persons}") String filePathMockPersons,
-                                 @Value("${safetynetalerts.jsonpath.medicalRecords}") String filePathMockMedicalRecords) {
-        this.filePathMockFireStations = filePathMockFireStations;
-        this.filePathMockPersons = filePathMockPersons;
-        this.filePathMockMedicalRecords = filePathMockMedicalRecords;
+
+    @Autowired
+    public FireStationCoverageIT(InitialLoadDataService initialLoadDataService) {
+        this.initialLoadDataService = initialLoadDataService;
     }
 
     @BeforeEach
     void setUp() throws IOException {
-        PersonsMockedData.createPersonMockedData(filePathMockPersons);
-        FireStationMockedData.createFirestationsMockedData(filePathMockFireStations);
-        MedicalRecordsMockedData.createMedicalRecordsMockedData(filePathMockMedicalRecords);
+        initialLoadDataService.initializeData();
     }
 
     @AfterEach
     void tearDown() throws FileNotFoundException {
-        ManageMockedData.clearJsonFile(filePathMockPersons);
-        ManageMockedData.clearJsonFile(filePathMockFireStations);
-        ManageMockedData.clearJsonFile(filePathMockMedicalRecords);
+        initialLoadDataService.clearData();
     }
 
     @Test

@@ -1,6 +1,5 @@
 package com.safetynet.safetynetalerts.repositories;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalerts.exception.ApiRepositoryException;
 import com.safetynet.safetynetalerts.models.Person;
@@ -13,8 +12,6 @@ import org.springframework.stereotype.Repository;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,9 +38,9 @@ public class PersonRepository {
 
 
     public void savePerson(Person newPerson) {
-        List<Person> persons = getPersons();
-        persons.add(newPerson);
-        saveInitialData(persons);
+        List<Person> currentPersons = new ArrayList<>(getPersons());
+        currentPersons.add(newPerson);
+        saveInitialData(currentPersons);
     }
 
     public void saveListToJson(List<Person> persons) {

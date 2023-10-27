@@ -2,15 +2,13 @@ package com.safetynet.safetynetalerts.IntegrationTests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.safetynetalerts.mockressources.utils.FireStationMockedData;
-import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.models.Firestation;
 import com.safetynet.safetynetalerts.repositories.FirestationRepository;
+import com.safetynet.safetynetalerts.services.InitialLoadDataService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -37,24 +35,23 @@ public class FireStationIT {
     @Autowired
     private MockMvc mockMvc;
 
-    private final String filePathMockFireStations;
-
     private final FirestationRepository firestationRepository;
+    private final InitialLoadDataService initialLoadDataService;
 
     @Autowired
-    public FireStationIT(@Value("${safetynetalerts.jsonpath.firestations}") String filePathMockFireStations, FirestationRepository firestationRepository) {
-        this.filePathMockFireStations = filePathMockFireStations;
+    public FireStationIT(FirestationRepository firestationRepository, InitialLoadDataService initialLoadDataService) {
         this.firestationRepository = firestationRepository;
+        this.initialLoadDataService = initialLoadDataService;
     }
 
     @BeforeEach
     void setUp() throws IOException {
-        FireStationMockedData.createFirestationsMockedData(filePathMockFireStations);
+        initialLoadDataService.initializeData();
     }
 
     @AfterEach
     void tearDown() throws FileNotFoundException {
-        ManageMockedData.clearJsonFile(filePathMockFireStations);
+        initialLoadDataService.clearData();
     }
 
     @Test

@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -43,7 +44,7 @@ public class InitialLoadDataService {
         this.medicalRecordRepository = medicalRecordRepository;
         this.personRepository = personRepository;
         this.filePath = filePath;
-        this.dataSet = new LoadInitialDataDTO(List.of(), List.of(), List.of());
+        this.dataSet = new LoadInitialDataDTO(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
     }
 
     public void loadData() {
@@ -81,4 +82,18 @@ public class InitialLoadDataService {
     public void saveFireStationsToRepository(List<Firestation> fireStationsToSave) {
         firestationRepository.saveInitialData(fireStationsToSave);
     }
+
+    public void initializeData() {
+        loadData();
+        saveMedicalRecordsToRepository(getMedicalRecords());
+        saveFireStationsToRepository(getFirestations());
+        savePersonsToRepository(getPersons());
+    }
+
+    public void clearData() {
+        savePersonsToRepository(new ArrayList<>());
+        saveMedicalRecordsToRepository(new ArrayList<>());
+        saveFireStationsToRepository(new ArrayList<>());
+    }
+
 }
