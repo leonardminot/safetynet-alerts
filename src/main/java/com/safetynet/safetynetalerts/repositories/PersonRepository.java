@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalerts.exception.ApiRepositoryException;
 import com.safetynet.safetynetalerts.models.Person;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,30 +29,21 @@ public class PersonRepository {
 
     private final ObjectMapper objectMapper;
 
+    @Getter
+    private List<Person> persons;
+
     @Autowired
     public PersonRepository(@Value("${safetynetalerts.jsonpath.persons}") String filePath, ObjectMapper objectMapper) {
         this.filePath = filePath;
         this.objectMapper = objectMapper;
+        this.persons = new ArrayList<>();
     }
 
-    public List<Person> getPersons() {
-        List<Person> persons = new ArrayList<>();
-        try {
-            Path path = Paths.get(filePath);
-            if (Files.size(path) != 0)
-                persons = objectMapper.readValue(path.toFile(), new TypeReference<>() {});
-
-        } catch (IOException e) {
-            log.error("Server ERROR - impossible to find Person repository");
-            throw new ApiRepositoryException("Server ERROR - impossible to find Person repository");
-        }
-        return persons;
-    }
 
     public void savePerson(Person newPerson) {
         List<Person> persons = getPersons();
         persons.add(newPerson);
-        saveListToJson(persons);
+        saveInitialData(persons);
     }
 
     public void saveListToJson(List<Person> persons) {
@@ -91,7 +83,7 @@ public class PersonRepository {
                         Objects.isNull(person.email()) ? currentPerson.email() : person.email())
                         : currentPerson)
                 .toList();
-        saveListToJson(updatedPersons);
+        saveInitialData(updatedPersons);
     }
 
     public void delete(Person person) {
@@ -99,10 +91,10 @@ public class PersonRepository {
         List<Person> updatedPersons = persons.stream()
                 .filter(p -> !p.firstName().equals(person.firstName()) || !p.lastName().equals(person.lastName()))
                 .toList();
-        saveListToJson(updatedPersons);
+        saveInitialData(updatedPersons);
     }
 
     public void saveInitialData(List<Person> personsToSave) {
-
+        persons = personsToSave;
     }
 }

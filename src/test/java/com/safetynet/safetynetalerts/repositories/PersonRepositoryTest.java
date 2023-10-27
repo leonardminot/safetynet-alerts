@@ -4,6 +4,7 @@ import com.safetynet.safetynetalerts.configuration.MyAppConfig;
 import com.safetynet.safetynetalerts.exception.ApiRepositoryException;
 import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.mockressources.utils.PersonsMockedData;
+import com.safetynet.safetynetalerts.models.Firestation;
 import com.safetynet.safetynetalerts.models.Person;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,11 +30,10 @@ class PersonRepositoryTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        PersonsMockedData.createPersonMockedData(filePathMockPersons);
-
         personRepository = new PersonRepository(
                 filePathMockPersons,
                 MyAppConfig.objectMapper());
+        personRepository.saveInitialData(PersonsMockedData.createPersonMockedDataList());
     }
 
     @AfterEach
@@ -50,21 +51,6 @@ class PersonRepositoryTest {
 
         // Then
         assertThat(personList).hasSize(7);
-    }
-
-    @Test
-    void itShouldReturnEmptyListWhenNoData() throws FileNotFoundException {
-        // Given
-        List<Person> personList;
-        // ... empty mockpersons.json
-        ManageMockedData.clearJsonFile(filePathMockPersons);
-
-        // When
-        personList = personRepository.getPersons();
-
-        // Then
-        assertThat(personList).hasSize(0);
-
     }
 
     @Test
@@ -208,20 +194,6 @@ class PersonRepositoryTest {
     }
 
     @Test
-    void itShouldThrowWhenFileNotFound() {
-        // Given
-        PersonRepository unknownPersonRepository = new PersonRepository(
-                "unknown/file/path",
-                MyAppConfig.objectMapper());
-
-        // When
-        // Then
-        assertThatThrownBy(unknownPersonRepository::getPersons)
-                .isInstanceOf(ApiRepositoryException.class)
-                .hasMessageContaining("Server ERROR - impossible to find Person repository");
-    }
-
-    @Test
     void itShouldThrowWhenFileNotFoundDuringSave() {
         // Given
         // ... a list of persons to save
@@ -246,5 +218,23 @@ class PersonRepositoryTest {
         assertThatThrownBy(() -> unknownPersonRepository.saveListToJson(persons))
                 .isInstanceOf(ApiRepositoryException.class)
                 .hasMessageContaining("Server ERROR - impossible to find Person repository");
+    }
+
+    @Test
+    void itShouldSaveFirestationsInClassStorage() {
+        // Given
+        //... Clear datas for tests purpose
+        personRepository.saveInitialData(new ArrayList<>());
+
+        List<Person> givenPersons = List.of(
+                new Person("John", "Boyd", "1509 Culver St", "Culver", "97451", "841-874-6512", "jaboyd@email.com"),
+                new Person("Jacob", "Boyd", "1509 Culver St", "Culver", "97451", "841-874-6513", "drk@email.com")
+        );
+
+        // When
+        personRepository.saveInitialData(givenPersons);
+
+        // Then
+        assertThat(personRepository.getPersons()).isEqualTo(givenPersons);
     }
 }

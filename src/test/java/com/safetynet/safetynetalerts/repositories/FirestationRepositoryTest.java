@@ -253,6 +253,5 @@ class FirestationRepositoryTest {
 
         // Then
         assertThat(firestationRepository.getFirestations()).isEqualTo(givenFireStations);
-
     }
 }
