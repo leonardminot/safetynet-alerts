@@ -3,11 +3,13 @@ package com.safetynet.safetynetalerts.IntegrationTests;
 import com.fasterxml.jackson.databind.JavaType;
 import com.safetynet.safetynetalerts.configuration.MyAppConfig;
 import com.safetynet.safetynetalerts.dto.PersonInfoDTO;
+import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.services.InitialLoadDataService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -31,6 +33,9 @@ public class PersonInfoIT {
 
     private final InitialLoadDataService initialLoadDataService;
 
+    @Value("${safetynetalerts.jsonpath.dataset}")
+    private String filePath;
+
     @Autowired
     public PersonInfoIT(InitialLoadDataService initialLoadDataService) {
         this.initialLoadDataService = initialLoadDataService;
@@ -38,11 +43,13 @@ public class PersonInfoIT {
 
     @BeforeEach
     void setUp() throws IOException {
+        ManageMockedData.createMockedDataWithAllEntries(filePath);
         initialLoadDataService.initializeData();
     }
 
     @AfterEach
     void tearDown() throws FileNotFoundException {
+        ManageMockedData.clearJsonFile(filePath);
         initialLoadDataService.clearData();
     }
 

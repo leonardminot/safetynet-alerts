@@ -2,6 +2,7 @@ package com.safetynet.safetynetalerts.IntegrationTests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
 import com.safetynet.safetynetalerts.services.InitialLoadDataService;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -17,6 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -37,6 +41,9 @@ public class PersonIT {
 
     private final InitialLoadDataService initialLoadDataService;
 
+    @Value("${safetynetalerts.jsonpath.dataset}")
+    private String filePath;
+
     @Autowired
     public PersonIT(PersonRepository personRepository, InitialLoadDataService initialLoadDataService) {
         this.personRepository = personRepository;
@@ -44,12 +51,14 @@ public class PersonIT {
     }
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
+        ManageMockedData.createMockedDataWithAllEntries(filePath);
         initialLoadDataService.initializeData();
     }
 
     @AfterEach
-    void tearDown() {
+    void tearDown() throws FileNotFoundException {
+        ManageMockedData.clearJsonFile(filePath);
         initialLoadDataService.clearData();
     }
 

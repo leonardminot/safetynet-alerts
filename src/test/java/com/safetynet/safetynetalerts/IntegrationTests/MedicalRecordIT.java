@@ -3,6 +3,7 @@ package com.safetynet.safetynetalerts.IntegrationTests;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.safetynetalerts.configuration.MyAppConfig;
+import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -40,6 +42,8 @@ public class MedicalRecordIT {
     private final MedicalRecordRepository medicalRecordRepository;
     private final InitialLoadDataService initialLoadDataService;
 
+    @Value("${safetynetalerts.jsonpath.dataset}")
+    private String filePath;
 
     @Autowired
     public MedicalRecordIT(MedicalRecordRepository medicalRecordRepository, InitialLoadDataService initialLoadDataService) {
@@ -49,11 +53,13 @@ public class MedicalRecordIT {
 
     @BeforeEach
     void setUp() throws IOException {
+        ManageMockedData.createMockedDataWithAllEntries(filePath);
         initialLoadDataService.initializeData();
     }
 
     @AfterEach
     void tearDown() throws FileNotFoundException {
+        ManageMockedData.clearJsonFile(filePath);
         initialLoadDataService.clearData();
     }
 
