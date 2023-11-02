@@ -1,11 +1,12 @@
 package com.safetynet.safetynetalerts.services;
 
-import com.safetynet.safetynetalerts.configuration.MyAppConfig;
+import com.safetynet.safetynetalerts.dto.LoadInitialDataDTO;
 import com.safetynet.safetynetalerts.exception.ApiRepositoryException;
 import com.safetynet.safetynetalerts.models.Firestation;
 import com.safetynet.safetynetalerts.models.MedicalRecord;
 import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.FirestationRepository;
+import com.safetynet.safetynetalerts.repositories.InitialLoadDataRepository;
 import com.safetynet.safetynetalerts.repositories.MedicalRecordRepository;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,11 +24,15 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.when;
 
 @Tag("UnitTest")
 @ExtendWith(MockitoExtension.class)
 public class InitialLoadDataServiceTest {
     private InitialLoadDataService initialLoadDataService;
+
+    @Mock
+    private InitialLoadDataRepository initialLoadDataRepository;
     @Mock
     private FirestationRepository firestationRepository;
     @Mock
@@ -44,8 +49,7 @@ public class InitialLoadDataServiceTest {
     @BeforeEach
     void setUp() {
         initialLoadDataService = new InitialLoadDataService(
-                "src/test/java/com/safetynet/safetynetalerts/mockressources/initialmockdataset.json",
-                MyAppConfig.objectMapper(),
+                initialLoadDataRepository,
                 firestationRepository,
                 medicalRecordRepository,
                 personRepository);
@@ -81,6 +85,14 @@ public class InitialLoadDataServiceTest {
                 new Firestation("29 15th St", "2"),
                 new Firestation("834 Binoc Ave", "3")
         );
+
+        LoadInitialDataDTO mockDataSet = new LoadInitialDataDTO(
+                expectedPersons,
+                expectedFireStations,
+                expectedMedicalRecords
+        );
+
+        when(initialLoadDataRepository.loadData()).thenReturn(mockDataSet);
 
         // When
         initialLoadDataService.loadData();
@@ -156,11 +168,13 @@ public class InitialLoadDataServiceTest {
     void itShouldThrowWhenDataSetNotFound() {
         // Given
         initialLoadDataService = new InitialLoadDataService(
-                "wrong/path",
-                MyAppConfig.objectMapper(),
+                initialLoadDataRepository,
                 firestationRepository,
                 medicalRecordRepository,
                 personRepository);
+
+        when(initialLoadDataRepository.loadData()).thenThrow(new ApiRepositoryException("Server ERROR - impossible to find initial dataset"));
+
         // When
         // Then
         assertThatThrownBy(() -> initialLoadDataService.loadData())

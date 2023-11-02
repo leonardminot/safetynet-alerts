@@ -3,7 +3,6 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-src/test/java/com/safetynet/safetynetalerts/mockressources/*.json
 TestRequest.http
 .idea/httpRequests
 IT_HTTP_REQUEST.http

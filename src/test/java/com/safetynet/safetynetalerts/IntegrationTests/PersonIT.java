@@ -6,6 +6,7 @@ import com.safetynet.safetynetalerts.mockressources.utils.ManageMockedData;
 import com.safetynet.safetynetalerts.models.Person;
 import com.safetynet.safetynetalerts.repositories.PersonRepository;
 import com.safetynet.safetynetalerts.services.InitialLoadDataService;
+import jakarta.annotation.PostConstruct;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,6 +49,11 @@ public class PersonIT {
     public PersonIT(PersonRepository personRepository, InitialLoadDataService initialLoadDataService) {
         this.personRepository = personRepository;
         this.initialLoadDataService = initialLoadDataService;
+    }
+
+    @PostConstruct
+    public void init() throws IOException {
+        ManageMockedData.createMockedDataWithAllEntries(filePath);
     }
 
     @BeforeEach
